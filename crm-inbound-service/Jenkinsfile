@@ -1,0 +1,10 @@
+#!/usr/bin/env groovy
+import hudson.model.*
+
+@Library('jenkins-utils')
+import ekol.jenkins.Stages
+
+node {
+    def config = [registry:'10.1.70.91', namespace: 'oneorder']
+    new Stages(this, config).runBackend([:])
+}

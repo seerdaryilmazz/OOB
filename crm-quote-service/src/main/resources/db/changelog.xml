@@ -1,0 +1,2264 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+
+    <changeSet id="20180223 09:00" author="caputlu">
+
+        <createTable tableName="CRM_QUOTE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CRM_QUOTE" />
+            </column>
+            <column name="QUOTE_NUMBER" type="NUMBER(19,0)"/>
+            <column name="NAME" type="VARCHAR2(150)"/>
+            <column name="ACCOUNT_ID" type="NUMBER(19,0)"/>
+            <column name="ACCOUNT_NAME" type="VARCHAR2(150)"/>
+            <column name="ACCOUNT_LOCATION_ID" type="NUMBER(19,0)"/>
+            <column name="ACCOUNT_LOCATION_NAME" type="VARCHAR2(150)"/>
+            <column name="SUBSIDIARY_ID" type="NUMBER(19,0)"/>
+            <column name="SUBSIDIARY_NAME" type="VARCHAR2(150)"/>
+            <column name="SERVICE_AREA" type="VARCHAR2(20)"/>
+            <column name="TYPE" type="VARCHAR2(20)"/>
+            <column name="STATUS" type="VARCHAR2(20)"/>
+            <column name="CREATED_AT" type="TIMESTAMP(6)" />
+            <column name="CREATED_BY" type="VARCHAR2(100)" />
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <addNotNullConstraint tableName="CRM_QUOTE" columnName="QUOTE_NUMBER" />
+        <addNotNullConstraint tableName="CRM_QUOTE" columnName="NAME" />
+        <addNotNullConstraint tableName="CRM_QUOTE" columnName="ACCOUNT_ID" />
+        <addNotNullConstraint tableName="CRM_QUOTE" columnName="ACCOUNT_LOCATION_ID" />
+        <addNotNullConstraint tableName="CRM_QUOTE" columnName="SUBSIDIARY_ID" />
+        <addNotNullConstraint tableName="CRM_QUOTE" columnName="SERVICE_AREA" />
+        <addNotNullConstraint tableName="CRM_QUOTE" columnName="TYPE" />
+        <addNotNullConstraint tableName="CRM_QUOTE" columnName="STATUS" />
+
+        <createSequence sequenceName="SEQ_CRMQUOTE" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20180223 09:30" author="caputlu">
+
+        <createTable tableName="CRM_PRODUCT">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CRM_PRODUCT" />
+            </column>
+
+            <column name="QUOTE_ID" type="NUMBER(19,0)"/>
+            <column name="FROM_COUNTRY_ISO" type="VARCHAR2(2)"/>
+            <column name="FROM_COUNTRY_NAME" type="VARCHAR2(50)"/>
+            <column name="FROM_POINT_ID" type="NUMBER(19,0)"/>
+            <column name="FROM_POINT_NAME" type="VARCHAR2(150)"/>
+            <column name="TO_COUNTRY_ISO" type="VARCHAR2(2)"/>
+            <column name="TO_COUNTRY_NAME" type="VARCHAR2(50)"/>
+            <column name="TO_POINT_ID" type="NUMBER(19,0)"/>
+            <column name="TO_POINT_NAME" type="VARCHAR2(150)"/>
+            <column name="SHIPMENT_LOADING_TYPE" type="VARCHAR2(20)"/>
+            <column name="INCOTERM" type="VARCHAR2(20)"/>
+            <column name="INCOTERM_EXPLANATION" type="VARCHAR2(50)"/>
+            <column name="CALCULATION_TYPE" type="VARCHAR2(50)"/>
+            <column name="STATUS" type="VARCHAR2(20)"/>
+            <column name="EXISTENCE" type="VARCHAR2(20)"/>
+            <column name="LOST_REASON_ID" type="NUMBER(19,0)"/>
+            <column name="SERVICE_AREA" type="VARCHAR2(20)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="CRM_PRODUCT" baseColumnNames="QUOTE_ID"
+                                 constraintName="FK_CRM_PRODUCT_QUOTE" referencedTableName="CRM_QUOTE"
+                                 referencedColumnNames="ID"/>
+
+        <addNotNullConstraint tableName="CRM_PRODUCT" columnName="STATUS" />
+        <addNotNullConstraint tableName="CRM_PRODUCT" columnName="SERVICE_AREA" />
+
+        <createSequence sequenceName="SEQ_CRMPRODUCT" incrementBy="50"/>
+
+
+    </changeSet>
+
+    <changeSet id="20180225 10:00" author="caputlu">
+
+        <createTable tableName="CRM_CUSTOMS">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CRM_QUOTE_CUSTOMS" />
+            </column>
+            <column name="DEP_CLEARANCE_RESPONSIBLE" type="VARCHAR2(50)"/>
+            <column name="DEP_CLEARANCE_TYPE" type="VARCHAR2(50)"/>
+            <column name="DEP_LOCATION_ID" type="NUMBER(19,0)"/>
+            <column name="DEP_LOCATION_NAME" type="VARCHAR2(150)"/>
+            <column name="DEP_OFFICE_ID" type="NUMBER(19,0)"/>
+            <column name="DEP_OFFICE_NAME" type="VARCHAR2(150)"/>
+            <column name="ARR_CLEARANCE_RESPONSIBLE" type="VARCHAR2(50)"/>
+            <column name="ARR_CLEARANCE_TYPE" type="VARCHAR2(50)"/>
+            <column name="ARR_LOCATION_ID" type="NUMBER(19,0)"/>
+            <column name="ARR_LOCATION_NAME" type="VARCHAR2(150)"/>
+            <column name="ARR_OFFICE_ID" type="NUMBER(19,0)"/>
+            <column name="ARR_OFFICE_NAME" type="VARCHAR2(150)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <addNotNullConstraint tableName="CRM_CUSTOMS" columnName="DEP_CLEARANCE_RESPONSIBLE" />
+        <addNotNullConstraint tableName="CRM_CUSTOMS" columnName="ARR_CLEARANCE_RESPONSIBLE" />
+        <addNotNullConstraint tableName="CRM_CUSTOMS" columnName="ARR_CLEARANCE_TYPE" />
+
+        <createSequence sequenceName="SEQ_CRMCUSTOMS" incrementBy="50"/>
+
+    </changeSet>
+
+
+    <changeSet id="20180318 21:00" author="caputlu">
+
+        <createTable tableName="CRM_PACKAGE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CRM_PACKAGE" />
+            </column>
+            <column name="QUOTE_ID" type="NUMBER(19,0)"/>
+            <column name="TYPE" type="VARCHAR2(20)"/>
+            <column name="QUANTITY" type="NUMBER(6,0)"/>
+            <column name="WIDTH" type="NUMBER(6,0)"/>
+            <column name="LENGTH" type="NUMBER(6,0)"/>
+            <column name="HEIGHT" type="NUMBER(6,0)"/>
+            <column name="WEIGHT" type="NUMBER(12,2)"/>
+            <column name="LDM" type="NUMBER(12,2)"/>
+            <column name="VOLUME" type="NUMBER(12,2)"/>
+            <column name="STACKABILITY_TYPE" type="VARCHAR2(20)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <addNotNullConstraint tableName="CRM_PACKAGE" columnName="TYPE" />
+        <addNotNullConstraint tableName="CRM_PACKAGE" columnName="QUANTITY" />
+        <addNotNullConstraint tableName="CRM_PACKAGE" columnName="STACKABILITY_TYPE" />
+
+        <addForeignKeyConstraint baseTableName="CRM_PACKAGE" baseColumnNames="QUOTE_ID"
+                                 constraintName="FK_CRM_PACKAGE_QUOTE" referencedTableName="CRM_QUOTE"
+                                 referencedColumnNames="ID"/>
+
+        <createSequence sequenceName="SEQ_CRMPACKAGE" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20180326 11:00" author="caputlu">
+
+        <createTable tableName="CRM_PRICE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CRM_PRICE" />
+            </column>
+            <column name="QUOTE_ID" type="NUMBER(19,0)"/>
+            <column name="TYPE" type="VARCHAR2(50)"/>
+            <column name="BILLING_ITEM" type="VARCHAR2(50)"/>
+            <column name="AMOUNT" type="NUMBER(12,2)"/>
+            <column name="CURRENCY" type="VARCHAR2(3)"/>
+            <column name="ADD_TO_FREIGHT" type="NUMBER(1,0)"/>
+            <column name="MIN_AMOUNT" type="NUMBER(12,2)"/>
+            <column name="CALCULATED_AMOUNT" type="NUMBER(12,2)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <addNotNullConstraint tableName="CRM_PRICE" columnName="TYPE" />
+        <addNotNullConstraint tableName="CRM_PRICE" columnName="BILLING_ITEM" />
+        <addNotNullConstraint tableName="CRM_PRICE" columnName="ADD_TO_FREIGHT" />
+
+        <addForeignKeyConstraint baseTableName="CRM_PRICE" baseColumnNames="QUOTE_ID"
+                                 constraintName="FK_CRM_PRICE_QUOTE" referencedTableName="CRM_QUOTE"
+                                 referencedColumnNames="ID"/>
+
+        <createSequence sequenceName="SEQ_CRMPRICE" incrementBy="50"/>
+
+    </changeSet>
+
+
+    <changeSet id="20180326 17:15" author="caputlu">
+
+        <createTable tableName="CRM_LOAD">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CRM_LOAD" />
+            </column>
+            <column name="QUOTE_ID" type="NUMBER(19,0)"/>
+            <column name="TYPE" type="VARCHAR2(50)"/>
+            <column name="RISK_FACTOR" type="VARCHAR2(4)"/>
+            <column name="MIN_TEMPERATURE" type="NUMBER(5,0)"/>
+            <column name="MAX_TEMPERATURE" type="NUMBER(5,0)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+
+        <addNotNullConstraint tableName="CRM_LOAD" columnName="TYPE" />
+
+        <addForeignKeyConstraint baseTableName="CRM_LOAD" baseColumnNames="QUOTE_ID"
+                                 constraintName="FK_CRM_LOAD_QUOTE" referencedTableName="CRM_QUOTE"
+                                 referencedColumnNames="ID"/>
+
+        <createSequence sequenceName="SEQ_CRMLOAD" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20180326 17:20" author="caputlu">
+
+        <createTable tableName="CRM_VEHICLE_REQ">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CRM_VEHICLE_REQ" />
+            </column>
+            <column name="QUOTE_ID" type="NUMBER(19,0)"/>
+            <column name="REQUIREMENT_CODE" type="VARCHAR2(40)"/>
+            <column name="REQUIREMENT_NAME" type="VARCHAR2(100)"/>
+            <column name="OPERATION_CODE" type="VARCHAR2(20)"/>
+            <column name="OPERATION_NAME" type="VARCHAR2(20)"/>
+            <column name="REMOVABLE" type="NUMBER(1,0)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+
+        <addNotNullConstraint tableName="CRM_VEHICLE_REQ" columnName="REQUIREMENT_CODE" />
+        <addNotNullConstraint tableName="CRM_VEHICLE_REQ" columnName="OPERATION_CODE" />
+
+        <addForeignKeyConstraint baseTableName="CRM_VEHICLE_REQ" baseColumnNames="QUOTE_ID"
+                                 constraintName="FK_CRM_VEHICLE_REQ_QUOTE" referencedTableName="CRM_QUOTE"
+                                 referencedColumnNames="ID"/>
+
+        <createSequence sequenceName="SEQ_CRMVEHICLEREQ" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20180326 17:30" author="caputlu">
+
+        <createTable tableName="CRM_CONTAINER_REQ">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CRM_CONTAINER_REQ" />
+            </column>
+            <column name="QUOTE_ID" type="NUMBER(19,0)"/>
+            <column name="VOLUME_CODE" type="VARCHAR2(40)"/>
+            <column name="VOLUME_NAME" type="VARCHAR2(100)"/>
+            <column name="CONTAINER_CODE" type="VARCHAR2(40)"/>
+            <column name="CONTAINER_NAME" type="VARCHAR2(100)"/>
+            <column name="QUANTITY" type="NUMBER(2,0)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+
+        <addNotNullConstraint tableName="CRM_CONTAINER_REQ" columnName="VOLUME_CODE" />
+        <addNotNullConstraint tableName="CRM_CONTAINER_REQ" columnName="CONTAINER_CODE" />
+        <addNotNullConstraint tableName="CRM_CONTAINER_REQ" columnName="QUANTITY" />
+
+        <addForeignKeyConstraint baseTableName="CRM_CONTAINER_REQ" baseColumnNames="QUOTE_ID"
+                                 constraintName="FK_CRM_CONTAINER_REQ_QUOTE" referencedTableName="CRM_QUOTE"
+                                 referencedColumnNames="ID"/>
+
+        <createSequence sequenceName="SEQ_CRMCONTAINERREQ" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20180326 17:45" author="caputlu">
+
+        <createTable tableName="CRM_SERVICE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CRM_SERVICE" />
+            </column>
+            <column name="QUOTE_ID" type="NUMBER(19,0)"/>
+            <column name="TYPE" type="VARCHAR2(50)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <addNotNullConstraint tableName="CRM_SERVICE" columnName="TYPE" />
+
+        <addForeignKeyConstraint baseTableName="CRM_SERVICE" baseColumnNames="QUOTE_ID"
+                                 constraintName="FK_CRM_SERVICE_QUOTE" referencedTableName="CRM_QUOTE"
+                                 referencedColumnNames="ID"/>
+
+        <createSequence sequenceName="SEQ_CRMSERVICE" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20180419 12:00" author="caputlu">
+
+        <createTable tableName="CRM_LOST_REASON">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CRM_LOST_REASON" />
+            </column>
+            <column name="COMPETITOR_ID" type="NUMBER(19,0)"/>
+            <column name="COMPETITOR_NAME" type="VARCHAR2(150)"/>
+            <column name="COMPETITOR_PRICE" type="NUMBER(12,2)"/>
+            <column name="COMPETITOR_PRICE_CURRENCY" type="VARCHAR2(3)"/>
+            <column name="REASON" type="VARCHAR2(150)"/>
+            <column name="REASON_DETAIL" type="VARCHAR2(150)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <addNotNullConstraint tableName="CRM_LOST_REASON" columnName="REASON" />
+
+        <createSequence sequenceName="SEQ_CRMLOSTREASON" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20180420 12:00" author="caputlu">
+
+        <createTable tableName="CRM_PAYMENT_RULE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CRM_PAYMENT_RULE" />
+            </column>
+            <column name="INVOICE_COMPANY_ID" type="NUMBER(19,0)"/>
+            <column name="INVOICE_COMPANY_NAME" type="VARCHAR2(150)"/>
+            <column name="INVOICE_LOCATION_ID" type="NUMBER(19,0)"/>
+            <column name="INVOICE_LOCATION_NAME" type="VARCHAR2(150)"/>
+            <column name="TYPE" type="VARCHAR2(50)"/>
+            <column name="PAYMENT_DUE_DAYS" type="NUMBER(3,0)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <addNotNullConstraint tableName="CRM_PAYMENT_RULE" columnName="INVOICE_COMPANY_ID" />
+        <addNotNullConstraint tableName="CRM_PAYMENT_RULE" columnName="TYPE" />
+        <addNotNullConstraint tableName="CRM_PAYMENT_RULE" columnName="PAYMENT_DUE_DAYS" />
+
+        <createSequence sequenceName="SEQ_CRMPAYMENTRULE" incrementBy="50"/>
+
+    </changeSet>
+
+
+    <changeSet id="20180629 14:00" author="caputlu">
+
+        <createTable tableName="CRM_PRICE_DISCOUNT">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CRM_PRICE_DISCOUNT" />
+            </column>
+            <column name="PRICE_ID" type="NUMBER(19,0)"/>
+            <column name="SALES_PRICE_ID" type="NUMBER(19,0)"/>
+            <column name="NAME" type="VARCHAR2(255)"/>
+            <column name="AMOUNT" type="NUMBER(12,2)"/>
+            <column name="PERCENTAGE" type="NUMBER(12,2)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <addNotNullConstraint tableName="CRM_PRICE_DISCOUNT" columnName="PRICE_ID" />
+        <addNotNullConstraint tableName="CRM_PRICE_DISCOUNT" columnName="SALES_PRICE_ID" />
+
+        <addForeignKeyConstraint baseTableName="CRM_PRICE_DISCOUNT" baseColumnNames="PRICE_ID"
+                                 constraintName="FK_CRM_DISCOUNT_PRICE" referencedTableName="CRM_PRICE"
+                                 referencedColumnNames="ID"/>
+
+        <createSequence sequenceName="SEQ_CRMPRICEDISCOUNT" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20180803 09:00" author="caputlu">
+
+        <createTable tableName="CRM_SPOT_QUOTE">
+            <column name="QUOTE_ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_SPOT_QUOTE" />
+            </column>
+            <column name="POTENTIAL_ID" type="NUMBER(19,0)"/>
+            <column name="REFERRER_TASK_ID" type="VARCHAR2(24)"/>
+            <column name="VALIDITY_START_DATE" type="TIMESTAMP(6)"/>
+            <column name="VALIDITY_END_DATE" type="TIMESTAMP(6)"/>
+            <column name="CONTACT_ID" type="NUMBER(19,0)"/>
+            <column name="CONTACT_NAME" type="VARCHAR2(100)"/>
+            <column name="WEIGHT" type="NUMBER(12,2)"/>
+            <column name="LDM" type="NUMBER(12,2)"/>
+            <column name="VOLUME" type="NUMBER(12,2)"/>
+            <column name="PAY_WEIGHT" type="NUMBER(12,2)"/>
+            <column name="CUSTOMS_ID" type="NUMBER(19,0)"/>
+            <column name="PAYMENT_RULE_ID" type="NUMBER(19,0)"/>
+        </createTable>
+
+        <addNotNullConstraint tableName="CRM_SPOT_QUOTE" columnName="VALIDITY_START_DATE" />
+        <addNotNullConstraint tableName="CRM_SPOT_QUOTE" columnName="VALIDITY_END_DATE" />
+
+        <addForeignKeyConstraint baseTableName="CRM_SPOT_QUOTE" baseColumnNames="QUOTE_ID"
+                                 constraintName="FK_CRM_SPOT_QUOTE" referencedTableName="CRM_QUOTE"
+                                 referencedColumnNames="ID"/>
+
+    </changeSet>
+
+    <changeSet id="20180803 09:30" author="caputlu">
+
+        <createTable tableName="CRM_LONG_TERM_QUOTE">
+            <column name="QUOTE_ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CRM_LONG_TERM_QUOTE" />
+            </column>
+            <column name="CLOSE_DATE" type="TIMESTAMP(6)"/>
+            <column name="CONTRACT_START_DATE" type="TIMESTAMP(6)"/>
+            <column name="CONTRACT_END_DATE" type="TIMESTAMP(6)"/>
+            <column name="OPERATION_START_DATE" type="TIMESTAMP(6)"/>
+            <column name="PRICE_AMOUNT" type="NUMBER(12,2)"/>
+            <column name="PRICE_CURRENCY" type="VARCHAR2(3)"/>
+            <column name="EXP_TURNOVER_AMOUNT" type="NUMBER(12,2)"/>
+            <column name="EXP_TURNOVER_CURRENCY" type="VARCHAR2(3)"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="CRM_LONG_TERM_QUOTE" baseColumnNames="QUOTE_ID"
+                                 constraintName="FK_CRM_LONG_TERM_QUOTE" referencedTableName="CRM_QUOTE"
+                                 referencedColumnNames="ID"/>
+
+    </changeSet>
+
+    <changeSet id="20180803 09:45" author="caputlu">
+
+        <createTable tableName="CRM_TENDER_QUOTE">
+            <column name="QUOTE_ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CRM_TENDER_QUOTE" />
+            </column>
+            <column name="CLOSE_DATE" type="TIMESTAMP(6)"/>
+            <column name="CONTRACT_START_DATE" type="TIMESTAMP(6)"/>
+            <column name="CONTRACT_END_DATE" type="TIMESTAMP(6)"/>
+            <column name="OPERATION_START_DATE" type="TIMESTAMP(6)"/>
+            <column name="INVITATION_DATE" type="TIMESTAMP(6)"/>
+            <column name="ROUND_TYPE" type="VARCHAR2(50)"/>
+            <column name="ROUND" type="NUMBER(1,0)"/>
+            <column name="RELATED_PEOPLE" type="VARCHAR2(300)"/>
+            <column name="PRICE_AMOUNT" type="NUMBER(12,2)"/>
+            <column name="PRICE_CURRENCY" type="VARCHAR2(3)"/>
+            <column name="EXP_TURNOVER_AMOUNT" type="NUMBER(12,2)"/>
+            <column name="EXP_TURNOVER_CURRENCY" type="VARCHAR2(3)"/>
+            <column name="PAYMENT_DUE_DAYS" type="NUMBER(3,0)"/>
+            <column name="PAYMENT_DESCRIPTION" type="VARCHAR2(2000)"/>
+            <column name="PRODUCT_TYPE" type="VARCHAR2(2000)"/>
+            <column name="TRANSPORTATION_TYPE" type="VARCHAR2(2000)"/>
+            <column name="EQUIPMENT_TYPE" type="VARCHAR2(2000)"/>
+            <column name="IMPORTANT_PRICE_ISSUES" type="VARCHAR2(2000)"/>
+            <column name="CONVERSION_FACTORS_LTL" type="VARCHAR2(2000)"/>
+            <column name="DIESEL_MECHANISM" type="VARCHAR2(2000)"/>
+            <column name="ADR_FRIGO_EXPRESS" type="VARCHAR2(2000)"/>
+            <column name="DEMURRAGE" type="VARCHAR2(2000)"/>
+            <column name="CANCELLATION" type="VARCHAR2(2000)"/>
+            <column name="KPI" type="VARCHAR2(2000)"/>
+            <column name="PENALTY" type="NUMBER(1,0)"/>
+            <column name="PENALTY_DETAIL" type="VARCHAR2(2000)"/>
+            <column name="LOAD_UNLOAD_FREE_TIMES" type="VARCHAR2(2000)"/>
+            <column name="STACKABILITY" type="VARCHAR2(2000)"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="CRM_TENDER_QUOTE" baseColumnNames="QUOTE_ID"
+                                 constraintName="FK_CRM_TENDER_QUOTE" referencedTableName="CRM_QUOTE"
+                                 referencedColumnNames="ID"/>
+
+    </changeSet>
+
+    <changeSet id="20180803 10:00" author="caputlu">
+
+        <createTable tableName="CRM_SPOT_PRODUCT">
+            <column name="PRODUCT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CRM_SPOT_PRODUCT" />
+            </column>
+            <column name="EARLIEST_READY_DATE" type="TIMESTAMP(6)"/>
+            <column name="LATEST_READY_DATE" type="TIMESTAMP(6)"/>
+            <column name="LOADING_TYPE" type="VARCHAR2(50)"/>
+            <column name="LOADING_COMPANY_ID" type="NUMBER(19,0)"/>
+            <column name="LOADING_COMPANY_NAME" type="VARCHAR2(150)"/>
+            <column name="LOADING_LOCATION_ID" type="NUMBER(19,0)"/>
+            <column name="LOADING_LOCATION_NAME" type="VARCHAR2(150)"/>
+            <column name="DELIVERY_TYPE" type="VARCHAR2(50)"/>
+            <column name="DELIVERY_COMPANY_ID" type="NUMBER(19,0)"/>
+            <column name="DELIVERY_COMPANY_NAME" type="VARCHAR2(150)"/>
+            <column name="DELIVERY_LOCATION_ID" type="NUMBER(19,0)"/>
+            <column name="DELIVERY_LOCATION_NAME" type="VARCHAR2(150)"/>
+            <column name="VEHICLE_COUNT" type="NUMBER(2,0)"/>
+        </createTable>
+
+        <addNotNullConstraint tableName="CRM_SPOT_PRODUCT" columnName="EARLIEST_READY_DATE" />
+        <addNotNullConstraint tableName="CRM_SPOT_PRODUCT" columnName="LATEST_READY_DATE" />
+
+        <addForeignKeyConstraint baseTableName="CRM_SPOT_PRODUCT" baseColumnNames="PRODUCT_ID"
+                                 constraintName="FK_CRM_SPOT_PRODUCT" referencedTableName="CRM_PRODUCT"
+                                 referencedColumnNames="ID"/>
+
+    </changeSet>
+
+
+    <changeSet id="20180803 10:30" author="caputlu">
+
+        <createTable tableName="CRM_BUNDLED_PRODUCT">
+            <column name="PRODUCT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CRM_BUNDLED_PRODUCT" />
+            </column>
+            <column name="UNIT_OF_MEASURE" type="VARCHAR2(20)"/>
+            <column name="QUANTITY" type="NUMBER(6,0)"/>
+            <column name="PRICE_ORG_AMOUNT" type="NUMBER(12,2)"/>
+            <column name="PRICE_ORG_CURRENCY" type="VARCHAR2(3)"/>
+            <column name="PRICE_EXC_AMOUNT" type="NUMBER(12,2)"/>
+            <column name="PRICE_EXC_CURRENCY" type="VARCHAR2(3)"/>
+            <column name="EXP_TURNOVER_ORG_AMOUNT" type="NUMBER(12,2)"/>
+            <column name="EXP_TURNOVER_ORG_CURRENCY" type="VARCHAR2(3)"/>
+            <column name="EXP_TURNOVER_EXC_AMOUNT" type="NUMBER(12,2)"/>
+            <column name="EXP_TURNOVER_EXC_CURRENCY" type="VARCHAR2(3)"/>
+            <column name="CUSTOMS_SERVICE_TYPE" type="VARCHAR2(20)"/>
+            <column name="CUSTOMS_OFFICE_ID" type="NUMBER(19,0)"/>
+            <column name="CUSTOMS_OFFICE_NAME" type="VARCHAR2(150)"/>
+        </createTable>
+
+        <addNotNullConstraint tableName="CRM_BUNDLED_PRODUCT" columnName="UNIT_OF_MEASURE" />
+        <addNotNullConstraint tableName="CRM_BUNDLED_PRODUCT" columnName="QUANTITY" />
+        <addNotNullConstraint tableName="CRM_BUNDLED_PRODUCT" columnName="EXP_TURNOVER_ORG_AMOUNT" />
+        <addNotNullConstraint tableName="CRM_BUNDLED_PRODUCT" columnName="EXP_TURNOVER_ORG_CURRENCY" />
+        <addNotNullConstraint tableName="CRM_BUNDLED_PRODUCT" columnName="EXP_TURNOVER_EXC_AMOUNT" />
+        <addNotNullConstraint tableName="CRM_BUNDLED_PRODUCT" columnName="EXP_TURNOVER_EXC_CURRENCY" />
+
+        <addForeignKeyConstraint baseTableName="CRM_BUNDLED_PRODUCT" baseColumnNames="PRODUCT_ID"
+                                 constraintName="FK_CRM_BUNDLED_PRODUCT" referencedTableName="CRM_PRODUCT"
+                                 referencedColumnNames="ID"/>
+
+    </changeSet>
+
+    <changeSet id="20180803 11:00" author="caputlu">
+
+        <createTable tableName="CRM_USER">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CRM_USER" />
+            </column>
+            <column name="NAME" type="VARCHAR2(100)"/>
+            <column name="DISPLAY_NAME" type="VARCHAR2(100)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <addNotNullConstraint tableName="CRM_USER" columnName="NAME" />
+        <addNotNullConstraint tableName="CRM_USER" columnName="DISPLAY_NAME" />
+
+    </changeSet>
+
+    <changeSet id="20180803 11:30" author="caputlu">
+        <createTable tableName="CRM_QUOTE_PEOPLE">
+            <column name="QUOTE_ID" type="Number(19, 0)"/>
+            <column name="USER_ID" type="Number(19, 0)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20181011 14:40" author="Eray Oral">
+        <createTable tableName="CRM_SPOT_QUOTE_PDF_SETTING">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_CRM_SPOT_QUOTE_PDF_SETTING"/>
+            </column>
+            <column name="LOCALE" type="VARCHAR2(10)"/>
+            <column name="ABOUT_COMPANY" type="VARCHAR2(4000)"/>
+            <column name="IMPORT_GENERAL_CONDITIONS" type="VARCHAR2(4000)"/>
+            <column name="EXPORT_GENERAL_CONDITIONS" type="VARCHAR2(4000)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20181011 14:41" author="Eray Oral">
+        <createSequence sequenceName="SEQ_CRM_SPOT_QUOTE_PDF_SETTING" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20181011 18:38" author="Eray Oral">
+        <dropColumn tableName="CRM_SPOT_QUOTE_PDF_SETTING" columnName="LOCALE"/>
+    </changeSet>
+
+    <changeSet id="20181011 18:39" author="Eray Oral">
+        <addColumn tableName="CRM_SPOT_QUOTE_PDF_SETTING">
+            <column name="LOCALE_ID" type="NUMBER(19,0)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20181011 18:40" author="Eray Oral">
+        <addColumn tableName="CRM_SPOT_QUOTE_PDF_SETTING">
+            <column name="LOCALE_ISO_CODE" type="VARCHAR2(10)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20181011 18:41" author="Eray Oral">
+        <addColumn tableName="CRM_SPOT_QUOTE_PDF_SETTING">
+            <column name="LOCALE_NAME" type="VARCHAR2(50)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20181011 18:55" author="Eray Oral">
+        <renameColumn tableName="CRM_SPOT_QUOTE_PDF_SETTING" oldColumnName="LOCALE_ID" newColumnName="LANGUAGE_ID"/>
+    </changeSet>
+
+    <changeSet id="20181011 18:56" author="Eray Oral">
+        <renameColumn tableName="CRM_SPOT_QUOTE_PDF_SETTING" oldColumnName="LOCALE_ISO_CODE" newColumnName="LANGUAGE_ISO_CODE"/>
+    </changeSet>
+
+    <changeSet id="20181011 18:57" author="Eray Oral">
+        <renameColumn tableName="CRM_SPOT_QUOTE_PDF_SETTING" oldColumnName="LOCALE_NAME" newColumnName="LANGUAGE_NAME"/>
+    </changeSet>
+
+    <changeSet id="20181012 11:08" author="Eray Oral">
+        <dropColumn tableName="CRM_SPOT_QUOTE_PDF_SETTING" columnName="ABOUT_COMPANY"/>
+    </changeSet>
+
+    <changeSet id="20181012 11:09" author="Eray Oral">
+        <dropColumn tableName="CRM_SPOT_QUOTE_PDF_SETTING" columnName="IMPORT_GENERAL_CONDITIONS"/>
+    </changeSet>
+
+    <changeSet id="20181012 11:10" author="Eray Oral">
+        <dropColumn tableName="CRM_SPOT_QUOTE_PDF_SETTING" columnName="EXPORT_GENERAL_CONDITIONS"/>
+    </changeSet>
+
+    <changeSet id="20181012 11:11" author="Eray Oral">
+        <addColumn tableName="CRM_SPOT_QUOTE_PDF_SETTING">
+            <column name="ABOUT_COMPANY" type="CLOB"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20181012 11:12" author="Eray Oral">
+        <addColumn tableName="CRM_SPOT_QUOTE_PDF_SETTING">
+            <column name="IMPORT_GENERAL_CONDITIONS" type="CLOB"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20181012 11:13" author="Eray Oral">
+        <addColumn tableName="CRM_SPOT_QUOTE_PDF_SETTING">
+            <column name="EXPORT_GENERAL_CONDITIONS" type="CLOB"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20181019 11:00" author="caputlu">
+
+        <createTable tableName="CRM_NOTE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CRM_NOTE" />
+            </column>
+            <column name="QUOTE_ID" type="NUMBER(19,0)"/>
+            <column name="NOTE_ID" type="VARCHAR2(50)"/>
+            <column name="NOTE_TYPE_CODE" type="VARCHAR2(50)"/>
+            <column name="NOTE_TYPE_NAME" type="VARCHAR2(100)"/>
+            <column name="CREATED_BY" type="VARCHAR2(100)"/>
+            <column name="CREATE_DATE" type="TIMESTAMP(6)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+
+        <addNotNullConstraint tableName="CRM_NOTE" columnName="NOTE_ID" />
+        <addNotNullConstraint tableName="CRM_NOTE" columnName="NOTE_TYPE_CODE" />
+
+        <addForeignKeyConstraint baseTableName="CRM_NOTE" baseColumnNames="QUOTE_ID"
+                                 constraintName="FK_CRM_NOTE_QUOTE" referencedTableName="CRM_QUOTE"
+                                 referencedColumnNames="ID"/>
+
+        <createSequence sequenceName="SEQ_CRMNOTE" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20181019 11:15" author="caputlu">
+
+        <createTable tableName="CRM_DOCUMENT">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CRM_DOCUMENT" />
+            </column>
+            <column name="QUOTE_ID" type="NUMBER(19,0)"/>
+            <column name="DOCUMENT_ID" type="VARCHAR2(50)"/>
+            <column name="DOCUMENT_NAME" type="VARCHAR2(100)"/>
+            <column name="CREATED_BY" type="VARCHAR2(100)"/>
+            <column name="CREATE_DATE" type="TIMESTAMP(6)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+
+        <addNotNullConstraint tableName="CRM_DOCUMENT" columnName="DOCUMENT_ID" />
+        <addNotNullConstraint tableName="CRM_DOCUMENT" columnName="DOCUMENT_NAME" />
+
+        <addForeignKeyConstraint baseTableName="CRM_DOCUMENT" baseColumnNames="QUOTE_ID"
+                                 constraintName="FK_CRM_DOCUMENT_QUOTE" referencedTableName="CRM_QUOTE"
+                                 referencedColumnNames="ID"/>
+
+        <createSequence sequenceName="SEQ_CRMDOCUMENT" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20181023 16:43" author="Eray Oral">
+        <addColumn tableName="CRM_SPOT_QUOTE_PDF_SETTING">
+            <column name="SUBSIDIARY_ID" type="NUMBER(19,0)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20181023 16:44" author="Eray Oral">
+        <addColumn tableName="CRM_SPOT_QUOTE_PDF_SETTING">
+            <column name="SUBSIDIARY_NAME" type="VARCHAR2(50)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20181023 16:45" author="Eray Oral" context="dev">
+        <sql>UPDATE CRM_SPOT_QUOTE_PDF_SETTING SET SUBSIDIARY_ID = 7, SUBSIDIARY_NAME = 'EKOL TURKEY'</sql>
+    </changeSet>
+
+    <changeSet id="20181023 16:46" author="Eray Oral" context="test">
+        <sql>UPDATE CRM_SPOT_QUOTE_PDF_SETTING SET SUBSIDIARY_ID = 1952, SUBSIDIARY_NAME = 'EKOL TURKEY'</sql>
+    </changeSet>
+
+    <changeSet id="20181030 13:48" author="Eray Oral">
+        <addColumn tableName="CRM_SPOT_QUOTE_PDF_SETTING">
+            <column name="SERVICE_AREA" type="VARCHAR2(4)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20181030 13:49" author="Eray Oral">
+        <sql>UPDATE CRM_SPOT_QUOTE_PDF_SETTING SET SERVICE_AREA = 'ROAD'</sql>
+    </changeSet>
+
+    <changeSet id="20181227 10:00" author="caputlu" context="local">
+        <createTable tableName="REVISION_INFO">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UPDATED_TIME" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <addPrimaryKey tableName="REVISION_INFO" columnNames="ID" constraintName="PK_REVISION_INFO"/>
+        <createSequence sequenceName="SEQ_REVISIONINFO" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20181227 10:05" author="caputlu">
+        <createTable tableName="AUD_CRM_QUOTE">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="QUOTE_NUMBER" type="NUMBER(19,0)"/>
+            <column name="NAME" type="VARCHAR2(150)"/>
+            <column name="ACCOUNT_ID" type="NUMBER(19,0)"/>
+            <column name="ACCOUNT_NAME" type="VARCHAR2(150)"/>
+            <column name="ACCOUNT_LOCATION_ID" type="NUMBER(19,0)"/>
+            <column name="ACCOUNT_LOCATION_NAME" type="VARCHAR2(150)"/>
+            <column name="SUBSIDIARY_ID" type="NUMBER(19,0)"/>
+            <column name="SUBSIDIARY_NAME" type="VARCHAR2(150)"/>
+            <column name="SERVICE_AREA" type="VARCHAR2(20)"/>
+            <column name="TYPE" type="VARCHAR2(20)"/>
+            <column name="STATUS" type="VARCHAR2(20)"/>
+            <column name="CREATED_AT" type="TIMESTAMP(6)" />
+            <column name="CREATED_BY" type="VARCHAR2(100)" />
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_CRM_QUOTE" columnNames="ID, REV" constraintName="PK_AUD_CRM_QUOTE"/>
+        <addForeignKeyConstraint baseTableName="AUD_CRM_QUOTE" baseColumnNames="REV" constraintName="FK_AUDCRMQUOTE_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20181227 10:10" author="caputlu">
+        <createTable tableName="AUD_CRM_PRODUCT">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="QUOTE_ID" type="NUMBER(19,0)"/>
+            <column name="FROM_COUNTRY_ISO" type="VARCHAR2(2)"/>
+            <column name="FROM_COUNTRY_NAME" type="VARCHAR2(50)"/>
+            <column name="FROM_POINT_ID" type="NUMBER(19,0)"/>
+            <column name="FROM_POINT_NAME" type="VARCHAR2(150)"/>
+            <column name="TO_COUNTRY_ISO" type="VARCHAR2(2)"/>
+            <column name="TO_COUNTRY_NAME" type="VARCHAR2(50)"/>
+            <column name="TO_POINT_ID" type="NUMBER(19,0)"/>
+            <column name="TO_POINT_NAME" type="VARCHAR2(150)"/>
+            <column name="SHIPMENT_LOADING_TYPE" type="VARCHAR2(20)"/>
+            <column name="INCOTERM" type="VARCHAR2(20)"/>
+            <column name="INCOTERM_EXPLANATION" type="VARCHAR2(50)"/>
+            <column name="CALCULATION_TYPE" type="VARCHAR2(50)"/>
+            <column name="STATUS" type="VARCHAR2(20)"/>
+            <column name="EXISTENCE" type="VARCHAR2(20)"/>
+            <column name="LOST_REASON_ID" type="NUMBER(19,0)"/>
+            <column name="SERVICE_AREA" type="VARCHAR2(20)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_CRM_PRODUCT" columnNames="ID, REV" constraintName="PK_AUD_CRM_PRODUCT"/>
+        <addForeignKeyConstraint baseTableName="AUD_CRM_PRODUCT" baseColumnNames="REV" constraintName="FK_AUDCRMPRODUCT_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20181227 10:15" author="caputlu">
+        <createTable tableName="AUD_CRM_CUSTOMS">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="DEP_CLEARANCE_RESPONSIBLE" type="VARCHAR2(50)"/>
+            <column name="DEP_CLEARANCE_TYPE" type="VARCHAR2(50)"/>
+            <column name="DEP_LOCATION_ID" type="NUMBER(19,0)"/>
+            <column name="DEP_LOCATION_NAME" type="VARCHAR2(150)"/>
+            <column name="DEP_OFFICE_ID" type="NUMBER(19,0)"/>
+            <column name="DEP_OFFICE_NAME" type="VARCHAR2(150)"/>
+            <column name="ARR_CLEARANCE_RESPONSIBLE" type="VARCHAR2(50)"/>
+            <column name="ARR_CLEARANCE_TYPE" type="VARCHAR2(50)"/>
+            <column name="ARR_LOCATION_ID" type="NUMBER(19,0)"/>
+            <column name="ARR_LOCATION_NAME" type="VARCHAR2(150)"/>
+            <column name="ARR_OFFICE_ID" type="NUMBER(19,0)"/>
+            <column name="ARR_OFFICE_NAME" type="VARCHAR2(150)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_CRM_CUSTOMS" columnNames="ID, REV" constraintName="PK_AUD_CRM_CUSTOMS"/>
+        <addForeignKeyConstraint baseTableName="AUD_CRM_CUSTOMS" baseColumnNames="REV" constraintName="FK_AUDCRMCUSTOMS_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20181227 10:20" author="caputlu">
+        <createTable tableName="AUD_CRM_PACKAGE">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="QUOTE_ID" type="NUMBER(19,0)"/>
+            <column name="TYPE" type="VARCHAR2(20)"/>
+            <column name="QUANTITY" type="NUMBER(6,0)"/>
+            <column name="WIDTH" type="NUMBER(6,0)"/>
+            <column name="LENGTH" type="NUMBER(6,0)"/>
+            <column name="HEIGHT" type="NUMBER(6,0)"/>
+            <column name="WEIGHT" type="NUMBER(12,2)"/>
+            <column name="LDM" type="NUMBER(12,2)"/>
+            <column name="VOLUME" type="NUMBER(12,2)"/>
+            <column name="STACKABILITY_TYPE" type="VARCHAR2(20)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_CRM_PACKAGE" columnNames="ID, REV" constraintName="PK_AUD_CRM_PACKAGE"/>
+        <addForeignKeyConstraint baseTableName="AUD_CRM_PACKAGE" baseColumnNames="REV" constraintName="FK_AUDCRMPACKAGE_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20181227 10:25" author="caputlu">
+        <createTable tableName="AUD_CRM_PRICE">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="QUOTE_ID" type="NUMBER(19,0)"/>
+            <column name="TYPE" type="VARCHAR2(50)"/>
+            <column name="BILLING_ITEM" type="VARCHAR2(50)"/>
+            <column name="AMOUNT" type="NUMBER(12,2)"/>
+            <column name="CURRENCY" type="VARCHAR2(3)"/>
+            <column name="ADD_TO_FREIGHT" type="NUMBER(1,0)"/>
+            <column name="MIN_AMOUNT" type="NUMBER(12,2)"/>
+            <column name="CALCULATED_AMOUNT" type="NUMBER(12,2)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_CRM_PRICE" columnNames="ID, REV" constraintName="PK_AUD_CRM_PRICE"/>
+        <addForeignKeyConstraint baseTableName="AUD_CRM_PRICE" baseColumnNames="REV" constraintName="FK_AUDCRMPRICE_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20181227 10:30" author="caputlu">
+        <createTable tableName="AUD_CRM_LOAD">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="QUOTE_ID" type="NUMBER(19,0)"/>
+            <column name="TYPE" type="VARCHAR2(50)"/>
+            <column name="RISK_FACTOR" type="VARCHAR2(4)"/>
+            <column name="MIN_TEMPERATURE" type="NUMBER(5,0)"/>
+            <column name="MAX_TEMPERATURE" type="NUMBER(5,0)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_CRM_LOAD" columnNames="ID, REV" constraintName="PK_AUD_CRM_LOAD"/>
+        <addForeignKeyConstraint baseTableName="AUD_CRM_LOAD" baseColumnNames="REV" constraintName="FK_AUDCRMLOAD_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20181227 10:35" author="caputlu">
+        <createTable tableName="AUD_CRM_VEHICLE_REQ">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="QUOTE_ID" type="NUMBER(19,0)"/>
+            <column name="REQUIREMENT_CODE" type="VARCHAR2(40)"/>
+            <column name="REQUIREMENT_NAME" type="VARCHAR2(100)"/>
+            <column name="OPERATION_CODE" type="VARCHAR2(20)"/>
+            <column name="OPERATION_NAME" type="VARCHAR2(20)"/>
+            <column name="REMOVABLE" type="NUMBER(1,0)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_CRM_VEHICLE_REQ" columnNames="ID, REV" constraintName="PK_AUD_CRM_VEHICLE_REQ"/>
+        <addForeignKeyConstraint baseTableName="AUD_CRM_VEHICLE_REQ" baseColumnNames="REV" constraintName="FK_AUDCRMVEHICLEREQ_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20181227 10:40" author="caputlu">
+        <createTable tableName="AUD_CRM_CONTAINER_REQ">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="QUOTE_ID" type="NUMBER(19,0)"/>
+            <column name="VOLUME_CODE" type="VARCHAR2(40)"/>
+            <column name="VOLUME_NAME" type="VARCHAR2(100)"/>
+            <column name="CONTAINER_CODE" type="VARCHAR2(40)"/>
+            <column name="CONTAINER_NAME" type="VARCHAR2(100)"/>
+            <column name="QUANTITY" type="NUMBER(2,0)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_CRM_CONTAINER_REQ" columnNames="ID, REV" constraintName="PK_AUD_CRM_CONTAINER_REQ"/>
+        <addForeignKeyConstraint baseTableName="AUD_CRM_CONTAINER_REQ" baseColumnNames="REV" constraintName="FK_AUDCRMCONTAINERREQ_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20181227 10:45" author="caputlu">
+        <createTable tableName="AUD_CRM_SERVICE">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="QUOTE_ID" type="NUMBER(19,0)"/>
+            <column name="TYPE" type="VARCHAR2(50)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_CRM_SERVICE" columnNames="ID, REV" constraintName="PK_AUD_CRM_SERVICE"/>
+        <addForeignKeyConstraint baseTableName="AUD_CRM_SERVICE" baseColumnNames="REV" constraintName="FK_AUDCRMSERVICE_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20181227 10:50" author="caputlu">
+        <createTable tableName="AUD_CRM_LOST_REASON">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="COMPETITOR_ID" type="NUMBER(19,0)"/>
+            <column name="COMPETITOR_NAME" type="VARCHAR2(150)"/>
+            <column name="COMPETITOR_PRICE" type="NUMBER(12,2)"/>
+            <column name="COMPETITOR_PRICE_CURRENCY" type="VARCHAR2(3)"/>
+            <column name="REASON" type="VARCHAR2(150)"/>
+            <column name="REASON_DETAIL" type="VARCHAR2(150)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_CRM_LOST_REASON" columnNames="ID, REV" constraintName="PK_AUD_CRM_LOST_REASON"/>
+        <addForeignKeyConstraint baseTableName="AUD_CRM_LOST_REASON" baseColumnNames="REV" constraintName="FK_AUDCRMLOSTREASON_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20181227 10:55" author="caputlu">
+        <createTable tableName="AUD_CRM_PAYMENT_RULE">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="INVOICE_COMPANY_ID" type="NUMBER(19,0)"/>
+            <column name="INVOICE_COMPANY_NAME" type="VARCHAR2(150)"/>
+            <column name="INVOICE_LOCATION_ID" type="NUMBER(19,0)"/>
+            <column name="INVOICE_LOCATION_NAME" type="VARCHAR2(150)"/>
+            <column name="TYPE" type="VARCHAR2(50)"/>
+            <column name="PAYMENT_DUE_DAYS" type="NUMBER(3,0)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_CRM_PAYMENT_RULE" columnNames="ID, REV" constraintName="PK_AUD_CRM_PAYMENT_RULE"/>
+        <addForeignKeyConstraint baseTableName="AUD_CRM_PAYMENT_RULE" baseColumnNames="REV" constraintName="FK_AUDCRMPAYMENTRULE_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20181227 11:00" author="caputlu">
+        <createTable tableName="AUD_CRM_PRICE_DISCOUNT">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="PRICE_ID" type="NUMBER(19,0)"/>
+            <column name="SALES_PRICE_ID" type="NUMBER(19,0)"/>
+            <column name="NAME" type="VARCHAR2(255)"/>
+            <column name="AMOUNT" type="NUMBER(12,2)"/>
+            <column name="PERCENTAGE" type="NUMBER(12,2)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_CRM_PRICE_DISCOUNT" columnNames="ID, REV" constraintName="PK_AUD_CRM_PRICE_DISCOUNT"/>
+        <addForeignKeyConstraint baseTableName="AUD_CRM_PRICE_DISCOUNT" baseColumnNames="REV" constraintName="FK_AUDCRMPRICEDISCOUNT_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20181227 11:05" author="caputlu">
+        <createTable tableName="AUD_CRM_USER">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="NAME" type="VARCHAR2(100)"/>
+            <column name="DISPLAY_NAME" type="VARCHAR2(100)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_CRM_USER" columnNames="ID, REV" constraintName="PK_AUD_CRM_USER"/>
+        <addForeignKeyConstraint baseTableName="AUD_CRM_USER" baseColumnNames="REV" constraintName="FK_AUDCRMUSER_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20181227 11:10" author="caputlu">
+        <createTable tableName="AUD_CRM_QUOTE_PEOPLE">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="QUOTE_ID" type="Number(19, 0)"/>
+            <column name="USER_ID" type="Number(19, 0)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_CRM_QUOTE_PEOPLE" columnNames="QUOTE_ID, USER_ID, REV" constraintName="PK_AUD_CRM_QUOTE_PEOPLE"/>
+        <addForeignKeyConstraint baseTableName="AUD_CRM_QUOTE_PEOPLE" baseColumnNames="REV" constraintName="FK_AUDCRMQUOTEPEOPLE_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20181227 11:15" author="caputlu">
+        <createTable tableName="AUD_CRM_SPOT_QUOTE">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="QUOTE_ID" type="Number(19, 0)"/>
+            <column name="POTENTIAL_ID" type="NUMBER(19,0)"/>
+            <column name="REFERRER_TASK_ID" type="VARCHAR2(24)"/>
+            <column name="VALIDITY_START_DATE" type="TIMESTAMP(6)"/>
+            <column name="VALIDITY_END_DATE" type="TIMESTAMP(6)"/>
+            <column name="CONTACT_ID" type="NUMBER(19,0)"/>
+            <column name="CONTACT_NAME" type="VARCHAR2(100)"/>
+            <column name="WEIGHT" type="NUMBER(12,2)"/>
+            <column name="LDM" type="NUMBER(12,2)"/>
+            <column name="VOLUME" type="NUMBER(12,2)"/>
+            <column name="PAY_WEIGHT" type="NUMBER(12,2)"/>
+            <column name="CUSTOMS_ID" type="NUMBER(19,0)"/>
+            <column name="PAYMENT_RULE_ID" type="NUMBER(19,0)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_CRM_SPOT_QUOTE" columnNames="QUOTE_ID, REV" constraintName="PK_AUD_CRM_SPOT_QUOTE"/>
+        <addForeignKeyConstraint baseTableName="AUD_CRM_SPOT_QUOTE" baseColumnNames="REV" constraintName="FK_AUDCRMSPOTQUOTE_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20181227 11:20" author="caputlu">
+        <createTable tableName="AUD_CRM_LONG_TERM_QUOTE">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="QUOTE_ID" type="Number(19, 0)"/>
+            <column name="CLOSE_DATE" type="TIMESTAMP(6)"/>
+            <column name="CONTRACT_START_DATE" type="TIMESTAMP(6)"/>
+            <column name="CONTRACT_END_DATE" type="TIMESTAMP(6)"/>
+            <column name="OPERATION_START_DATE" type="TIMESTAMP(6)"/>
+            <column name="PRICE_AMOUNT" type="NUMBER(12,2)"/>
+            <column name="PRICE_CURRENCY" type="VARCHAR2(3)"/>
+            <column name="EXP_TURNOVER_AMOUNT" type="NUMBER(12,2)"/>
+            <column name="EXP_TURNOVER_CURRENCY" type="VARCHAR2(3)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_CRM_LONG_TERM_QUOTE" columnNames="QUOTE_ID, REV" constraintName="PK_AUD_CRM_LT_QUOTE"/>
+        <addForeignKeyConstraint baseTableName="AUD_CRM_LONG_TERM_QUOTE" baseColumnNames="REV" constraintName="FK_AUDCRMLTQUOTE_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20181227 11:25" author="caputlu">
+        <createTable tableName="AUD_CRM_TENDER_QUOTE">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="QUOTE_ID" type="Number(19, 0)"/>
+            <column name="CLOSE_DATE" type="TIMESTAMP(6)"/>
+            <column name="CONTRACT_START_DATE" type="TIMESTAMP(6)"/>
+            <column name="CONTRACT_END_DATE" type="TIMESTAMP(6)"/>
+            <column name="OPERATION_START_DATE" type="TIMESTAMP(6)"/>
+            <column name="INVITATION_DATE" type="TIMESTAMP(6)"/>
+            <column name="ROUND_TYPE" type="VARCHAR2(50)"/>
+            <column name="ROUND" type="NUMBER(1,0)"/>
+            <column name="RELATED_PEOPLE" type="VARCHAR2(300)"/>
+            <column name="PRICE_AMOUNT" type="NUMBER(12,2)"/>
+            <column name="PRICE_CURRENCY" type="VARCHAR2(3)"/>
+            <column name="EXP_TURNOVER_AMOUNT" type="NUMBER(12,2)"/>
+            <column name="EXP_TURNOVER_CURRENCY" type="VARCHAR2(3)"/>
+            <column name="PAYMENT_DUE_DAYS" type="NUMBER(3,0)"/>
+            <column name="PAYMENT_DESCRIPTION" type="VARCHAR2(2000)"/>
+            <column name="PRODUCT_TYPE" type="VARCHAR2(2000)"/>
+            <column name="TRANSPORTATION_TYPE" type="VARCHAR2(2000)"/>
+            <column name="EQUIPMENT_TYPE" type="VARCHAR2(2000)"/>
+            <column name="IMPORTANT_PRICE_ISSUES" type="VARCHAR2(2000)"/>
+            <column name="CONVERSION_FACTORS_LTL" type="VARCHAR2(2000)"/>
+            <column name="DIESEL_MECHANISM" type="VARCHAR2(2000)"/>
+            <column name="ADR_FRIGO_EXPRESS" type="VARCHAR2(2000)"/>
+            <column name="DEMURRAGE" type="VARCHAR2(2000)"/>
+            <column name="CANCELLATION" type="VARCHAR2(2000)"/>
+            <column name="KPI" type="VARCHAR2(2000)"/>
+            <column name="PENALTY" type="NUMBER(1,0)"/>
+            <column name="PENALTY_DETAIL" type="VARCHAR2(2000)"/>
+            <column name="LOAD_UNLOAD_FREE_TIMES" type="VARCHAR2(2000)"/>
+            <column name="STACKABILITY" type="VARCHAR2(2000)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_CRM_TENDER_QUOTE" columnNames="QUOTE_ID, REV" constraintName="PK_AUD_CRM_TENDER_QUOTE"/>
+        <addForeignKeyConstraint baseTableName="AUD_CRM_TENDER_QUOTE" baseColumnNames="REV" constraintName="FK_AUDCRMTENDERQUOTE_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20181227 11:30" author="caputlu">
+        <createTable tableName="AUD_CRM_SPOT_PRODUCT">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PRODUCT_ID" type="Number(19, 0)"/>
+            <column name="EARLIEST_READY_DATE" type="TIMESTAMP(6)"/>
+            <column name="LATEST_READY_DATE" type="TIMESTAMP(6)"/>
+            <column name="LOADING_TYPE" type="VARCHAR2(50)"/>
+            <column name="LOADING_COMPANY_ID" type="NUMBER(19,0)"/>
+            <column name="LOADING_COMPANY_NAME" type="VARCHAR2(150)"/>
+            <column name="LOADING_LOCATION_ID" type="NUMBER(19,0)"/>
+            <column name="LOADING_LOCATION_NAME" type="VARCHAR2(150)"/>
+            <column name="DELIVERY_TYPE" type="VARCHAR2(50)"/>
+            <column name="DELIVERY_COMPANY_ID" type="NUMBER(19,0)"/>
+            <column name="DELIVERY_COMPANY_NAME" type="VARCHAR2(150)"/>
+            <column name="DELIVERY_LOCATION_ID" type="NUMBER(19,0)"/>
+            <column name="DELIVERY_LOCATION_NAME" type="VARCHAR2(150)"/>
+            <column name="VEHICLE_COUNT" type="NUMBER(2,0)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_CRM_SPOT_PRODUCT" columnNames="PRODUCT_ID, REV" constraintName="PK_AUD_CRM_SPOT_PRODUCT"/>
+        <addForeignKeyConstraint baseTableName="AUD_CRM_SPOT_PRODUCT" baseColumnNames="REV" constraintName="FK_AUDCRMSPOTPRODUCT_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20181227 11:35" author="caputlu">
+        <createTable tableName="AUD_CRM_BUNDLED_PRODUCT">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PRODUCT_ID" type="Number(19, 0)"/>
+            <column name="UNIT_OF_MEASURE" type="VARCHAR2(20)"/>
+            <column name="QUANTITY" type="NUMBER(6,0)"/>
+            <column name="PRICE_ORG_AMOUNT" type="NUMBER(12,2)"/>
+            <column name="PRICE_ORG_CURRENCY" type="VARCHAR2(3)"/>
+            <column name="PRICE_EXC_AMOUNT" type="NUMBER(12,2)"/>
+            <column name="PRICE_EXC_CURRENCY" type="VARCHAR2(3)"/>
+            <column name="EXP_TURNOVER_ORG_AMOUNT" type="NUMBER(12,2)"/>
+            <column name="EXP_TURNOVER_ORG_CURRENCY" type="VARCHAR2(3)"/>
+            <column name="EXP_TURNOVER_EXC_AMOUNT" type="NUMBER(12,2)"/>
+            <column name="EXP_TURNOVER_EXC_CURRENCY" type="VARCHAR2(3)"/>
+            <column name="CUSTOMS_SERVICE_TYPE" type="VARCHAR2(20)"/>
+            <column name="CUSTOMS_OFFICE_ID" type="NUMBER(19,0)"/>
+            <column name="CUSTOMS_OFFICE_NAME" type="VARCHAR2(150)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_CRM_BUNDLED_PRODUCT" columnNames="PRODUCT_ID, REV" constraintName="PK_AUD_CRM_BUNDLED_PRODUCT"/>
+        <addForeignKeyConstraint baseTableName="AUD_CRM_BUNDLED_PRODUCT" baseColumnNames="REV" constraintName="FK_AUDCRMBUNDLEDPRODUCT_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20181227 18:00" author="caputlu" context="test">
+        <createSequence sequenceName="SEQ_REVISIONINFO" incrementBy="50" startValue="70000"/>
+    </changeSet>
+
+    <changeSet id="20190107 17:10" author="Eray Oral">
+        <addColumn tableName="CRM_SPOT_QUOTE">
+            <column name="CAMPAIGN_ID" type="VARCHAR2(24)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20190107 17:11" author="Eray Oral">
+        <addColumn tableName="AUD_CRM_SPOT_QUOTE">
+            <column name="CAMPAIGN_ID" type="VARCHAR2(24)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20190108 17:36" author="AliRiza.Bostanci">
+        <createTable tableName="CRM_QUOTE_ID_MAPPING">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_CRM_QUOTE_ID_MAPPING"/>
+            </column>
+            <column name="QUOTE_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="APPLICATION" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="APPLICATION_QUOTE_ID" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DELETED" type="NUMBER(1,0)" />
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)" />
+        </createTable>
+        <createSequence sequenceName="SEQ_CRMQUOTEIDMAPPING" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20190111 14:10" author="Eray Oral">
+        <dropColumn tableName="CRM_SPOT_QUOTE" columnName="CAMPAIGN_ID"/>
+    </changeSet>
+
+    <changeSet id="20190111 14:11" author="Eray Oral">
+        <dropColumn tableName="AUD_CRM_SPOT_QUOTE" columnName="CAMPAIGN_ID"/>
+    </changeSet>
+
+    <changeSet id="20190111 14:12" author="Eray Oral">
+        <addColumn tableName="CRM_PRICE">
+            <column name="CAMPAIGN_ID" type="VARCHAR2(24)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20190111 14:13" author="Eray Oral">
+        <addColumn tableName="AUD_CRM_PRICE">
+            <column name="CAMPAIGN_ID" type="VARCHAR2(24)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20190116 14:58:01" author="Eray Oral">
+        <addColumn tableName="CRM_SPOT_QUOTE">
+            <column name="HOLDING_FOR_COMPANY_TRANSFER" type="NUMBER(1,0)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20190116 14:58:02" author="Eray Oral">
+        <addColumn tableName="AUD_CRM_SPOT_QUOTE">
+            <column name="HOLDING_FOR_COMPANY_TRANSFER" type="NUMBER(1,0)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20190116 14:58:03" author="Eray Oral">
+        <addColumn tableName="CRM_SPOT_QUOTE">
+            <column name="HOLDING_FOR_QUOTE_TRANSFER" type="NUMBER(1,0)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20190116 14:58:04" author="Eray Oral">
+        <addColumn tableName="AUD_CRM_SPOT_QUOTE">
+            <column name="HOLDING_FOR_QUOTE_TRANSFER" type="NUMBER(1,0)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20190117 18:35:01" author="Eray Oral">
+        <sql>UPDATE CRM_SPOT_QUOTE SET HOLDING_FOR_COMPANY_TRANSFER = 0 WHERE HOLDING_FOR_COMPANY_TRANSFER IS NULL</sql>
+    </changeSet>
+
+    <changeSet id="20190117 18:35:02" author="Eray Oral">
+        <sql>UPDATE CRM_SPOT_QUOTE SET HOLDING_FOR_QUOTE_TRANSFER = 0 WHERE HOLDING_FOR_QUOTE_TRANSFER IS NULL</sql>
+    </changeSet>
+
+    <changeSet id="20190119 11:30:01" author="Eray Oral">
+        <dropColumn tableName="CRM_SPOT_QUOTE" columnName="HOLDING_FOR_QUOTE_TRANSFER"/>
+    </changeSet>
+
+    <changeSet id="20190119 11:30:02" author="Eray Oral">
+        <dropColumn tableName="AUD_CRM_SPOT_QUOTE" columnName="HOLDING_FOR_QUOTE_TRANSFER"/>
+    </changeSet>
+
+    <changeSet id="20190201 18:37:01" author="Eray Oral">
+        <dropNotNullConstraint tableName="CRM_PACKAGE" columnName="STACKABILITY_TYPE"/>
+    </changeSet>
+
+    <changeSet id="20190211 18:03:01" author="Eray Oral">
+        <addColumn tableName="CRM_PACKAGE">
+            <column name="HANGING_GOODS_CATEGORY" type="VARCHAR2(20)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20190211 18:03:02" author="Eray Oral">
+        <addColumn tableName="AUD_CRM_PACKAGE">
+            <column name="HANGING_GOODS_CATEGORY" type="VARCHAR2(20)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20190212 13:47:01" author="Eray Oral">
+        <createTable tableName="CRM_HANGING_GOODS_CATEGORY">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_CRM_HANGING_GOODS_CATEGORY"/>
+            </column>
+            <column name="CODE" type="VARCHAR2(20)"/>
+            <column name="NAME" type="VARCHAR2(20)"/>
+            <column name="DELETED" type="NUMBER(1,0)" />
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)" />
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20190212 13:47:02" author="Eray Oral">
+        <sql>
+            INSERT INTO CRM_HANGING_GOODS_CATEGORY (ID, CODE, NAME, DELETED, LAST_UPDATED, LAST_UPDATED_BY)
+            VALUES (1, '1+1 LEVEL', '1+1 LEVEL', 0, SYSTIMESTAMP, 'eray.oral');
+        </sql>
+    </changeSet>
+
+    <changeSet id="20190212 13:47:03" author="Eray Oral">
+        <sql>
+            INSERT INTO CRM_HANGING_GOODS_CATEGORY (ID, CODE, NAME, DELETED, LAST_UPDATED, LAST_UPDATED_BY)
+            VALUES (2, '2+1 LEVEL', '2+1 LEVEL', 0, SYSTIMESTAMP, 'eray.oral');
+        </sql>
+    </changeSet>
+
+    <changeSet id="20190212 13:47:04" author="Eray Oral">
+        <sql>
+            INSERT INTO CRM_HANGING_GOODS_CATEGORY (ID, CODE, NAME, DELETED, LAST_UPDATED, LAST_UPDATED_BY)
+            VALUES (3, '1 LEVEL', '1 LEVEL', 0, SYSTIMESTAMP, 'eray.oral');
+        </sql>
+    </changeSet>
+
+    <changeSet id="20190212 13:47:05" author="Eray Oral">
+        <sql>
+            INSERT INTO CRM_HANGING_GOODS_CATEGORY (ID, CODE, NAME, DELETED, LAST_UPDATED, LAST_UPDATED_BY)
+            VALUES (4, '2 LEVEL', '2 LEVEL', 0, SYSTIMESTAMP, 'eray.oral');
+        </sql>
+    </changeSet>
+
+    <changeSet id="20190212 13:47:06" author="Eray Oral">
+        <sql>
+            INSERT INTO CRM_HANGING_GOODS_CATEGORY (ID, CODE, NAME, DELETED, LAST_UPDATED, LAST_UPDATED_BY)
+            VALUES (5, '3 LEVEL', '3 LEVEL', 0, SYSTIMESTAMP, 'eray.oral');
+        </sql>
+    </changeSet>
+
+    <changeSet id="20190212 13:47:07" author="Eray Oral">
+        <sql>
+            INSERT INTO CRM_HANGING_GOODS_CATEGORY (ID, CODE, NAME, DELETED, LAST_UPDATED, LAST_UPDATED_BY)
+            VALUES (6, '4 LEVEL', '4 LEVEL', 0, SYSTIMESTAMP, 'eray.oral');
+        </sql>
+    </changeSet>
+
+    <changeSet id="20190212 13:47:08" author="Eray Oral">
+        <addColumn tableName="CRM_PACKAGE">
+            <column name="HANGING_GOODS_CATEGORY_ID" type="NUMBER(19,0)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20190212 13:47:09" author="Eray Oral">
+        <addColumn tableName="AUD_CRM_PACKAGE">
+            <column name="HANGING_GOODS_CATEGORY_ID" type="NUMBER(19,0)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20190212 13:47:10" author="Eray Oral">
+        <sql>UPDATE CRM_PACKAGE SET HANGING_GOODS_CATEGORY_ID = 1 WHERE HANGING_GOODS_CATEGORY = '_1_PLUS_1_LEVEL';</sql>
+    </changeSet>
+
+    <changeSet id="20190212 13:47:11" author="Eray Oral">
+        <sql>UPDATE CRM_PACKAGE SET HANGING_GOODS_CATEGORY_ID = 2 WHERE HANGING_GOODS_CATEGORY = '_2_PLUS_1_LEVEL';</sql>
+    </changeSet>
+
+    <changeSet id="20190212 13:47:12" author="Eray Oral">
+        <sql>UPDATE CRM_PACKAGE SET HANGING_GOODS_CATEGORY_ID = 3 WHERE HANGING_GOODS_CATEGORY = '_1_LEVEL';</sql>
+    </changeSet>
+
+    <changeSet id="20190212 13:47:13" author="Eray Oral">
+        <sql>UPDATE CRM_PACKAGE SET HANGING_GOODS_CATEGORY_ID = 4 WHERE HANGING_GOODS_CATEGORY = '_2_LEVEL';</sql>
+    </changeSet>
+
+    <changeSet id="20190212 13:47:14" author="Eray Oral">
+        <sql>UPDATE CRM_PACKAGE SET HANGING_GOODS_CATEGORY_ID = 5 WHERE HANGING_GOODS_CATEGORY = '_3_LEVEL';</sql>
+    </changeSet>
+
+    <changeSet id="20190212 13:47:15" author="Eray Oral">
+        <sql>UPDATE CRM_PACKAGE SET HANGING_GOODS_CATEGORY_ID = 6 WHERE HANGING_GOODS_CATEGORY = '_4_LEVEL';</sql>
+    </changeSet>
+
+    <changeSet id="20190212 13:47:16" author="Eray Oral">
+        <sql>UPDATE AUD_CRM_PACKAGE SET HANGING_GOODS_CATEGORY_ID = 1 WHERE HANGING_GOODS_CATEGORY = '_1_PLUS_1_LEVEL';</sql>
+    </changeSet>
+
+    <changeSet id="20190212 13:47:17" author="Eray Oral">
+        <sql>UPDATE AUD_CRM_PACKAGE SET HANGING_GOODS_CATEGORY_ID = 2 WHERE HANGING_GOODS_CATEGORY = '_2_PLUS_1_LEVEL';</sql>
+    </changeSet>
+
+    <changeSet id="20190212 13:47:18" author="Eray Oral">
+        <sql>UPDATE AUD_CRM_PACKAGE SET HANGING_GOODS_CATEGORY_ID = 3 WHERE HANGING_GOODS_CATEGORY = '_1_LEVEL';</sql>
+    </changeSet>
+
+    <changeSet id="20190212 13:47:19" author="Eray Oral">
+        <sql>UPDATE AUD_CRM_PACKAGE SET HANGING_GOODS_CATEGORY_ID = 4 WHERE HANGING_GOODS_CATEGORY = '_2_LEVEL';</sql>
+    </changeSet>
+
+    <changeSet id="20190212 13:47:20" author="Eray Oral">
+        <sql>UPDATE AUD_CRM_PACKAGE SET HANGING_GOODS_CATEGORY_ID = 5 WHERE HANGING_GOODS_CATEGORY = '_3_LEVEL';</sql>
+    </changeSet>
+
+    <changeSet id="20190212 13:47:21" author="Eray Oral">
+        <sql>UPDATE AUD_CRM_PACKAGE SET HANGING_GOODS_CATEGORY_ID = 6 WHERE HANGING_GOODS_CATEGORY = '_4_LEVEL';</sql>
+    </changeSet>
+
+    <changeSet id="20190212 13:47:22" author="Eray Oral">
+        <dropColumn tableName="CRM_PACKAGE" columnName="HANGING_GOODS_CATEGORY"/>
+    </changeSet>
+
+    <changeSet id="20190212 13:47:23" author="Eray Oral">
+        <dropColumn tableName="AUD_CRM_PACKAGE" columnName="HANGING_GOODS_CATEGORY"/>
+    </changeSet>
+
+    <changeSet id="20190212 17:48:01" author="Eray Oral">
+        <addColumn tableName="CRM_HANGING_GOODS_CATEGORY">
+            <column name="COEFFICIENT" type="NUMBER(2,1)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20190212 17:48:02" author="Eray Oral">
+        <sql>UPDATE CRM_HANGING_GOODS_CATEGORY SET COEFFICIENT = 1.5 WHERE ID = 1;</sql>
+    </changeSet>
+
+    <changeSet id="20190212 17:48:03" author="Eray Oral">
+        <sql>UPDATE CRM_HANGING_GOODS_CATEGORY SET COEFFICIENT = 2.5 WHERE ID = 2;</sql>
+    </changeSet>
+
+    <changeSet id="20190212 17:48:04" author="Eray Oral">
+        <sql>UPDATE CRM_HANGING_GOODS_CATEGORY SET COEFFICIENT = 1 WHERE ID = 3;</sql>
+    </changeSet>
+
+    <changeSet id="20190212 17:48:05" author="Eray Oral">
+        <sql>UPDATE CRM_HANGING_GOODS_CATEGORY SET COEFFICIENT = 2 WHERE ID = 4;</sql>
+    </changeSet>
+
+    <changeSet id="20190212 17:48:06" author="Eray Oral">
+        <sql>UPDATE CRM_HANGING_GOODS_CATEGORY SET COEFFICIENT = 3 WHERE ID = 5;</sql>
+    </changeSet>
+
+    <changeSet id="20190212 17:48:07" author="Eray Oral">
+        <sql>UPDATE CRM_HANGING_GOODS_CATEGORY SET COEFFICIENT = 4 WHERE ID = 6;</sql>
+    </changeSet>
+    <changeSet id="20190227 16:20:00" author="Dogukan Sahinturk">
+        <dropNotNullConstraint tableName="CRM_BUNDLED_PRODUCT" columnName="QUANTITY" />
+        <dropNotNullConstraint tableName="CRM_BUNDLED_PRODUCT" columnName="EXP_TURNOVER_ORG_AMOUNT" />
+        <dropNotNullConstraint tableName="CRM_BUNDLED_PRODUCT" columnName="EXP_TURNOVER_EXC_AMOUNT" />
+        <dropNotNullConstraint tableName="CRM_BUNDLED_PRODUCT" columnName="EXP_TURNOVER_ORG_CURRENCY" />
+        <dropNotNullConstraint tableName="CRM_BUNDLED_PRODUCT" columnName="EXP_TURNOVER_EXC_CURRENCY" />
+    </changeSet>
+    <changeSet id="20190227 10:03:00" author="Dogukan Sahinturk">
+        <dropColumn tableName="CRM_TENDER_QUOTE" columnName="PENALTY" />
+    </changeSet>
+
+    <changeSet id="20190307 10:41:00" author="umut.serin">
+        <addColumn tableName="CRM_QUOTE">
+            <column name="QUOTE_OWNER" type="VARCHAR2(100)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20190307 10:41:01" author="umut.serin">
+        <sql>UPDATE CRM_QUOTE SET QUOTE_OWNER = CREATED_BY;</sql>
+    </changeSet>
+
+    <changeSet id="20190307 10:41:02" author="umut.serin">
+        <addNotNullConstraint tableName="CRM_QUOTE" columnName="QUOTE_OWNER" />
+    </changeSet>
+
+    <changeSet id="20190227 10:03:00" author="Dogukan Sahinturk">
+        <dropColumn tableName="CRM_TENDER_QUOTE" columnName="PENALTY" />
+    </changeSet>
+
+    <changeSet id="20190307 10:41:03" author="umut.serin">
+        <addColumn tableName="AUD_CRM_QUOTE">
+            <column name="QUOTE_OWNER" type="VARCHAR2(100)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20190308 17:41:00" author="umut.serin">
+        <addColumn tableName="CRM_PRICE">
+            <column name="RATE_TO_EURO" type="NUMBER(10,4)"/>
+        </addColumn>
+        <addColumn tableName="CRM_PRICE">
+            <column name="AMOUNT_TO_EURO" type="NUMBER(10,4)"/>
+        </addColumn>
+        <addColumn tableName="CRM_PRICE">
+            <column name="RATE_DATE" type="TIMESTAMP(6)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20190308 17:41:01" author="umut.serin">
+        <addColumn tableName="AUD_CRM_PRICE">
+            <column name="RATE_TO_EURO" type="NUMBER(10,4)"/>
+        </addColumn>
+        <addColumn tableName="AUD_CRM_PRICE">
+            <column name="AMOUNT_TO_EURO" type="NUMBER(10,4)"/>
+        </addColumn>
+        <addColumn tableName="AUD_CRM_PRICE">
+            <column name="RATE_DATE" type="TIMESTAMP(6)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20190311 11:41:00" author="umut.serin">
+        <dropColumn tableName="CRM_PRICE" columnName="RATE_TO_EURO" />
+        <dropColumn tableName="CRM_PRICE" columnName="AMOUNT_TO_EURO" />
+        <dropColumn tableName="CRM_PRICE" columnName="RATE_DATE" />
+    </changeSet>
+
+    <changeSet id="20190311 11:41:01" author="umut.serin">
+        <dropColumn tableName="AUD_CRM_PRICE" columnName="RATE_TO_EURO" />
+        <dropColumn tableName="AUD_CRM_PRICE" columnName="AMOUNT_TO_EURO" />
+        <dropColumn tableName="AUD_CRM_PRICE" columnName="RATE_DATE" />
+    </changeSet>
+
+    <changeSet id="20190311 11:42:00" author="umut.serin">
+        <addColumn tableName="CRM_PRICE">
+            <column name="EXCHANGE_CURRENCY" type="VARCHAR2(3 BYTE)"/>
+        </addColumn>
+        <addColumn tableName="CRM_PRICE">
+            <column name="EXCHANGE_AMOUNT" type="NUMBER(12,2)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20190311 11:42:01" author="umut.serin">
+        <addColumn tableName="AUD_CRM_PRICE">
+            <column name="EXCHANGE_CURRENCY" type="VARCHAR2(3 BYTE)"/>
+        </addColumn>
+        <addColumn tableName="AUD_CRM_PRICE">
+            <column name="EXCHANGE_AMOUNT" type="NUMBER(12,2)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20190314 11:14:01" author="Dogukan Sahinturk">
+        <addColumn tableName="CRM_SPOT_QUOTE">
+            <column name="QUANTITY" type="NUMBER(12,0)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20190314 11:14:02" author="Dogukan Sahinturk">
+        <addColumn tableName="AUD_CRM_SPOT_QUOTE">
+            <column name="QUANTITY" type="NUMBER(12,0)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20190314 15:23:01" author="Dogukan Sahinturk">
+        <sql> UPDATE CRM_SPOT_QUOTE SQ SET SQ.QUANTITY = (SELECT SUM(QUANTITY) FROM CRM_PACKAGE
+            WHERE DELETED = 0 AND QUOTE_ID = SQ.QUOTE_ID)
+            WHERE EXISTS (SELECT COUNT(*) FROM CRM_PACKAGE WHERE DELETED = 0 AND QUOTE_ID = SQ.QUOTE_ID ); </sql>
+    </changeSet>
+
+	<changeSet id="20190321 16:10" author="AliRiza.Bostanci">
+		<createTable tableName="CRM_QUOTE_USER">
+			<column name="CODE" type="VARCHAR2(255)" />
+			<column name="NAME" type="VARCHAR2(255)" />
+			<column name="QUOTE_ID" type="NUMBER(19,0)" />
+		</createTable>
+		
+		<createIndex tableName="CRM_QUOTE_USER" indexName="IDX_CQU_USER_CODE">
+			<column name="CODE"/>
+		</createIndex>
+		
+		<createIndex tableName="CRM_QUOTE_USER" indexName="IDX_CQU_QUOTE_ID">
+			<column name="QUOTE_ID"/>
+		</createIndex>
+	</changeSet>
+	
+	<changeSet id="20190321 16:50" author="AliRiza.Bostanci">
+		<createTable tableName="AUD_CRM_QUOTE_USER">
+			<column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+			<column name="SETORDINAL" type="NUMBER(3,0)" />
+			<column name="CODE" type="VARCHAR2(255)" />
+			<column name="NAME" type="VARCHAR2(255)" />
+			<column name="QUOTE_ID" type="NUMBER(19,0)" />
+		</createTable>
+		<addPrimaryKey tableName="AUD_CRM_QUOTE_USER" columnNames="QUOTE_ID, CODE, REV" constraintName="PK_AUD_CRM_QUOTE_USER"/>
+        <addForeignKeyConstraint baseTableName="AUD_CRM_QUOTE_USER" baseColumnNames="REV" constraintName="FK_AUDCRMQUOTEUSER_REV" referencedTableName="REVISION_INFO" referencedColumnNames="ID"/>
+	</changeSet>
+
+	<changeSet id="20190321 17:10" author="AliRiza.Bostanci">
+		<dropTable cascadeConstraints="true" tableName="AUD_CRM_QUOTE_PEOPLE" />
+		<dropTable cascadeConstraints="true" tableName="CRM_QUOTE_PEOPLE" />
+	</changeSet>
+
+    <changeSet id="20190401 09:41:01" author="Ertugrul Akbuga">
+        <addColumn tableName="CRM_USER">
+            <column name="FIRST_LEVEL" type="VARCHAR2(100)"/>
+        </addColumn>
+        <addColumn tableName="CRM_USER">
+            <column name="SECOND_LEVEL" type="VARCHAR2(100)"/>
+        </addColumn>
+        <addColumn tableName="CRM_USER">
+            <column name="THIRD_LEVEL" type="VARCHAR2(100)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20190401 11:01:01" author="Ertugrul Akbuga">
+        <dropTable cascadeConstraints="true" tableName="AUD_CRM_USER" />
+    </changeSet>
+
+    <changeSet id="20190408 11:13:00" author="Umut Serin">
+        <addColumn tableName="CRM_DOCUMENT">
+            <column name="INEFFACEABLE" type="NUMBER(1,0)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20190408 11:13:01" author="Umut Serin">
+        <sql> UPDATE CRM_DOCUMENT SET INEFFACEABLE = 0; </sql>
+    </changeSet>
+    
+    <changeSet id="20190410 12:33:00" author="Fulya Konçu">
+        <modifyDataType tableName="CRM_BUNDLED_PRODUCT" columnName="QUANTITY" newDataType="NUMBER(8)"/>
+        <modifyDataType tableName="AUD_CRM_BUNDLED_PRODUCT" columnName="QUANTITY" newDataType="NUMBER(8)"/>
+    </changeSet>
+    
+    <changeSet id="20190410 15:33:00" author="Fulya Konçu">
+		<createTable tableName="CRM_BUNDLE_PROD_VH_TYPE">
+			<column name="VEHICLE_TYPE" type="VARCHAR2(255)" />
+			<column name="PRODUCT_ID" type="NUMBER(19,0)" />
+		</createTable>
+		
+		<createIndex tableName="CRM_BUNDLE_PROD_VH_TYPE" indexName="IDX_BP_PRODUCT_ID">
+			<column name="PRODUCT_ID"/>
+		</createIndex>
+	</changeSet>
+	
+	<changeSet id="20190410 15:33:01" author="Fulya Konçu">
+		<createTable tableName="AUD_CRM_BUNDLE_PROD_VH_TYPE">
+			<column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+			<column name="SETORDINAL" type="NUMBER(3,0)" />
+			<column name="VEHICLE_TYPE" type="VARCHAR2(255)" />
+			<column name="PRODUCT_ID" type="NUMBER(19,0)" />
+		</createTable>
+		<addPrimaryKey tableName="AUD_CRM_BUNDLE_PROD_VH_TYPE" columnNames="PRODUCT_ID, VEHICLE_TYPE, REV" constraintName="PK_AUD_CRM_BUNDLE_PROD_VH_TYPE"/>
+        <addForeignKeyConstraint baseTableName="AUD_CRM_BUNDLE_PROD_VH_TYPE" baseColumnNames="REV" constraintName="FK_AUDCRMBUNDLEPRODVHTYPE_REV" referencedTableName="REVISION_INFO" referencedColumnNames="ID"/>
+	</changeSet>
+
+    <changeSet id="20190412 10:37" author="Ertugrul Akbuga">
+        <addColumn tableName="CRM_CUSTOMS">
+            <column name="DEP_COUNTRY_ISO" type="VARCHAR2(2)"/>
+            <column name="DEP_COUNTRY_NAME" type="VARCHAR2(50)"/>
+            <column name="DEP_POINT_ID" type="NUMBER(19,0)"/>
+            <column name="DEP_POINT_NAME" type="VARCHAR2(150)"/>
+            <column name="ARR_COUNTRY_ISO" type="VARCHAR2(2)"/>
+            <column name="ARR_COUNTRY_NAME" type="VARCHAR2(50)"/>
+            <column name="ARR_POINT_ID" type="NUMBER(19,0)"/>
+            <column name="ARR_POINT_NAME" type="VARCHAR2(150)"/>
+        </addColumn>
+        <addColumn tableName="AUD_CRM_CUSTOMS">
+            <column name="DEP_COUNTRY_ISO" type="VARCHAR2(2)"/>
+            <column name="DEP_COUNTRY_NAME" type="VARCHAR2(50)"/>
+            <column name="DEP_POINT_ID" type="NUMBER(19,0)"/>
+            <column name="DEP_POINT_NAME" type="VARCHAR2(150)"/>
+            <column name="ARR_COUNTRY_ISO" type="VARCHAR2(2)"/>
+            <column name="ARR_COUNTRY_NAME" type="VARCHAR2(50)"/>
+            <column name="ARR_POINT_ID" type="NUMBER(19,0)"/>
+            <column name="ARR_POINT_NAME" type="VARCHAR2(150)"/>
+        </addColumn>
+    </changeSet>
+    
+    <changeSet id="20190416 10:33:01" author="Fulya Konçu">
+    	<sql><![CDATA[UPDATE CRM_BUNDLE_PROD_VH_TYPE SET VEHICLE_TYPE = 'TRAILER' WHERE VEHICLE_TYPE = 'FULL_TRUCK' ]]></sql>
+    </changeSet>
+    
+     <changeSet id="20190424 09:52:03" author="fulya.koncu">
+        <addColumn tableName="CRM_QUOTE">
+            <column name="DEFAULT_INVOICE_COUNTRY" type="VARCHAR2(4)"/>
+        </addColumn>
+        <addColumn tableName="AUD_CRM_QUOTE">
+            <column name="DEFAULT_INVOICE_COUNTRY" type="VARCHAR2(4)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20190701 15:46" author="Dogukan Sahinturk">
+        <sql> UPDATE CRM_QUOTE SET SERVICE_AREA = 'DTR' WHERE SERVICE_AREA = 'DOMESTIC'; </sql>
+        <sql> UPDATE CRM_QUOTE SET SERVICE_AREA = 'CUSTOMS' WHERE SERVICE_AREA = 'CCL'; </sql>
+        <sql> UPDATE CRM_PRODUCT SET SERVICE_AREA = 'DTR' WHERE SERVICE_AREA = 'DOMESTIC'; </sql>
+        <sql> UPDATE CRM_PRODUCT SET SERVICE_AREA = 'CUSTOMS' WHERE SERVICE_AREA = 'CCL'; </sql>
+    </changeSet>
+
+    <changeSet id="20190703 10:07" author="Dogukan Sahinturk">
+        <sql> UPDATE CRM_PRICE SET BILLING_ITEM = 'DTR_FREIGHT' WHERE BILLING_ITEM='DOMESTIC_FREIGHT'</sql>
+    </changeSet>
+
+    <changeSet id="20190703 10:16" author="Dogukan Sahinturk">
+        <sql> UPDATE CRM_QUOTE SET SERVICE_AREA = 'CCL' WHERE SERVICE_AREA = 'CUSTOMS'; </sql>
+        <sql> UPDATE CRM_PRODUCT SET SERVICE_AREA = 'CCL' WHERE SERVICE_AREA = 'CUSTOMS'; </sql>
+    </changeSet>
+
+    <changeSet id="20190705 09:58" author="Dogukan Sahinturk">
+        <createTable tableName="CRM_BILLING_ITEM">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_CRM_BILLING_ITEM"/>
+            </column>
+            <column name="NAME" type="VARCHAR(100)"/>
+            <column name="DESCRIPTION" type="VARCHAR(150)"/>
+            <column name="CODE" type="VARCHAR(10)"/>
+            <column name="SERVICE_AREA" type="VARCHAR(10)"/>
+            <column name="DELETED" type="NUMBER(1,0)" />
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)" />
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20190705 12:09" author="Dogukan Sahinturk">
+        <sqlFile path="insert_billing_items.sql" encoding="utf8" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="20190705 14:46" author="Dogukan Sahinturk">
+        <dropColumn tableName="CRM_BILLING_ITEM" columnName="DELETED" />
+        <dropColumn tableName="CRM_BILLING_ITEM" columnName="DELETED_AT" />
+        <dropColumn tableName="CRM_BILLING_ITEM" columnName="LAST_UPDATED" />
+        <dropColumn tableName="CRM_BILLING_ITEM" columnName="LAST_UPDATED_BY" />
+    </changeSet>
+    
+    <changeSet id="20190725 15:15" author="Fulya.Koncu">
+        <createTable tableName="CRM_DOCUMENT_EMAIL">
+       		<column name="DOCUMENT_ID" type="NUMBER(19,0)" />
+       		<column name="EMAIL_ID" type="VARCHAR2(100)" />
+        </createTable>
+        <createIndex tableName="CRM_DOCUMENT_EMAIL" indexName="IDX_CRM_DOC_EMAIL_DOC_ID">
+			<column name="DOCUMENT_ID"/>
+		</createIndex>
+	</changeSet>
+	
+	 <changeSet id="20190802 13:35" author="Fulya Koncu">
+        <sql>  INSERT INTO CRM_BILLING_ITEM (ID, NAME, DESCRIPTION, CODE, SERVICE_AREA)
+            VALUES (62, 'TRANSIT_SERVICE_COST', 'Transit Service Cost',1405, 'ROAD');</sql>
+    </changeSet>
+    
+     <changeSet id="20190913 16:30:00" author="fulya.koncu">
+        <addColumn tableName="CRM_SPOT_QUOTE">
+            <column name="CHARGEABLE_WEIGHT" type="NUMBER(12,2)"/>
+        </addColumn>
+    </changeSet>
+         <changeSet id="20190913 17:50:00" author="fulya.koncu">
+        <addColumn tableName="AUD_CRM_SPOT_QUOTE">
+            <column name="CHARGEABLE_WEIGHT" type="NUMBER(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="20190919 16:50:00" author="fulya.koncu">
+        <addColumn tableName="CRM_QUOTE">
+            <column name="HOLDING_FOR_COMPANY_TRANSFER" type="NUMBER(1,0)"/>
+        </addColumn>
+        <addColumn tableName="AUD_CRM_QUOTE">
+            <column name="HOLDING_FOR_COMPANY_TRANSFER" type="NUMBER(1,0)"/>
+        </addColumn>
+        <sql><![CDATA[UPDATE CRM_QUOTE Q SET Q.HOLDING_FOR_COMPANY_TRANSFER = (SELECT S.HOLDING_FOR_COMPANY_TRANSFER FROM CRM_SPOT_QUOTE S WHERE Q.ID=S.QUOTE_ID );]]></sql>
+    </changeSet>
+    
+    <changeSet id="20191009 17:50:00" author="fulya.koncu">
+        <addColumn tableName="CRM_SPOT_PRODUCT">
+            <column name="LOADING_COUNTRY_ISO" type="VARCHAR2(2)"/>
+            <column name="LOADING_COUNTRY_NAME" type="VARCHAR2(50)"/>
+            <column name="LOADING_POINT_ID" type="NUMBER(19,0)"/>
+            <column name="LOADING_POINT_NAME" type="VARCHAR2(150)"/>
+            <column name="DELIVERY_COUNTRY_ISO" type="VARCHAR2(2)"/>
+            <column name="DELIVERY_COUNTRY_NAME" type="VARCHAR2(50)"/>
+            <column name="DELIVERY_POINT_ID" type="NUMBER(19,0)"/>
+            <column name="DELIVERY_POINT_NAME" type="VARCHAR2(150)"/>
+        </addColumn>
+        <addColumn tableName="AUD_CRM_SPOT_PRODUCT">
+             <column name="LOADING_COUNTRY_ISO" type="VARCHAR2(2)"/>
+            <column name="LOADING_COUNTRY_NAME" type="VARCHAR2(50)"/>
+            <column name="LOADING_POINT_ID" type="NUMBER(19,0)"/>
+            <column name="LOADING_POINT_NAME" type="VARCHAR2(150)"/>
+            <column name="DELIVERY_COUNTRY_ISO" type="VARCHAR2(2)"/>
+            <column name="DELIVERY_COUNTRY_NAME" type="VARCHAR2(50)"/>
+            <column name="DELIVERY_POINT_ID" type="NUMBER(19,0)"/>
+            <column name="DELIVERY_POINT_NAME" type="VARCHAR2(150)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="20191010 09:45" author="Fulya Koncu">
+        <sql>  INSERT INTO CRM_BILLING_ITEM (ID, NAME, DESCRIPTION, CODE, SERVICE_AREA)
+            VALUES (63, 'HEALTH_CERTIFICATION_COST', 'Health Certification Cost',1585, 'ROAD');</sql>
+    </changeSet>
+
+    <changeSet id="20191016 17:49" author="Dogukan Sahinturk">
+        <sqlFile path="insert_billing_items2.sql" encoding="utf8" relativeToChangelogFile="true"/>
+    </changeSet>
+    
+    <changeSet id="20191031 17:20" author="AliRiza.Bostanci">
+        <addColumn tableName="CRM_SPOT_QUOTE_PDF_SETTING">
+            <column name="N_ABOUT_COMPANY" type="NCLOB"/>
+            <column name="N_IMPORT_GENERAL_CONDITIONS" type="NCLOB"/>
+            <column name="N_EXPORT_GENERAL_CONDITIONS" type="NCLOB"/>
+        </addColumn>
+        
+        <sql><![CDATA[UPDATE CRM_SPOT_QUOTE_PDF_SETTING SET N_ABOUT_COMPANY=ABOUT_COMPANY, N_IMPORT_GENERAL_CONDITIONS=IMPORT_GENERAL_CONDITIONS,N_EXPORT_GENERAL_CONDITIONS=EXPORT_GENERAL_CONDITIONS]]></sql>
+        
+        <dropColumn tableName="CRM_SPOT_QUOTE_PDF_SETTING" columnName="ABOUT_COMPANY"/>
+        <dropColumn tableName="CRM_SPOT_QUOTE_PDF_SETTING" columnName="IMPORT_GENERAL_CONDITIONS"/>
+        <dropColumn tableName="CRM_SPOT_QUOTE_PDF_SETTING" columnName="EXPORT_GENERAL_CONDITIONS"/>
+        
+        <renameColumn tableName="CRM_SPOT_QUOTE_PDF_SETTING" oldColumnName="N_ABOUT_COMPANY" newColumnName="ABOUT_COMPANY"/>
+        <renameColumn tableName="CRM_SPOT_QUOTE_PDF_SETTING" oldColumnName="N_IMPORT_GENERAL_CONDITIONS" newColumnName="IMPORT_GENERAL_CONDITIONS"/>
+        <renameColumn tableName="CRM_SPOT_QUOTE_PDF_SETTING" oldColumnName="N_EXPORT_GENERAL_CONDITIONS" newColumnName="EXPORT_GENERAL_CONDITIONS"/>
+    </changeSet>
+    
+    <changeSet id="20191113 14:20" author="AliRiza.Bostanci">
+    	<createTable tableName="CRM_QUOTE_ATTRIBUTE">
+    		<column name="QUOTE_ID" type="NUMBER(19,0)"/>
+            <column name="ATTR_KEY" type="VARCHAR2(50)"/>
+            <column name="ATTR_VALUE" type="VARCHAR2(50)"/>
+    	</createTable>
+    	<createIndex tableName="CRM_QUOTE_ATTRIBUTE" indexName="IDX_CRM_QUOTE_ATTRIBUTE">
+			<column name="QUOTE_ID"/>
+		</createIndex>
+    </changeSet>
+    
+    <changeSet id="20191113 14:21" author="AliRiza.Bostanci">
+        <createTable tableName="AUD_CRM_QUOTE_ATTRIBUTE">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="QUOTE_ID" type="NUMBER(19,0)"/>
+            <column name="ATTR_KEY" type="VARCHAR2(50)"/>
+            <column name="ATTR_VALUE" type="VARCHAR2(50)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_CRM_QUOTE_ATTRIBUTE" columnNames="QUOTE_ID, REV" constraintName="PK_AUD_CRM_QUOTE_ATTRIBUTE"/>
+        <addForeignKeyConstraint baseTableName="AUD_CRM_QUOTE_ATTRIBUTE" baseColumnNames="REV" constraintName="FK_AUDCRMQUOTEATTRIBUTE_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+    
+    <changeSet id="20191125 17:00" author="AliRiza.Bostanci">
+    	<createTable tableName="CRM_QUOTE_ORDER_MAPPING">
+    		<column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_CRM_QUOTE_ORDER_MAPPING"/>
+            </column>
+    		<column name="QUOTE_ID" type="NUMBER(19,0)"/>
+    		<column name="ORDER_NUMBER" type="VARCHAR2(16)"/>
+            <column name="ORDER_STATUS_CODE" type="VARCHAR2(16)"/>
+            <column name="ORDER_STATUS_NAME" type="VARCHAR2(100)"/>
+    		<column name="ORDER_RELATION" type="VARCHAR2(16)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+    	</createTable>
+    	<createSequence sequenceName="SEQ_CRMQUOTEORDERMAPPING" incrementBy="50"/>
+    </changeSet>
+    
+    <changeSet id="20191126 09:00" author="AliRiza.Bostanci">
+    	<createTable tableName="CRM_PRICE_AUTHORIZATION">
+    		<column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_CRM_PRICE_AUTHORIZATION"/>
+            </column>
+    		<column name="PRICE_ID" type="NUMBER(19,0)"/>
+    		<column name="MINIMUM_AMOUNT" type="NUMBER(12,2)"/>
+            <column name="MINIMUM_CURRENCY" type="VARCHAR2(3)"/>
+    		<column name="CALCULATED_AMOUNT" type="NUMBER(12,2)"/>
+            <column name="CALCULATED_CURRENCY" type="VARCHAR2(3)"/>
+    		<column name="REQUESTED_AMOUNT" type="NUMBER(12,2)"/>
+            <column name="REQUESTED_CURRENCY" type="VARCHAR2(3)"/>
+    		<column name="APPROVED_AMOUNT" type="NUMBER(12,2)"/>
+            <column name="APPROVED_CURRENCY" type="VARCHAR2(3)"/>
+            <column name="REQUEST_BY" type="VARCHAR2(100)" />
+            <column name="REQUESTED_AT" type="TIMESTAMP(6)" />
+            <column name="CLOSED_BY" type="VARCHAR2(100)" />
+            <column name="CLOSED_AT" type="TIMESTAMP(6)" />
+            <column name="CLOSE_STATUS" type="VARCHAR2(20)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+    	</createTable>
+    	
+    	<createSequence sequenceName="SEQ_CRMPRICEAUTHORIZATION" incrementBy="50"/>
+    </changeSet>
+    
+    <changeSet id="20191127 11:39" author="Dogukan Sahinturk">
+        <addColumn tableName="CRM_QUOTE">
+            <column name="OPPORTUNITY_ID" type="NUMBER(19,0)"/>
+        </addColumn>
+        <addColumn tableName="AUD_CRM_QUOTE">
+            <column name="OPPORTUNITY_ID" type="NUMBER(19,0)"/>
+        </addColumn>
+    </changeSet>
+
+
+	<changeSet id="20191126 16:03" author="Fulya.Koncu">
+		<addColumn tableName="CRM_BUNDLED_PRODUCT">
+			<column name="COUNTRY_ISO" type="VARCHAR2(2)" />
+			<column name="COUNTRY_NAME" type="VARCHAR2(50)" />
+			<column name="POINT_ID" type="NUMBER(19,0)" />
+			<column name="POINT_NAME" type="VARCHAR2(150)" />
+		</addColumn>
+
+		<addColumn tableName="AUD_CRM_BUNDLED_PRODUCT">
+			<column name="COUNTRY_ISO" type="VARCHAR2(2)" />
+			<column name="COUNTRY_NAME" type="VARCHAR2(50)" />
+			<column name="POINT_ID" type="NUMBER(19,0)" />
+			<column name="POINT_NAME" type="VARCHAR2(150)" />
+		</addColumn>
+	</changeSet>
+
+	<changeSet id="20191126 16:04" author="Fulya.Koncu">
+		<dropNotNullConstraint
+			tableName="CRM_BUNDLED_PRODUCT" columnName="UNIT_OF_MEASURE" />
+	</changeSet>
+
+	<changeSet id="20191126 16:05" author="Fulya.Koncu">
+		<addColumn tableName="CRM_LONG_TERM_QUOTE">
+			<column name="BUSINESS_VOLUME_ID" type="NUMBER(19,0)" />
+		</addColumn>
+
+		<addColumn tableName="AUD_CRM_LONG_TERM_QUOTE">
+			<column name="BUSINESS_VOLUME_ID" type="NUMBER(19,0)" />
+		</addColumn>
+
+		<createTable tableName="CRM_BUSINESS_VOLUME">
+			<column name="ID" type="NUMBER(19,0)">
+				<constraints nullable="false" primaryKey="true"
+					primaryKeyName="PK_CRM_BUSINESS_VOLUME" />
+			</column>
+			<column name="INBOUND" type="VARCHAR2(255)" />
+			<column name="STORAGE" type="VARCHAR2(255)" />
+			<column name="OUTBOUND" type="VARCHAR2(255)" />
+			<column name="VAS" type="VARCHAR2(255)" />
+			<column name="SPOT" type="NUMBER(1,0)" />
+			<column name="LAST_UPDATED" type="TIMESTAMP(6)" />
+			<column name="LAST_UPDATED_BY" type="VARCHAR2(100)" />
+			<column name="DELETED" type="NUMBER(1,0)" />
+			<column name="DELETED_AT" type="TIMESTAMP(6)" />
+		</createTable>
+
+		<createSequence sequenceName="SEQ_CRMBUSINESSVOLUME"
+			incrementBy="50" />
+
+		<createTable tableName="AUD_CRM_BUSINESS_VOLUME">
+			<column name="REV" type="NUMBER(10,0)">
+				<constraints nullable="false" />
+			</column>
+			<column name="REVTYPE" type="NUMBER(3,0)">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="ID" type="NUMBER(19,0)" />
+			<column name="INBOUND" type="VARCHAR2(255)" />
+			<column name="STORAGE" type="VARCHAR2(255)" />
+			<column name="OUTBOUND" type="VARCHAR2(255)" />
+			<column name="VAS" type="VARCHAR2(255)" />
+			<column name="SPOT" type="NUMBER(1,0)" />
+			<column name="LAST_UPDATED" type="TIMESTAMP(6)" />
+			<column name="LAST_UPDATED_BY" type="VARCHAR2(100)" />
+			<column name="DELETED" type="NUMBER(1,0)" />
+			<column name="DELETED_AT" type="TIMESTAMP(6)" />
+		</createTable>
+
+		<addPrimaryKey tableName="AUD_CRM_BUSINESS_VOLUME"
+			columnNames="ID, REV"
+			constraintName="PK_AUD_CRM_BUSINESS_VOLUME" />
+		<addForeignKeyConstraint
+			baseTableName="AUD_CRM_BUSINESS_VOLUME" baseColumnNames="REV"
+			constraintName="FK_AUDCRMBUSINESSVOLUME_REV"
+			referencedTableName="REVISION_INFO" referencedColumnNames="ID" />
+	</changeSet>
+	
+	<changeSet id="20191203 11:30" author="Fulya.Koncu">
+		<modifyDataType tableName="CRM_BUSINESS_VOLUME" columnName="INBOUND" newDataType="VARCHAR2(255 CHAR)"/>
+		<modifyDataType tableName="CRM_BUSINESS_VOLUME" columnName="STORAGE" newDataType="VARCHAR2(255 CHAR)"/>
+		<modifyDataType tableName="CRM_BUSINESS_VOLUME" columnName="OUTBOUND" newDataType="VARCHAR2(255 CHAR)"/>
+		<modifyDataType tableName="CRM_BUSINESS_VOLUME" columnName="VAS" newDataType="VARCHAR2(255 CHAR)"/>
+		
+		<modifyDataType tableName="AUD_CRM_BUSINESS_VOLUME" columnName="INBOUND" newDataType="VARCHAR2(255 CHAR)"/>
+		<modifyDataType tableName="AUD_CRM_BUSINESS_VOLUME" columnName="STORAGE" newDataType="VARCHAR2(255 CHAR)"/>
+		<modifyDataType tableName="AUD_CRM_BUSINESS_VOLUME" columnName="OUTBOUND" newDataType="VARCHAR2(255 CHAR)"/>
+		<modifyDataType tableName="AUD_CRM_BUSINESS_VOLUME" columnName="VAS" newDataType="VARCHAR2(255 CHAR)"/>
+	</changeSet>
+	
+	<changeSet id="20191204 15:00" author="Fulya.Koncu">
+		<addColumn tableName="CRM_BUNDLED_PRODUCT">
+			<column name="CROSS_DOCK_ID" type="NUMBER(19,0)"/>
+            <column name="CROSS_DOCK_NAME" type="VARCHAR2(150)"/>
+       </addColumn>
+        
+       <addColumn tableName="AUD_CRM_BUNDLED_PRODUCT">
+            <column name="CROSS_DOCK_ID" type="NUMBER(19,0)"/>
+            <column name="CROSS_DOCK_NAME" type="VARCHAR2(150)"/>
+       </addColumn>
+	</changeSet>
+	
+	<changeSet id="20191211 09:00" author="AliRiza.Bostanci">
+		<addColumn tableName="CRM_QUOTE">
+			<column name="REQUESTED_DATE" type="TIMESTAMP(6)" />
+		</addColumn>
+	</changeSet>
+	<changeSet id="20191211 09:01" author="AliRiza.Bostanci">
+		<addColumn tableName="AUD_CRM_QUOTE">
+			<column name="REQUESTED_DATE" type="TIMESTAMP(6)" />
+		</addColumn>
+	</changeSet>
+
+    <changeSet id="20191212 15:31" author="Dogukan Sahinturk">
+        <sql>UPDATE CRM_QUOTE SET OPPORTUNITY_ID = NULL</sql>
+        <dropColumn tableName="CRM_QUOTE" columnName="OPPORTUNITY_ID"/>
+    </changeSet>
+    
+    <changeSet id="20191217 16:45" author="Fulya.Koncu">
+		<addColumn tableName="CRM_SPOT_PRODUCT">
+			<column name = "TRANSIT_TIME" type = "NUMBER(19,0)" />
+			<column name = "TRANSSHIPMENT_PORT_ID" type = "NUMBER(19,0)" />
+			<column name = "TRANSSHIPMENT_PORT_NAME" type = "VARCHAR2(150)" />
+		</addColumn>
+		
+		<addColumn tableName="AUD_CRM_SPOT_PRODUCT">
+			<column name = "TRANSIT_TIME" type = "NUMBER(19,0)" />
+			<column name = "TRANSSHIPMENT_PORT_ID" type = "NUMBER(19,0)" />
+			<column name = "TRANSSHIPMENT_PORT_NAME" type = "VARCHAR2(150)" />
+		</addColumn>
+	</changeSet>
+    
+    <changeSet id="20191218 14:15" author="AliRiza.Bostanci">
+    	<createTable tableName="CRM_SERVICE_TYPE">
+    		<column name="ID" type="VARCHAR2(100)">
+				<constraints nullable="false" primaryKey="true"
+					primaryKeyName="PK_CRM_SERVICE_TYPE" />
+			</column>
+			<column name="CODE" type="VARCHAR2(100)" />
+			<column name="NAME" type="VARCHAR2(100)" />
+			<column name="BILLING_ITEM_ID" type="NUMBER(19,0)" />
+			<column name="CATEGORY" type="VARCHAR2(16)" />
+			<column name="SERVICE_AREA" type="VARCHAR2(32)" />
+    	</createTable>
+
+		<addForeignKeyConstraint baseTableName="CRM_SERVICE_TYPE" baseColumnNames="BILLING_ITEM_ID"
+                                 constraintName="FK_SERVICE_TYPE_BILLING_ITEM" referencedTableName="CRM_BILLING_ITEM"
+                                 referencedColumnNames="ID"/>
+    	
+    	<createSequence sequenceName="SEQ_SERVICETYPE" incrementBy="50" />
+    </changeSet>
+    
+    <changeSet id="20191218 14:16" author="AliRiza.Bostanci">
+        <sqlFile path="insert_service_types.sql" encoding="utf8" relativeToChangelogFile="true"/>
+    </changeSet>
+    
+    <changeSet id="20191220 08:50" author="AliRiza.Bostanci">
+    	<createSequence sequenceName="SEQ_BILLINGITEM" incrementBy="50" startValue="100"/>
+    </changeSet>
+    
+    <changeSet id="20191226 10:07:00" author="Fulya.Koncu">
+    	<createTable tableName="CRM_OWNER_COMPANY">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CRM_OWNER_COMPANY" />
+            </column>
+            <column name="CODE" type="NUMBER(19,0)"/>
+            <column name="NAME" type="VARCHAR2(150)"/>
+            <column name="TYPE" type="VARCHAR2(20)"/>
+            <column name="CREATED_AT" type="TIMESTAMP(6)" />
+            <column name="CREATED_BY" type="VARCHAR2(100)" />
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+   
+        <createSequence sequenceName="SEQ_CRMOWNERCOMPANY" incrementBy="50"/>
+        
+        <createTable tableName="AUD_CRM_OWNER_COMPANY">
+			<column name="REV" type="NUMBER(10,0)">
+				<constraints nullable="false" />
+			</column>
+			<column name="REVTYPE" type="NUMBER(3,0)">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="ID" type="NUMBER(19,0)" />
+			<column name="CODE" type="NUMBER(19,0)"/>
+            <column name="NAME" type="VARCHAR2(150)"/>
+            <column name="TYPE" type="VARCHAR2(20)"/>
+			<column name="CREATED_AT" type="TIMESTAMP(6)" />
+            <column name="CREATED_BY" type="VARCHAR2(100)" />
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+            
+		</createTable>
+		
+		<addPrimaryKey tableName="AUD_CRM_OWNER_COMPANY"
+			columnNames="ID, REV"
+			constraintName="PK_AUD_CRM_OWNER_COMPANY" />
+		<addForeignKeyConstraint
+			baseTableName="AUD_CRM_OWNER_COMPANY" baseColumnNames="REV"
+			constraintName="FK_AUDCRMOWNERCOMPANY_REV"
+			referencedTableName="REVISION_INFO" referencedColumnNames="ID" />
+    </changeSet>
+    
+    <changeSet id="20191226 11:16:00" author="Fulya.Koncu">
+    	<modifyDataType tableName="CRM_OWNER_COMPANY" columnName="CODE" newDataType="VARCHAR2(150)"/>
+    	
+    	<modifyDataType tableName="AUD_CRM_OWNER_COMPANY" columnName="CODE" newDataType="VARCHAR2(150)"/>
+    </changeSet>
+    
+    <changeSet id="20191226 14:35:00" author="Fulya.Koncu">
+    	<addColumn tableName="CRM_PAYMENT_RULE">
+			<column name="OWNER_COMPANY_ID" type="NUMBER(19,0)" />
+		</addColumn>
+    	
+    	<addColumn tableName="AUD_CRM_PAYMENT_RULE">
+			<column name="OWNER_COMPANY_ID" type="NUMBER(19,0)" />
+		</addColumn>
+    	
+    </changeSet>
+    <changeSet id="20191227 14:35" author="Fulya.Koncu">
+        <sqlFile path="insert_owner_company_items.sql" encoding="utf8" relativeToChangelogFile="true"/>
+    </changeSet>
+    
+    <changeSet id="20200106 10:26" author="Fulya.Koncu">
+    	<renameTable oldTableName="CRM_OWNER_COMPANY" newTableName="CRM_SHIPOWNER_AIRLINE"/>
+    	<renameTable oldTableName="AUD_CRM_OWNER_COMPANY" newTableName="AUD_CRM_SHIPOWNER_AIRLINE"/>
+    </changeSet>
+	
+	<changeSet id="20200212 16:00" author="AliRiza.Bostanci">
+		<addColumn tableName="CRM_SPOT_PRODUCT">
+			<column name="COLLECTION_WH_ID" type="NUMBER(19,0)" />
+			<column name="COLLECTION_WH_NAME" type="VARCHAR2(150)" />
+			<column name="DELIVERY_WH_ID" type="NUMBER(19,0)" />
+			<column name="DELIVERY_WH_NAME" type="VARCHAR2(150)" />
+		</addColumn>
+		<addColumn tableName="AUD_CRM_SPOT_PRODUCT">
+			<column name="COLLECTION_WH_ID" type="NUMBER(19,0)" />
+			<column name="COLLECTION_WH_NAME" type="VARCHAR2(150)" />
+			<column name="DELIVERY_WH_ID" type="NUMBER(19,0)" />
+			<column name="DELIVERY_WH_NAME" type="VARCHAR2(150)" />
+		</addColumn>
+	</changeSet>
+	
+	<changeSet id="20200326 16:00" author="AliRiza.Bostanci">
+		<addColumn tableName="CRM_SPOT_PRODUCT">
+			<column name="COLLECTION_TARIFF_CODE" type="VARCHAR2(255)" />
+			<column name="COLLECTION_TARIFF_NAME" type="VARCHAR2(255)" />
+			<column name="DELIVERY_TARIFF_CODE" type="VARCHAR2(255)" />
+			<column name="DELIVERY_TARIFF_NAME" type="VARCHAR2(255)" />
+		</addColumn>
+		<addColumn tableName="AUD_CRM_SPOT_PRODUCT">
+			<column name="COLLECTION_TARIFF_CODE" type="VARCHAR2(255)" />
+			<column name="COLLECTION_TARIFF_NAME" type="VARCHAR2(255)" />
+			<column name="DELIVERY_TARIFF_CODE" type="VARCHAR2(255)" />
+			<column name="DELIVERY_TARIFF_NAME" type="VARCHAR2(255)" />
+		</addColumn>
+	</changeSet>
+	
+	<changeSet id="20200706 11:00" author="AliRiza.Bostanci">
+        <renameColumn tableName="CRM_NOTE" oldColumnName="CREATE_DATE" newColumnName="CREATED_AT"/>
+        <renameColumn tableName="CRM_DOCUMENT" oldColumnName="CREATE_DATE" newColumnName="CREATED_AT"/>
+    </changeSet>
+    
+    <changeSet id="20200713 11:24" author="AliRiza.Bostanci">
+    	<addColumn tableName="CRM_SPOT_QUOTE">
+    		<column name="VOLUME_COEFFICIENT" type="NUMBER(5,0)" />
+    		<column name="LDM_COEFFICIENT" type="NUMBER(5,0)" />
+    	</addColumn>
+    	<addColumn tableName="AUD_CRM_SPOT_QUOTE">
+    		<column name="VOLUME_COEFFICIENT" type="NUMBER(5,0)" />
+    		<column name="LDM_COEFFICIENT" type="NUMBER(5,0)" />
+    	</addColumn>
+    </changeSet>
+    
+    <changeSet id="20200713 11:25" author="AliRiza.Bostanci">
+    	<sql>
+    		<![CDATA[
+				update crm_spot_quote q 
+				set q.ldm_coefficient = 1750, 
+					q.volume_coefficient = 250 
+				where q.quote_id in (select distinct quote_id from crm_service s where s.type <> 'SPEEDY' and s.type <> 'SPEEDY_VAN' and deleted = 0);
+    		]]>
+    	</sql>
+    	<sql>
+    		<![CDATA[
+    			update crm_spot_quote q 
+   				set q.ldm_coefficient = 700, 
+    				q.volume_coefficient = 150 
+    			where q.quote_id in (select distinct quote_id from crm_service s where (s.type = 'SPEEDY' or s.type = 'SPEEDY_VAN') and deleted = 0);
+    		]]>
+    	</sql>
+    </changeSet>
+    
+</databaseChangeLog>
+

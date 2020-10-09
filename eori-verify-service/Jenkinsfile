@@ -1,0 +1,10 @@
+#!/usr/bin/env groovy
+import hudson.model.*
+
+@Library('jenkins-utils')
+import ekol.jenkins.NodejsStages
+
+node {
+    new NodejsStages(this).run()
+}
+

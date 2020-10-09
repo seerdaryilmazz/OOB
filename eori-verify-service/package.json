@@ -1,0 +1,23 @@
+{
+  "name": "eori-verify-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test-start": "forever start -a --uid 'eori-verify-service' app.js -p 3001",
+    "test-run": "mocha --recursive -R xunit test/test.js > test-reports.xml",
+    "test-stop": "forever stop eori-verify-service"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cheerio": "^0.22.0",
+    "express": "^4.14.0",
+    "request": "^2.79.0"
+  },
+  "devDependencies": {
+    "mocha": "^3.2.0",
+    "should": "^11.2.0",
+    "supertest": "^2.0.1"
+  }
+}

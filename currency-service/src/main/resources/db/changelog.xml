@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="20171108 15:06:01" author="Eray Oral">
+
+        <createTable tableName="EXCHANGE_RATE">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_EXCHANGE_RATE"/>
+            </column>
+
+            <column name="PUBLISHER" type="VARCHAR2(50)"/>
+
+            <column name="PUBLISH_DATE" type="TIMESTAMP(6)"/>
+
+            <column name="UNIT" type="NUMBER(10,0)"/>
+
+            <column name="FROM_CURRENCY" type="CHAR(3)"/>
+
+            <column name="TO_CURRENCY" type="CHAR(3)"/>
+
+            <column name="VALUE" type="NUMBER(19,9)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="DELETED_AT" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20171108 15:06:02" author="Eray Oral">
+        <createSequence sequenceName="SEQ_EXCHANGE_RATE" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20171110 11:50:01" author="Eray Oral">
+        <createIndex tableName="EXCHANGE_RATE" indexName="INDX_XRATE_PUB_PUBD">
+            <column name="PUBLISHER"/>
+            <column name="PUBLISH_DATE"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="20171110 11:50:02" author="Eray Oral">
+        <createIndex tableName="EXCHANGE_RATE" indexName="INDX_XRATE_PUB_TOCUR">
+            <column name="PUBLISHER"/>
+            <column name="TO_CURRENCY"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="20171110 11:50:03" author="Eray Oral">
+        <createIndex tableName="EXCHANGE_RATE" indexName="INDX_XRATE_PUB_PUBD_TOCUR">
+            <column name="PUBLISHER"/>
+            <column name="PUBLISH_DATE"/>
+            <column name="TO_CURRENCY"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="20180509 09:21:01" author="Eray Oral">
+        <addColumn tableName="EXCHANGE_RATE">
+            <column name="FOREX_BUYING_VALUE" type="NUMBER(19,9)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20180509 09:21:02" author="Eray Oral">
+        <addColumn tableName="EXCHANGE_RATE">
+            <column name="FOREX_SELLING_VALUE" type="NUMBER(19,9)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20180509 09:21:03" author="Eray Oral">
+        <addColumn tableName="EXCHANGE_RATE">
+            <column name="BANKNOTE_BUYING_VALUE" type="NUMBER(19,9)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20180509 09:21:04" author="Eray Oral">
+        <addColumn tableName="EXCHANGE_RATE">
+            <column name="BANKNOTE_SELLING_VALUE" type="NUMBER(19,9)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20190327 12:04:01" author="Eray Oral">
+        <createIndex tableName="EXCHANGE_RATE" indexName="INDX_XRATE_PUB_PUBD_FCUR_TCUR" unique="true">
+            <column name="PUBLISHER"/>
+            <column name="PUBLISH_DATE"/>
+            <column name="FROM_CURRENCY"/>
+            <column name="TO_CURRENCY"/>
+            <column name="DELETED"/>
+            <column name="DELETED_AT"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

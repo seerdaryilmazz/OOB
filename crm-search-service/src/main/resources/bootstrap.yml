@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: crm-search-service
+  cloud:
+    config:
+      uri: http://localhost:8090
+
+---
+spring:
+  profiles: dev
+  cloud:
+    config:
+      uri: http://10.1.70.92:8090
+
+---
+spring:
+  profiles: test
+  cloud:
+    config:
+      uri: http://10.1.69.156:8090
+
+---
+spring:
+  profiles: prod
+  cloud:
+    config:
+      uri: http://10.1.69.85:8090

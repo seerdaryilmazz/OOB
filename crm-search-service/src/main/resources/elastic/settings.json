@@ -1,0 +1,62 @@
+{
+	"analysis": {
+		"filter": {
+			"stemmer_filter": {
+				"type": "stemmer",
+				"name": "english"
+			},
+			"synonym_filter": {
+				"type": "synonym",
+				"ignore_case": "true",
+				"synonyms": [
+					"ltd,limited",
+					"sti,sirket",
+					"as,anonim sirketi",
+					"san,sanayi",
+					"tic,ticaret",
+					"oto,otomotiv"
+				],
+				"expand": "true"
+			},
+			"autocomplete_filter": {
+				"type": "edge_ngram",
+				"min_gram": 1,
+				"max_gram": 20
+			},
+			"shingle_filter": {
+				"type": "shingle",
+				"min_shingle_size": 2,
+     			"max_shingle_size": 3,
+				"output_unigrams": "true"
+			},
+			"no_space_filter": {
+			     "type": "pattern_replace",
+			     "pattern": " ",
+			     "replacement": ""
+		    }
+		},
+		"analyzer": {
+			"search_analyzer": {
+				"tokenizer": "standard",
+				"filter": [
+					"standard",
+					"lowercase",
+					"shingle_filter",
+					"no_space_filter",
+					"stemmer_filter",
+					"synonym_filter"
+				]
+			},
+			"autocomplete_analyzer": {
+				"tokenizer": "standard",
+				"filter": [
+					"standard",
+					"lowercase",
+					"autocomplete_filter",
+					"stemmer_filter",
+					"synonym_filter"
+				]
+			}
+		}
+	}
+}

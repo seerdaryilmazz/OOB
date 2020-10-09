@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <springProperty scope="global" name="facility" source="spring.application.name"/>
+
+    <include resource="oneorder-base.xml"/>
+
+    <springProfile name="local">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+    <springProfile name="dev">
+        <root level="WARN">
+            <appender-ref ref="DEV-GELF"/>
+        </root>
+    </springProfile>
+    <springProfile name="test">
+        <root level="WARN">
+            <appender-ref ref="TEST-GELF"/>
+        </root>
+    </springProfile>
+    <springProfile name="prod">
+        <root level="WARN">
+            <appender-ref ref="PROD-GELF"/>
+        </root>
+    </springProfile>
+</configuration>

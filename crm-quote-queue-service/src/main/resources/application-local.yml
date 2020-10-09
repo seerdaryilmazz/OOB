@@ -1,0 +1,38 @@
+server:
+  port: 8766
+
+spring:
+  data:
+    mongodb:
+      host: 10.1.70.92
+      port: 27017
+      database: crm-quote-queue
+      authentication-database: crm-quote-queue
+      mechanism: SCRAM-SHA-1
+  rabbitmq:
+    host: 10.1.70.92
+    port: 5672
+
+security:
+  host: 10.1.70.92
+  oauth2:
+    client:
+      checkTokenUri: http://${security.host}:9999/auth/oauth/check_token
+      accessTokenUri: http://${security.host}:9999/auth/oauth/token
+      userAuthorizationUri: http://${security.host}:9999/auth/oauth/authorize
+      clientId: oneorder
+      clientSecret: oneorder
+      scope: oneorder
+    resource:
+      userInfoUri: http://${security.host}:9999/auth/user
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://10.1.70.92:8761/eureka/
+
+boomi:
+  quadro:
+    endpoint: http://193.200.188.2:4091/ws/simple/createQuoteTestOOTest
+    username: oneorder@ekollojistik-ZM3E1W
+    password: 453830c7-64bf-47f7-9179-0ed458a03750

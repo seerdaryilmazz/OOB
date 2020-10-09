@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <springProperty scope="global" name="facility" source="spring.application.name"/>
+
+    <include resource="oneorder-base.xml"/>
+
+    <springProfile name="local">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+    <springProfile name="dev">
+        <root level="WARN">
+            <appender-ref ref="DEV-GELF"/>
+        </root>
+    </springProfile>
+    <springProfile name="test">
+        <root level="WARN">
+            <appender-ref ref="TEST-GELF"/>
+        </root>
+    </springProfile>
+    <springProfile name="prod">
+        <root level="WARN">
+            <appender-ref ref="PROD-GELF"/>
+        </root>
+    </springProfile>
+    <springProfile name="tos-prod">
+        <appender name="GELF" class="de.siegmar.logbackgelf.GelfUdpAppender">
+            <graylogHost>172.16.167.51</graylogHost>
+            <maxChunkSize>8192</maxChunkSize>
+            <useCompression>true</useCompression>
+            <layout class="de.siegmar.logbackgelf.GelfLayout">
+
+                <includeRawMessage>false</includeRawMessage>
+                <includeMarker>true</includeMarker>
+                <includeMdcData>false</includeMdcData>
+                <includeCallerData>true</includeCallerData>
+                <includeRootCauseData>true</includeRootCauseData>
+                <includeLevelName>true</includeLevelName>
+                <shortPatternLayout class="ch.qos.logback.classic.PatternLayout">
+                    <pattern>%m%nopex</pattern>
+                </shortPatternLayout>
+                <fullPatternLayout class="ch.qos.logback.classic.PatternLayout">
+                    <pattern>%m</pattern>
+                </fullPatternLayout>
+                <staticField>facility:discovery</staticField>
+
+            </layout>
+        </appender>
+        <root level="INFO">
+            <appender-ref ref="GELF"/>
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+</configuration>

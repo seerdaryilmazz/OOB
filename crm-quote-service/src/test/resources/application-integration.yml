@@ -1,0 +1,32 @@
+host: localhost
+
+eureka:
+  client:
+    enabled: false
+
+spring:
+  jpa:
+    show-sql: true
+  metrics:
+    influx:
+      enabled: false
+
+security:
+  ignored: /**
+  oauth2:
+    client:
+      checkTokenUri: http://${host}:9999/auth/oauth/check_token
+      accessTokenUri: http://${host}:9999/auth/oauth/token
+      userAuthorizationUri: http://${host}:9999/auth/oauth/authorize
+      clientId: oneorder
+      clientSecret: oneorder
+      scope: oneorder
+    resource:
+      userInfoUri: http://${host}:9999/auth/user
+
+oneorder:
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    jdbcUrl: jdbc:oracle:thin:@//localhost:${test-database.port}/xe
+    username: system
+    password: oracle

@@ -1,0 +1,236 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="20191119 09:38" author="Dogukan Sahinturk">
+        <createTable tableName="CRM_OPPORTUNITY">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CRMOPPORTUNITY"/>
+            </column>
+            <column name="OPPORTUNITY_NUMBER" type="NUMBER(19,0)"/>
+            <column name="STATUS" type="VARCHAR2(20)"/>
+            <column name="SERVICE_AREA_CODE" type="VARCHAR2(20)"/>
+            <column name="SERVICE_AREA_NAME" type="VARCHAR2(20)"/>
+            <column name="OPPORTUNITY_OWNER" type="VARCHAR2(100)"/>
+            <column name="CREATED_AT" type="TIMESTAMP(6)"/>
+            <column name="CREATED_BY" type="VARCHAR2(100)"/>
+            <column name="NAME" type="VARCHAR2(255)"/>
+            <column name="ACCOUNT_ID" type="NUMBER(19,0)"/>
+            <column name="ACCOUNT_NAME" type="VARCHAR2(150)"/>
+            <column name="ACCOUNT_LOCATION_ID" type="NUMBER(19,0)"/>
+            <column name="ACCOUNT_LOCATION_NAME" type="VARCHAR2(150)"/>
+            <column name="SUBSIDIARY_ID" type="NUMBER(19,0)"/>
+            <column name="SUBSIDIARY_NAME" type="VARCHAR2(150)"/>
+            <column name="EXP_TURNOVER_AMOUNT" type="NUMBER(12,2)"/>
+            <column name="EXP_TURNOVER_CURRENCY" type="VARCHAR2(3)"/>
+            <column name="ACT_TURNOVER_AMOUNT" type="NUMBER(12,2)"/>
+            <column name="ACT_TURNOVER_CURRENCY" type="VARCHAR2(3)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <addNotNullConstraint tableName="CRM_OPPORTUNITY" columnName="OPPORTUNITY_NUMBER"/>
+        <addNotNullConstraint tableName="CRM_OPPORTUNITY" columnName="STATUS"/>
+        <addNotNullConstraint tableName="CRM_OPPORTUNITY" columnName="SERVICE_AREA_CODE"/>
+        <addNotNullConstraint tableName="CRM_OPPORTUNITY" columnName="NAME"/>
+        <addNotNullConstraint tableName="CRM_OPPORTUNITY" columnName="ACCOUNT_ID"/>
+        <addNotNullConstraint tableName="CRM_OPPORTUNITY" columnName="ACCOUNT_LOCATION_ID"/>
+        <addNotNullConstraint tableName="CRM_OPPORTUNITY" columnName="SUBSIDIARY_ID"/>
+
+        <createSequence sequenceName="SEQ_CRMOPPORTUNITY" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20191119 09:39" author="Dogukan Sahinturk">
+        <createTable tableName="CRM_OPPORTUNITY_PRODUCT">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CRMOPPORTUNITYPRODUCT"/>
+            </column>
+            <column name="OPPORTUNITY_ID" type="NUMBER(19,0)"/>
+            <column name="FROM_COUNTRY_ISO" type="VARCHAR2(2)"/>
+            <column name="FROM_COUNTRY_NAME" type="VARCHAR2(50)"/>
+            <column name="FROM_POINT_ID" type="NUMBER(19,0)"/>
+            <column name="FROM_POINT_NAME" type="VARCHAR2(150)"/>
+            <column name="TO_COUNTRY_ISO" type="VARCHAR2(2)"/>
+            <column name="TO_COUNTRY_NAME" type="VARCHAR2(50)"/>
+            <column name="TO_POINT_ID" type="NUMBER(19,0)"/>
+            <column name="TO_POINT_NAME" type="VARCHAR2(150)"/>
+            <column name="EXISTENCE" type="VARCHAR2(20)"/>
+            <column name="FREQUENCY_TYPE" type="VARCHAR2(50)"/>
+            <column name="FREQUENCY" type="NUMBER(5,0)"/>
+            <column name="EXP_TURNOVER_AMOUNT" type="NUMBER(12,2)"/>
+            <column name="EXP_TURNOVER_CURRENCY" type="VARCHAR2(3)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="CRM_OPPORTUNITY_PRODUCT" baseColumnNames="OPPORTUNITY_ID"
+                                 constraintName="FK_PRODUCT" referencedTableName="CRM_OPPORTUNITY"
+                                 referencedColumnNames="ID"/>
+        <addNotNullConstraint tableName="CRM_OPPORTUNITY_PRODUCT" columnName="FROM_COUNTRY_ISO"/>
+        <addNotNullConstraint tableName="CRM_OPPORTUNITY_PRODUCT" columnName="TO_COUNTRY_ISO"/>
+        <addNotNullConstraint tableName="CRM_OPPORTUNITY_PRODUCT" columnName="EXISTENCE"/>
+
+        <createSequence sequenceName="SEQ_CRMOPPORTUNITYPRODUCT" incrementBy="50"/>
+    </changeSet>
+    
+    <changeSet id="20191121 18:05" author="Dogukan Sahinturk">
+        <createTable tableName="OPPORTUNITY_NOTE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_OPPORTUNITY_NOTE" />
+            </column>
+            <column name="OPPORTUNITY_ID" type="NUMBER(19,0)"/>
+            <column name="NOTE_ID" type="VARCHAR2(50)"/>
+            <column name="NOTE_TYPE_CODE" type="VARCHAR2(50)"/>
+            <column name="NOTE_TYPE_NAME" type="VARCHAR2(100)"/>
+            <column name="CREATED_BY" type="VARCHAR2(100)"/>
+            <column name="CREATE_DATE" type="TIMESTAMP(6)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <addNotNullConstraint tableName="OPPORTUNITY_NOTE" columnName="NOTE_ID" />
+        <addNotNullConstraint tableName="OPPORTUNITY_NOTE" columnName="NOTE_TYPE_CODE" />
+
+        <addForeignKeyConstraint baseTableName="OPPORTUNITY_NOTE" baseColumnNames="OPPORTUNITY_ID"
+                                 constraintName="FK_NOTE_OPPORTUNITY" referencedTableName="CRM_OPPORTUNITY"
+                                 referencedColumnNames="ID"/>
+
+        <createSequence sequenceName="SEQ_OPPORTUNITYNOTE" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20191121 18:06" author="Dogukan Sahinturk">
+        <createTable tableName="OPPORTUNITY_DOCUMENT">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_OPPORTUNITY_DOCUMENT" />
+            </column>
+            <column name="OPPORTUNITY_ID" type="NUMBER(19,0)"/>
+            <column name="DOCUMENT_ID" type="VARCHAR2(50)"/>
+            <column name="DOCUMENT_NAME" type="VARCHAR2(100)"/>
+            <column name="INEFFACEABLE" type="NUMBER(1,0)"/>
+            <column name="CREATED_BY" type="VARCHAR2(100)"/>
+            <column name="CREATE_DATE" type="TIMESTAMP(6)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <addNotNullConstraint tableName="OPPORTUNITY_DOCUMENT" columnName="DOCUMENT_ID" />
+        <addNotNullConstraint tableName="OPPORTUNITY_DOCUMENT" columnName="DOCUMENT_NAME" />
+
+        <addForeignKeyConstraint baseTableName="OPPORTUNITY_DOCUMENT" baseColumnNames="OPPORTUNITY_ID"
+                                 constraintName="FK_DOCUMENT_OPPORTUNITY" referencedTableName="CRM_OPPORTUNITY"
+                                 referencedColumnNames="ID"/>
+
+        <createSequence sequenceName="SEQ_OPPORTUNITYDOCUMENT" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20191129 17:14" author="Dogukan Sahinturk">
+        <createTable tableName="OPPORTUNITY_LOST_REASON">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_OPP_LOST_REASON" />
+            </column>
+            <column name="OPPORTUNITY_ID" type="NUMBER(19,0)"/>
+            <column name="COMPETITOR_ID" type="NUMBER(19,0)"/>
+            <column name="COMPETITOR_NAME" type="VARCHAR2(150)"/>
+            <column name="COMPETITOR_PRICE" type="NUMBER(12,2)"/>
+            <column name="COMPETITOR_PRICE_CURRENCY" type="VARCHAR2(3)"/>
+            <column name="REASON" type="VARCHAR2(150)"/>
+            <column name="REASON_DETAIL" type="VARCHAR2(150)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <addNotNullConstraint tableName="OPPORTUNITY_LOST_REASON" columnName="REASON" />
+        <createSequence sequenceName="SEQ_OPPLOSTREASON" incrementBy="50"/>
+        <addForeignKeyConstraint baseTableName="OPPORTUNITY_LOST_REASON" baseColumnNames="OPPORTUNITY_ID"
+                                 constraintName="FK_LOST_REASON_OPP" referencedTableName="CRM_OPPORTUNITY"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+    
+    <changeSet id="20191212 17:08" author="Dogukan Sahinturk">
+        <modifyDataType tableName="CRM_OPPORTUNITY" columnName="SERVICE_AREA_NAME" newDataType="VARCHAR2(30)"/>
+    </changeSet>
+
+    <changeSet id="20191225 09:51" author="Dogukan Sahinturk">
+        <renameColumn tableName="CRM_OPPORTUNITY" oldColumnName="ACT_TURNOVER_AMOUNT" newColumnName="COM_TURNOVER_AMOUNT"/>
+        <renameColumn tableName="CRM_OPPORTUNITY" oldColumnName="ACT_TURNOVER_CURRENCY" newColumnName="COM_TURNOVER_CURRENCY"/>
+    </changeSet>
+    
+    <changeSet id="20191230 11:12" author="Dogukan Sahinturk">
+        <addColumn tableName="CRM_OPPORTUNITY">
+            <column name="EXPECTED_QUOTE_DATE" type="TIMESTAMP(6)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20191230 13:33" author="Dogukan Sahinturk">
+        <addColumn tableName="CRM_OPPORTUNITY">
+            <column name="QUOTE_TURNOVER_AMOUNT" type="NUMBER(12,2)"/>
+            <column name="QUOTE_TURNOVER_CURRENCY" type="VARCHAR2(3)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20200107 16:30" author="Dogukan Sahinturk">
+        <dropColumn tableName="OPPORTUNITY_LOST_REASON" columnName="COMPETITOR_ID"/>
+        <dropColumn tableName="OPPORTUNITY_LOST_REASON" columnName="COMPETITOR_NAME"/>
+        <dropColumn tableName="OPPORTUNITY_LOST_REASON" columnName="COMPETITOR_PRICE"/>
+        <dropColumn tableName="OPPORTUNITY_LOST_REASON" columnName="COMPETITOR_PRICE_CURRENCY"/>
+        <addColumn tableName="OPPORTUNITY_LOST_REASON">
+            <column name="TYPE" type="VARCHAR2(30)"/>
+        </addColumn>
+        <dropNotNullConstraint tableName="OPPORTUNITY_LOST_REASON" columnName="REASON"/>
+        <renameTable oldTableName="OPPORTUNITY_LOST_REASON" newTableName="OPPORTUNITY_CLOSE_REASON"/>
+        <dropSequence sequenceName="SEQ_OPPLOSTREASON"/>
+        <createSequence sequenceName="SEQ_OPPCLOSEREASON" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20200108" author="Dogukan Sahinturk">
+        <dropNotNullConstraint tableName="CRM_OPPORTUNITY_PRODUCT" columnName="FROM_COUNTRY_ISO"/>
+        <dropNotNullConstraint tableName="CRM_OPPORTUNITY_PRODUCT" columnName="TO_COUNTRY_ISO"/>
+        <dropNotNullConstraint tableName="CRM_OPPORTUNITY_PRODUCT" columnName="EXISTENCE"/>
+    </changeSet>
+
+    <changeSet id="20200109 14:43" author="Dogukan Sahinturk">
+        <addColumn tableName="CRM_OPPORTUNITY_PRODUCT">
+            <column name="CUSTOMS_SERVICE_TYPE" type="VARCHAR2(20)"/>
+            <column name="CUSTOMS_OFFICE_ID" type="NUMBER(19,0)"/>
+            <column name="CUSTOMS_OFFICE_NAME" type="VARCHAR2(150)"/>
+            <column name="COUNTRY_ISO" type="VARCHAR2(2)"/>
+            <column name="COUNTRY_NAME" type="VARCHAR2(50)"/>
+            <column name="POINT_ID" type="NUMBER(19,0)"/>
+            <column name="POINT_NAME" type="VARCHAR2(150)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20200109 17:01" author="Dogukan Sahinturk">
+        <addColumn tableName="CRM_OPPORTUNITY_PRODUCT">
+            <column name="SERVICE_AREA" type="VARCHAR2(20)"/>
+        </addColumn>
+    </changeSet>
+    
+    <changeSet id="20200110 09:32" author="Dogukan Sahinturk">
+        <renameColumn tableName="CRM_OPPORTUNITY_PRODUCT" oldColumnName="EXISTENCE" newColumnName="EXISTENCE_TYPE"/>
+    </changeSet>
+
+    <changeSet id="20200114 13:28" author="Dogukan Sahinturk">
+        <createTable tableName="CRM_OPPORTUNITY_ATTRIBUTE">
+            <column name="OPPORTUNITY_ID" type="NUMBER(19,0)"/>
+            <column name="ATTR_KEY" type="VARCHAR2(50)"/>
+            <column name="ATTR_VALUE" type="VARCHAR2(50)"/>
+        </createTable>
+        <createIndex tableName="CRM_OPPORTUNITY_ATTRIBUTE" indexName="IDX_CRM_OPP_ATTRIBUTE">
+            <column name="OPPORTUNITY_ID"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>
