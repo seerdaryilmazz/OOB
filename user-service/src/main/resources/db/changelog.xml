@@ -1,0 +1,642 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+
+    <property name="DB_OWNER" value="USERMGR" context="local,dev"/>
+    <property name="DB_OWNER" value="ONEORDER" context="test,prod"/>
+    <property name="DB_OWNER" value="SYSTEM" context="integration"/>
+    <property name="DB_OWNER" value="NARTOS" context="tos-prod"/>
+    <property name="DB_OWNER" value="RORO" context="roro-test"/>
+
+
+    <changeSet id="20160413 09:35" author="kilimci">
+        <createTable tableName="USERS">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_USER" />
+            </column>
+            <column name="ACCOUNT_NAME" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FIRST_NAME" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LAST_NAME" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EMAIL" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="STATUS" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_USERS" incrementBy="50"/>
+
+        <createTable tableName="USER_GROUP">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_USER_GROUP" />
+            </column>
+            <column name="NAME" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PARENT_ID" type="NUMBER(19,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_USERGROUP" incrementBy="50"/>
+        <addForeignKeyConstraint baseTableName="USER_GROUP" baseColumnNames="PARENT_ID" constraintName="FK_USERGROUP_USERGROUP"
+                                 referencedTableName="USER_GROUP" referencedColumnNames="ID"/>
+
+        <createTable tableName="USER_GROUP_MEMBERSHIP">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_USER_GROUP_MEMBERSHIP" />
+            </column>
+            <column name="USER_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="USERGROUP_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_USERGROUPMEMBERSHIP" incrementBy="50"/>
+        <addForeignKeyConstraint baseTableName="USER_GROUP_MEMBERSHIP" baseColumnNames="USER_ID" constraintName="FK_USERGROUPMEM_USER"
+                                 referencedTableName="USERS" referencedColumnNames="ID"/>
+        <addForeignKeyConstraint baseTableName="USER_GROUP_MEMBERSHIP" baseColumnNames="USERGROUP_ID" constraintName="FK_USERGROUPMEM_USERGROUP"
+                                 referencedTableName="USER_GROUP" referencedColumnNames="ID"/>
+
+
+        <createTable tableName="PERMISSION">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_PERMISSION" />
+            </column>
+            <column name="USER_ID" type="NUMBER(19,0)" />
+            <column name="USERGROUP_ID" type="NUMBER(19,0)"/>
+            <column name="START_DATE" type="TIMESTAMP(6)" />
+            <column name="END_DATE" type="TIMESTAMP(6)" />
+            <column name="ACTIVE" type="NUMBER(1,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="URL_TO_PERMIT" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_PERMISSION" incrementBy="50"/>
+        <addForeignKeyConstraint baseTableName="PERMISSION" baseColumnNames="USER_ID" constraintName="FK_PERMISSION_USER"
+                                 referencedTableName="USERS" referencedColumnNames="ID"/>
+        <addForeignKeyConstraint baseTableName="PERMISSION" baseColumnNames="USERGROUP_ID" constraintName="FK_PERMISSION_USERGROUP"
+                                 referencedTableName="USER_GROUP" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20160423 16:30" author="kilimci">
+        <addColumn tableName="PERMISSION">
+            <column name="URL" type="VARCHAR2(255)"></column>
+        </addColumn>
+        <sql>update PERMISSION set URL = URL_TO_PERMIT</sql>
+        <dropColumn tableName="PERMISSION" columnName="URL_TO_PERMIT" />
+        <addNotNullConstraint tableName="PERMISSION" columnName="URL"/>
+    </changeSet>
+    <changeSet id="20160423 16:35" author="kilimci">
+        <addColumn tableName="PERMISSION">
+            <column name="PERMISSION_TYPE" type="VARCHAR2(20)"></column>
+        </addColumn>
+        <sql>update PERMISSION set PERMISSION_TYPE = 'DENY'</sql>
+        <addNotNullConstraint tableName="PERMISSION" columnName="PERMISSION_TYPE"/>
+    </changeSet>
+
+
+    <changeSet id="20160815 14:13:00" author="bverid">
+        <createTable tableName="UIMENU">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_UIMENU" />
+            </column>
+
+            <column name="PARENT_ID" type="NUMBER(19,0)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="CODE" type="VARCHAR2(20)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="NAME" type="VARCHAR2(255)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="URL" type="VARCHAR2(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <createSequence sequenceName="SEQ_UIMENU" incrementBy="50"/>
+
+        <addForeignKeyConstraint baseTableName="UIMENU" baseColumnNames="PARENT_ID" constraintName="FK_PARENTID_ID"
+                                 referencedTableName="UIMENU" referencedColumnNames="ID"/>
+
+    </changeSet>
+
+    <changeSet id="20160816 14:12:00" author="bverid">
+        <createTable tableName="USERGROUP_UIMENU">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_USERGROUP_UIMENU" />
+            </column>
+
+            <column name="uimenu_id" type="NUMBER(19,0)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="usergroup_id" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <createSequence sequenceName="SEQ_USERGROUP_UIMENU" incrementBy="50"/>
+
+        <addForeignKeyConstraint baseTableName="USERGROUP_UIMENU" baseColumnNames="UIMENU_ID" constraintName="FK_USER_GROUP_UIMENU_1"
+                                 referencedTableName="UIMENU" referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="USERGROUP_UIMENU" baseColumnNames="USERGROUP_ID" constraintName="FK_USER_GROUP_UIMENU_2"
+                                 referencedTableName="USER_GROUP" referencedColumnNames="ID"/>
+
+
+    </changeSet>
+
+    <changeSet id="20160906 09:30" author="bverid">
+    <addColumn tableName="USER_GROUP">
+        <column name="HOME_PAGE_URL" type="VARCHAR2(255)"></column>
+    </addColumn>
+    </changeSet>
+
+    <changeSet id="20160920 11:21:00" author="ozer">
+
+        <createTable tableName="TEAM">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TEAM" />
+            </column>
+
+            <column name="NAME" type="VARCHAR2(50)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <createSequence sequenceName="SEQ_TEAM" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20160921 09:31:00" author="ozer">
+
+        <createTable tableName="TEAM_MEMBER">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TEAM_MEMBER" />
+            </column>
+
+            <column name="TEAM_ID" type="NUMBER(19,0)"/>
+
+            <column name="USER_ID" type="NUMBER(19,0)"/>
+
+            <column name="START_DATE" type="DATE"/>
+
+            <column name="END_DATE" type="DATE"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <createSequence sequenceName="SEQ_TEAM_MEMBER" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20160921 10:24:00" author="ozer">
+
+        <dropColumn tableName="TEAM_MEMBER" columnName="START_DATE"/>
+
+        <dropColumn tableName="TEAM_MEMBER" columnName="END_DATE"/>
+
+        <addColumn tableName="TEAM_MEMBER">
+            <column name="START_DATE" type="TIMESTAMP(6)"/>
+            <column name="END_DATE" type="TIMESTAMP(6)"/>
+        </addColumn>
+
+    </changeSet>
+
+    <changeSet id="20160921 10:39:00" author="ozer">
+
+        <dropColumn tableName="TEAM_MEMBER" columnName="START_DATE"/>
+
+        <dropColumn tableName="TEAM_MEMBER" columnName="END_DATE"/>
+
+        <addColumn tableName="TEAM_MEMBER">
+            <column name="START_DATE" type="DATE"/>
+            <column name="END_DATE" type="DATE"/>
+        </addColumn>
+
+    </changeSet>
+
+    <changeSet id="20160921 17:28:00" author="ozer">
+
+        <addColumn tableName="TEAM_MEMBER">
+            <column name="LEADER" type ="NUMBER(1,0)"/>
+        </addColumn>
+
+    </changeSet>
+
+    <changeSet id="20160928 09:14:00" author="ozer">
+
+        <createTable tableName="TEAM_TAG">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TEAM_TAG" />
+            </column>
+
+            <column name="TEAM_ID" type="NUMBER(19,0)"/>
+
+            <column name="TAG" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_TEAM_TAG" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20160928 09:27:00" author="ozer">
+
+        <addColumn tableName="TEAM_TAG">
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </addColumn>
+
+    </changeSet>
+
+    <changeSet id="20161110" author="Eray Oral">
+
+        <addColumn tableName="USERS">
+
+            <column name="TIME_ZONE_ID" type="VARCHAR2(100)" defaultValue="UTC">
+                <constraints nullable="false"/>
+            </column>
+
+        </addColumn>
+    </changeSet>
+
+
+    <changeSet id="20161226 17:00" author="kilimci">
+        <createTable tableName="COMPONENT_RULE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_COMPONENT_RULE" />
+            </column>
+            <column name="usergroup_id" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="COMPONENT_ID" type="VARCHAR2(100)"/>
+            <column name="APP_NAME" type="VARCHAR2(100)"/>
+            <column name="PERMISSION_TYPE" type="VARCHAR2(20)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_COMPONENTRULE" incrementBy="50"/>
+        <addForeignKeyConstraint baseTableName="COMPONENT_RULE" baseColumnNames="USERGROUP_ID" constraintName="FK_COMPONENTRULE_USERGROUP"
+                                 referencedTableName="USER_GROUP" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20161228 13:30" author="kilimci">
+        <createTable tableName="USER_GROUP_TAG">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_USER_GROUP_TAG" />
+            </column>
+            <column name="usergroup_id" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TAG" type="VARCHAR2(100)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_USERGROUP_TAG" incrementBy="50"/>
+        <addForeignKeyConstraint baseTableName="USER_GROUP_TAG" baseColumnNames="USERGROUP_ID" constraintName="FK_USERGROUPTAG_USERGROUP"
+                                 referencedTableName="USER_GROUP" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170208 14:26" author="Ozer Senturk">
+        <addColumn tableName="USER_GROUP_MEMBERSHIP">
+            <column name="TYPE" type="VARCHAR2(100)" defaultValue="MEMBER">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170217 14:35" author="Ozer Senturk">
+        <addColumn tableName="USERS">
+            <column name="AUTHENTICATION_TYPE" type="VARCHAR2(100)" defaultValue="ACTIVE_DIRECTORY">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PASSWORD" type="VARCHAR2(100)" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170411 09:45" author="kilimci">
+        <addColumn tableName="UIMENU">
+            <column name="RANK" type="NUMBER(3,0)">
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170411 09:50" author="kilimci">
+        <sqlFile path="refactor_menu_ranks.sql" encoding="utf8" relativeToChangelogFile="true" splitStatements="false"/>
+    </changeSet>
+
+    <changeSet id="20170419 14:20" author="kilimci">
+        <dropColumn tableName="UIMENU" columnName="CODE" />
+    </changeSet>
+
+    <changeSet id="20170421 12:20:01" author="Eray Oral">
+
+        <createTable tableName="LANGUAGE">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_LANGUAGE"/>
+            </column>
+
+            <column name="NAME" type="VARCHAR2(30)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="ISO_CODE" type="VARCHAR2(2)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170421 12:20:02" author="Eray Oral">
+        <createSequence sequenceName="SEQ_LANGUAGE" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20170421 12:20:03" author="Eray Oral">
+        <sql>
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY)
+            VALUES (SEQ_LANGUAGE.NEXTVAL, 'Bulgarian', 'bg', 0, SYSTIMESTAMP, 'admin');
+
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY)
+            VALUES (SEQ_LANGUAGE.NEXTVAL, 'Croatian', 'hr', 0, SYSTIMESTAMP, 'admin');
+
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY)
+            VALUES (SEQ_LANGUAGE.NEXTVAL, 'Czech', 'cs', 0, SYSTIMESTAMP, 'admin');
+
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY)
+            VALUES (SEQ_LANGUAGE.NEXTVAL, 'Danish', 'da', 0, SYSTIMESTAMP, 'admin');
+
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY)
+            VALUES (SEQ_LANGUAGE.NEXTVAL, 'Dutch', 'nl', 0, SYSTIMESTAMP, 'admin');
+
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY)
+            VALUES (SEQ_LANGUAGE.NEXTVAL, 'English', 'en', 0, SYSTIMESTAMP, 'admin');
+
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY)
+            VALUES (SEQ_LANGUAGE.NEXTVAL, 'Estonian', 'et', 0, SYSTIMESTAMP, 'admin');
+
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY)
+            VALUES (SEQ_LANGUAGE.NEXTVAL, 'Finnish', 'fi', 0, SYSTIMESTAMP, 'admin');
+
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY)
+            VALUES (SEQ_LANGUAGE.NEXTVAL, 'French', 'fr', 0, SYSTIMESTAMP, 'admin');
+
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY)
+            VALUES (SEQ_LANGUAGE.NEXTVAL, 'German', 'de', 0, SYSTIMESTAMP, 'admin');
+
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY)
+            VALUES (SEQ_LANGUAGE.NEXTVAL, 'Greek', 'el', 0, SYSTIMESTAMP, 'admin');
+
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY)
+            VALUES (SEQ_LANGUAGE.NEXTVAL, 'Hungarian', 'hu', 0, SYSTIMESTAMP, 'admin');
+
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY)
+            VALUES (SEQ_LANGUAGE.NEXTVAL, 'Irish', 'ga', 0, SYSTIMESTAMP, 'admin');
+
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY)
+            VALUES (SEQ_LANGUAGE.NEXTVAL, 'Italian', 'it', 0, SYSTIMESTAMP, 'admin');
+
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY)
+            VALUES (SEQ_LANGUAGE.NEXTVAL, 'Latvian', 'lv', 0, SYSTIMESTAMP, 'admin');
+
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY)
+            VALUES (SEQ_LANGUAGE.NEXTVAL, 'Lithuanian', 'lt', 0, SYSTIMESTAMP, 'admin');
+
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY)
+            VALUES (SEQ_LANGUAGE.NEXTVAL, 'Maltese', 'mt', 0, SYSTIMESTAMP, 'admin');
+
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY)
+            VALUES (SEQ_LANGUAGE.NEXTVAL, 'Polish', 'pl', 0, SYSTIMESTAMP, 'admin');
+
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY)
+            VALUES (SEQ_LANGUAGE.NEXTVAL, 'Portuguese', 'pt', 0, SYSTIMESTAMP, 'admin');
+
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY)
+            VALUES (SEQ_LANGUAGE.NEXTVAL, 'Romanian', 'ro', 0, SYSTIMESTAMP, 'admin');
+
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY)
+            VALUES (SEQ_LANGUAGE.NEXTVAL, 'Slovak', 'sk', 0, SYSTIMESTAMP, 'admin');
+
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY)
+            VALUES (SEQ_LANGUAGE.NEXTVAL, 'Slovenian', 'sl', 0, SYSTIMESTAMP, 'admin');
+
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY)
+            VALUES (SEQ_LANGUAGE.NEXTVAL, 'Spanish', 'es', 0, SYSTIMESTAMP, 'admin');
+
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY)
+            VALUES (SEQ_LANGUAGE.NEXTVAL, 'Swedish', 'sv', 0, SYSTIMESTAMP, 'admin');
+        </sql>
+</changeSet>
+
+    <changeSet id="20170714 14:33" author="kilimci">
+        <sqlFile path="drop_usergroup_menu.sql" encoding="utf8" relativeToChangelogFile="true" splitStatements="false"/>
+    </changeSet>
+
+    <changeSet id="20171101 16:15" author="kilimci">
+        <sqlFile path="add-column-deleted-at.sql" encoding="utf8" relativeToChangelogFile="true" splitStatements="false"/>
+    </changeSet>
+
+    <changeSet id="20171228 10:55" author="kilimci">
+        <addColumn tableName="USERS">
+            <column name="DISPLAY_NAME" type="VARCHAR2(255)" />
+        </addColumn>
+        <sqlFile path="refactor_display_name.sql" encoding="utf8" relativeToChangelogFile="true" splitStatements="false"/>
+        <dropColumn tableName="USERS" columnName="FIRST_NAME"/>
+        <dropColumn tableName="USERS" columnName="LAST_NAME"/>
+    </changeSet>
+    <changeSet id="20171228 11:55" author="kilimci">
+        <addColumn tableName="USERS">
+            <column name="OFFICE" type="VARCHAR2(100)" />
+            <column name="SAP_NUMBER" type="VARCHAR2(20)" />
+            <column name="PHONE_NUMBER" type="VARCHAR2(100)" />
+            <column name="MOBILE_NUMBER" type="VARCHAR2(100)" />
+        </addColumn>
+    </changeSet>
+    <changeSet id="20171228 12:05" author="kilimci">
+        <addColumn tableName="USERS">
+            <column name="THUMBNAIL_PATH" type="VARCHAR2(255)" />
+        </addColumn>
+    </changeSet>
+    <changeSet id="20171228 15:30" author="kilimci">
+        <dropNotNullConstraint tableName="USERS" columnName="EMAIL" />
+    </changeSet>
+    <changeSet id="20171228 17:30" author="kilimci">
+        <renameColumn tableName="USERS" oldColumnName="ACCOUNT_NAME" newColumnName="USERNAME"/>
+    </changeSet>
+    <changeSet id="20180103 17:35" author="kilimci">
+        <addColumn tableName="USERS">
+            <column name="NORMALIZED_NAME" type="VARCHAR2(255)" />
+        </addColumn>
+        <sql>
+            update USERS set NORMALIZED_NAME = SUBSTR(
+                utl_raw.cast_to_varchar2((nlssort(display_name, 'nls_sort=BINARY_AI'))),
+                1,
+                LENGTH(utl_raw.cast_to_varchar2((nlssort(display_name, 'nls_sort=BINARY_AI')))) - 1
+            );
+        </sql>
+        <addNotNullConstraint tableName="USERS" columnName="NORMALIZED_NAME" />
+    </changeSet>
+	
+    <changeSet id="20190322 10:02" author="AliRiza.Bostanci">
+    	<dropTable cascadeConstraints="true" tableName="USER_GROUP" />
+    	<dropTable cascadeConstraints="true" tableName="USER_GROUP_TAG" />
+    	<dropTable cascadeConstraints="true" tableName="USER_GROUP_MEMBERSHIP" />
+    	<dropTable cascadeConstraints="true" tableName="TEAM" />
+    	<dropTable cascadeConstraints="true" tableName="TEAM_MEMBER" />
+    	<dropTable cascadeConstraints="true" tableName="TEAM_TAG" />
+    	<dropTable cascadeConstraints="true" tableName="PERMISSION" />
+    	<dropTable cascadeConstraints="true" tableName="LANGUAGE" />
+    	<dropSequence sequenceName="SEQ_USERGROUP" />
+    	<dropSequence sequenceName="SEQ_USERGROUP_TAG" />
+    	<dropSequence sequenceName="SEQ_USERGROUPMEMBERSHIP" />
+    	<dropSequence sequenceName="SEQ_TEAM" />
+    	<dropSequence sequenceName="SEQ_TEAM_MEMBER" />
+    	<dropSequence sequenceName="SEQ_TEAM_TAG" />
+    	<dropSequence sequenceName="SEQ_COMPONENTRULE" />
+    	<dropSequence sequenceName="SEQ_LANGUAGE" />
+    	<dropSequence sequenceName="SEQ_PERMISSION" />
+    </changeSet>
+
+    <changeSet id="20190322 10:03" author="AliRiza.Bostanci">
+    	<dropTable cascadeConstraints="true" tableName="COMPONENT_RULE" />
+   	</changeSet>
+   	
+   	<changeSet id="20190617 15:20:01" author="AliRiza.Bostanci">
+        <createTable tableName="LANGUAGE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_LANGUAGE"/>
+            </column>
+            <column name="NAME" type="VARCHAR2(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ISO_CODE" type="VARCHAR2(2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_LANGUAGE" incrementBy="50"/>
+    </changeSet>
+
+   	<changeSet id="20190617 15:20:02" author="AliRiza.Bostanci">
+        <sql><![CDATA[
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY) VALUES (SEQ_LANGUAGE.NEXTVAL, 'Bulgarian', 'bg', 0, SYSTIMESTAMP, 'admin');
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY) VALUES (SEQ_LANGUAGE.NEXTVAL, 'Croatian', 'hr', 0, SYSTIMESTAMP, 'admin');
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY) VALUES (SEQ_LANGUAGE.NEXTVAL, 'Czech', 'cs', 0, SYSTIMESTAMP, 'admin');
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY) VALUES (SEQ_LANGUAGE.NEXTVAL, 'Danish', 'da', 0, SYSTIMESTAMP, 'admin');
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY) VALUES (SEQ_LANGUAGE.NEXTVAL, 'Dutch', 'nl', 0, SYSTIMESTAMP, 'admin');
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY) VALUES (SEQ_LANGUAGE.NEXTVAL, 'English', 'en', 0, SYSTIMESTAMP, 'admin');
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY) VALUES (SEQ_LANGUAGE.NEXTVAL, 'Estonian', 'et', 0, SYSTIMESTAMP, 'admin');
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY) VALUES (SEQ_LANGUAGE.NEXTVAL, 'Finnish', 'fi', 0, SYSTIMESTAMP, 'admin');
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY) VALUES (SEQ_LANGUAGE.NEXTVAL, 'French', 'fr', 0, SYSTIMESTAMP, 'admin');
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY) VALUES (SEQ_LANGUAGE.NEXTVAL, 'German', 'de', 0, SYSTIMESTAMP, 'admin');
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY) VALUES (SEQ_LANGUAGE.NEXTVAL, 'Greek', 'el', 0, SYSTIMESTAMP, 'admin');
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY) VALUES (SEQ_LANGUAGE.NEXTVAL, 'Hungarian', 'hu', 0, SYSTIMESTAMP, 'admin');
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY) VALUES (SEQ_LANGUAGE.NEXTVAL, 'Irish', 'ga', 0, SYSTIMESTAMP, 'admin');
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY) VALUES (SEQ_LANGUAGE.NEXTVAL, 'Italian', 'it', 0, SYSTIMESTAMP, 'admin');
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY) VALUES (SEQ_LANGUAGE.NEXTVAL, 'Latvian', 'lv', 0, SYSTIMESTAMP, 'admin');
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY) VALUES (SEQ_LANGUAGE.NEXTVAL, 'Lithuanian', 'lt', 0, SYSTIMESTAMP, 'admin');
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY) VALUES (SEQ_LANGUAGE.NEXTVAL, 'Maltese', 'mt', 0, SYSTIMESTAMP, 'admin');
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY) VALUES (SEQ_LANGUAGE.NEXTVAL, 'Polish', 'pl', 0, SYSTIMESTAMP, 'admin');
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY) VALUES (SEQ_LANGUAGE.NEXTVAL, 'Portuguese', 'pt', 0, SYSTIMESTAMP, 'admin');
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY) VALUES (SEQ_LANGUAGE.NEXTVAL, 'Romanian', 'ro', 0, SYSTIMESTAMP, 'admin');
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY) VALUES (SEQ_LANGUAGE.NEXTVAL, 'Slovak', 'sk', 0, SYSTIMESTAMP, 'admin');
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY) VALUES (SEQ_LANGUAGE.NEXTVAL, 'Slovenian', 'sl', 0, SYSTIMESTAMP, 'admin');
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY) VALUES (SEQ_LANGUAGE.NEXTVAL, 'Spanish', 'es', 0, SYSTIMESTAMP, 'admin');
+            INSERT INTO LANGUAGE (ID, NAME, ISO_CODE, DELETED, LAST_UPDATED, LAST_UPDATED_BY) VALUES (SEQ_LANGUAGE.NEXTVAL, 'Swedish', 'sv', 0, SYSTIMESTAMP, 'admin');
+        	]]></sql>
+	</changeSet>
+	<changeSet id="20190617 15:20:03" author="AliRiza.Bostanci">
+        <sqlFile path="add-column-deleted-at.sql" encoding="utf8" relativeToChangelogFile="true" splitStatements="false"/>
+    </changeSet>
+    
+    <changeSet id="20200206 20:35:01" author="AliRiza.Bostanci">
+    	<modifyDataType tableName="USERS" columnName="DISPLAY_NAME" newDataType="NVARCHAR2(255)"/>
+    </changeSet>
+    
+    <changeSet id="20201003 16:16:01" author="AliRiza.Bostanci">
+    	<createSequence sequenceName="SEQ_USERS_LOGIN" incrementBy="50"/>
+    	<createTable tableName="USERS_LOGIN">
+    		<column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_USERS_LOGIN"/>
+            </column>
+            <column name="USERNAME" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CLIENT_ID" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LOGIN_TIME" type="TIMESTAMP(6)" defaultValueComputed="SYS_EXTRACT_UTC(SYSTIMESTAMP)"/>
+    	</createTable>
+    </changeSet>
+</databaseChangeLog>
