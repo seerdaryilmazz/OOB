@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="20180716 17:05:01" author="Eray Oral">
+        <createTable tableName="FILE">
+            <column name="ID" type="CHAR(36)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_FILE"/>
+            </column>
+            <column name="ORIGINAL_NAME" type="VARCHAR2(255)"/>
+            <column name="PHYSICAL_NAME" type="VARCHAR2(255)"/>
+            <column name="UPLOAD_DATE_TIME" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20180716 17:05:02" author="Eray Oral">
+        <dropTable tableName="FILE" cascadeConstraints="true"/>
+    </changeSet>
+
+    <changeSet id="20180716 17:05:03" author="Eray Oral">
+        <createTable tableName="FILE_ENTRY">
+            <column name="ID" type="CHAR(36)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_FILE_ENTRY"/>
+            </column>
+            <column name="ORIGINAL_NAME" type="VARCHAR2(255)"/>
+            <column name="PHYSICAL_NAME" type="VARCHAR2(255)"/>
+            <column name="UPLOAD_DATE_TIME" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20180717 12:00:01" author="Eray Oral">
+        <addColumn tableName="FILE_ENTRY">
+            <column name="UPLOAD_DATE_TIME_TZ" type="VARCHAR2(32)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20180717 14:26:01" author="Eray Oral">
+        <dropColumn tableName="FILE_ENTRY" columnName="UPLOAD_DATE_TIME_TZ"/>
+    </changeSet>
+
+    <changeSet id="20180717 16:20:01" author="Eray Oral">
+        <renameColumn tableName="FILE_ENTRY" oldColumnName="ORIGINAL_NAME" newColumnName="NAME"/>
+    </changeSet>
+
+</databaseChangeLog>
