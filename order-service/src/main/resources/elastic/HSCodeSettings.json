@@ -1,0 +1,39 @@
+{
+	"analysis": {
+		"filter": {
+			"tr_stop_filter": {
+				"type": "stop",
+				"stopwords": [
+					"_turkish_"
+				]
+			}
+		},
+		"analyzer": {
+			"tr_analyzer": {
+				"type": "custom",
+				"filter": [
+					"icu_normalizer",
+					"tr_stop_filter",
+					"icu_folding"
+				],
+				"tokenizer": "icu_tokenizer"
+			},
+			"lowercase_analyzer": {
+				"type": "custom",
+				"filter": [
+					"icu_normalizer",
+					"icu_folding"
+				],
+				"tokenizer": "keyword"
+			},
+			"default": {
+				"type": "custom",
+				"filter": [
+					"icu_normalizer",
+					"icu_folding"
+				],
+				"tokenizer": "icu_tokenizer"
+			}
+		}
+	}
+}

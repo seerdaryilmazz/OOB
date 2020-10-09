@@ -1,0 +1,6 @@
+spring:
+  cache:
+    cache-names:
+    - config-options
+    ttl:
+      config-options: 86400

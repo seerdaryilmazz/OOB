@@ -1,0 +1,11 @@
+delete from INCOTERM
+insert into INCOTERM (id, code, name, deleted) values (seq_incoterm.nextval,'EXW','EXW',0)
+insert into INCOTERM (id, code, name, deleted) values (seq_incoterm.nextval,'FCA','FCA',0)
+insert into INCOTERM (id, code, name, deleted) values (seq_incoterm.nextval,'FOB/FOT','FOB/FOT',0)
+insert into INCOTERM (id, code, name, deleted) values (seq_incoterm.nextval,'DAF','DAF',0)
+insert into INCOTERM (id, code, name, deleted) values (seq_incoterm.nextval,'CIP/CIF','CIP/CIF',0)
+insert into INCOTERM (id, code, name, deleted) values (seq_incoterm.nextval,'CPT/CFR','CPT/CFR',0)
+insert into INCOTERM (id, code, name, deleted) values (seq_incoterm.nextval,'DDU','DDU',0)
+insert into INCOTERM (id, code, name, deleted) values (seq_incoterm.nextval,'DDP','DDP',0)
+insert into INCOTERM (id, code, name, deleted) values (seq_incoterm.nextval,'DAP','DAP',0)
+insert into INCOTERM (id, code, name, deleted) values (seq_incoterm.nextval,'DAT','DAT',0)

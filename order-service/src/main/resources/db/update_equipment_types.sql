@@ -1,0 +1,20 @@
+update equipment_type set deleted=1;
+
+insert into EQUIPMENT_TYPE (id, code, name, deleted, last_updated, last_updated_by) values (seq_equipment_type.nextval, 'OSB(CHIPBOARD)', 'OSB (Chipboard)', 0, systimestamp, 'admin');
+insert into EQUIPMENT_TYPE (id, code, name, deleted, last_updated, last_updated_by) values (seq_equipment_type.nextval, 'SPANZET(RATCHETSTRAP', 'Spanzet (Ratchet Strap)', 0, systimestamp, 'admin');
+insert into EQUIPMENT_TYPE (id, code, name, deleted, last_updated, last_updated_by) values (seq_equipment_type.nextval, 'STANGE', 'Stange ', 0, systimestamp, 'admin');
+insert into EQUIPMENT_TYPE (id, code, name, deleted, last_updated, last_updated_by) values (seq_equipment_type.nextval, 'SPANNBRETT', 'Spannbrett', 0, systimestamp, 'admin');
+insert into EQUIPMENT_TYPE (id, code, name, deleted, last_updated, last_updated_by) values (seq_equipment_type.nextval, 'ANTISLIPEQUIPMENT', 'Anti Slip Equipment', 0, systimestamp, 'admin');
+insert into EQUIPMENT_TYPE (id, code, name, deleted, last_updated, last_updated_by) values (seq_equipment_type.nextval, 'ANGLEIRON', 'Angle Iron', 0, systimestamp, 'admin');
+insert into EQUIPMENT_TYPE (id, code, name, deleted, last_updated, last_updated_by) values (seq_equipment_type.nextval, 'PLASTICWEDGE', 'Plastic Wedge', 0, systimestamp, 'admin');
+insert into EQUIPMENT_TYPE (id, code, name, deleted, last_updated, last_updated_by) values (seq_equipment_type.nextval, 'PALLET', 'Pallet', 0, systimestamp, 'admin');
+insert into EQUIPMENT_TYPE (id, code, name, deleted, last_updated, last_updated_by) values (seq_equipment_type.nextval, 'PALLET(80X120)', 'Pallet(80x120)', 0, systimestamp, 'admin');
+insert into EQUIPMENT_TYPE (id, code, name, deleted, last_updated, last_updated_by) values (seq_equipment_type.nextval, 'PALLET(100X120)', 'Pallet(100x120)', 0, systimestamp, 'admin');
+insert into EQUIPMENT_TYPE (id, code, name, deleted, last_updated, last_updated_by) values (seq_equipment_type.nextval, 'FRIGOSPANNBRETT', 'Frigo Spannbrett', 0, systimestamp, 'admin');
+insert into EQUIPMENT_TYPE (id, code, name, deleted, last_updated, last_updated_by) values (seq_equipment_type.nextval, 'FRIGOLOADHOLDER', 'Frigo Load Holder', 0, systimestamp, 'admin');
+insert into EQUIPMENT_TYPE (id, code, name, deleted, last_updated, last_updated_by) values (seq_equipment_type.nextval, 'AIRBAG', 'Airbag', 0, systimestamp, 'admin');
+insert into EQUIPMENT_TYPE (id, code, name, deleted, last_updated, last_updated_by) values (seq_equipment_type.nextval, 'CHAIN', 'Chain', 0, systimestamp, 'admin');
+insert into EQUIPMENT_TYPE (id, code, name, deleted, last_updated, last_updated_by) values (seq_equipment_type.nextval, 'CUSTOMSEALROPE(34M)', 'Custom Seal Rope(34 m)', 0, systimestamp, 'admin');
+insert into EQUIPMENT_TYPE (id, code, name, deleted, last_updated, last_updated_by) values (seq_equipment_type.nextval, 'CUSTOMSEALROPE(42M)', 'Custom Seal Rope(42 m)', 0, systimestamp, 'admin');
+insert into EQUIPMENT_TYPE (id, code, name, deleted, last_updated, last_updated_by) values (seq_equipment_type.nextval, 'DOUBLE-DECKEQUIPMENT', 'Double-Deck  Equipment', 0, systimestamp, 'admin');
+insert into EQUIPMENT_TYPE (id, code, name, deleted, last_updated, last_updated_by) values (seq_equipment_type.nextval, 'SIDEMOULDING', 'Side Moulding', 0, systimestamp, 'admin');

@@ -1,0 +1,9 @@
+ekol/oneorder/configuration/OneOrderEnableConfiguration.class
+ekol/oneorder/configuration/dto/Option.class
+ekol/oneorder/configuration/dto/TextOption.class
+ekol/oneorder/configuration/dto/BooleanOption.class
+ekol/oneorder/configuration/ConfigurationCacheController.class
+ekol/oneorder/configuration/ConfigurationApi.class
+ekol/oneorder/configuration/dto/NumberOption.class
+ekol/oneorder/configuration/ConfigurationService.class
+ekol/oneorder/configuration/dto/ListOption.class

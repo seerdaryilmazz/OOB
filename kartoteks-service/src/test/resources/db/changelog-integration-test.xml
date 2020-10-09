@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <include file="db/changelog.xml"/>
+    <changeSet id="20161018 11:01" author="kilimci" context="integration">
+        <sql>
+            <![CDATA[
+            delete from country;
+            insert into Country values(-1, 'AAAAA', 'AA', '000', '#', 0, null,'test','aa', null, 'AAA', 1,0,null);
+            insert into Country values(-2, 'ZZZZZ', 'ZZ', '000', '#', 0, null,'test','zz', null, 'ZZZ', 1,0,null);
+            insert into Country values(-3, 'GGGGG', 'GG', '000', '#', 0, null,'test','aa', null, 'GGG', 1,1,null);
+
+            delete from COMPANY_SEGMENT_TYPE;
+            Insert into COMPANY_SEGMENT_TYPE (ID,CODE,NAME,DELETED,LAST_UPDATED,LAST_UPDATED_BY) values ('-1','CST','segment type','0',null,null);
+
+            delete from COMPANY_TYPE;
+            Insert into COMPANY_TYPE (ID,CODE,NAME,DELETED,LAST_UPDATED,LAST_UPDATED_BY) values (-1,'CORPORATE','Corporate','0',null,null);
+            Insert into COMPANY_TYPE (ID,CODE,NAME,DELETED,LAST_UPDATED,LAST_UPDATED_BY) values (-2,'PERSONAL','Personal','0',null,null);
+            Insert into COMPANY_TYPE (ID,CODE,NAME,DELETED,LAST_UPDATED,LAST_UPDATED_BY) values (-3,'FREEZONE','Free Zone','0',null,null);
+
+            delete from TAX_OFFICE;
+            insert into tax_office values(-1, 'tax office', '000','TR',0,null,null,'000000', null);
+
+            delete from COMPANY_RELATION_TYPE;
+            Insert into COMPANY_RELATION_TYPE (ID,CODE,NAME,DELETED,LAST_UPDATED,LAST_UPDATED_BY,ALT_NAME) values
+                ('-1','CODE','relation name','0',null,null,null);
+
+            delete from company;
+            Insert into COMPANY (ID,NAME,WEBSITE,EMAIL_DOMAIN,TAX_OFFICE_ID,TAX_ID,TCKN,LOGO_URL,DELETED,LAST_UPDATED,LAST_UPDATED_BY,COUNTRY_ID,LOCAL_NAME,COMPANY_TYPE_ID,CODE,COMPANY_SEGMENT_TYPE_ID,OWNED_BY_EKOL, SHORT_NAME_CHECKED)
+            values (-1,'INTEGRATION TEST AŞ','www.example.com','example.com','-1','0000',null,null,'0',to_timestamp('18/07/2016 10:45:26',
+                'DD/MM/RRRR HH24:MI:SS'),'user','-1','INTEGRATION AŞ','-1','1000',null, 0, 0);
+            Insert into COMPANY (ID,NAME,WEBSITE,EMAIL_DOMAIN,TAX_OFFICE_ID,TAX_ID,TCKN,LOGO_URL,DELETED,LAST_UPDATED,LAST_UPDATED_BY,COUNTRY_ID,LOCAL_NAME,COMPANY_TYPE_ID,CODE,COMPANY_SEGMENT_TYPE_ID,OWNED_BY_EKOL, SHORT_NAME_CHECKED)
+            values (-2,'REPOSITORY TEST AŞ','www.example.com','example.com','-1','0000',null,null,'0',to_timestamp('18/07/2016 10:45:26',
+                'DD/MM/RRRR HH24:MI:SS'),'user','-1','REPOSITORY AŞ','-1','1000',null, 0, 0);
+
+            ]]>
+        </sql>
+
+    </changeSet>
+
+</databaseChangeLog>

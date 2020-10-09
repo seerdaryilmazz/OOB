@@ -1,0 +1,58 @@
+server:
+  port: 8764
+
+spring:
+  jpa:
+    show-sql: false
+  data:
+    elasticsearch:
+      cluster-nodes: 10.1.70.92:9301
+  rabbitmq:
+    host: 10.1.70.92
+    port: 5672
+  redis:
+    host: 10.1.70.92
+    port: 6379
+
+oneorder:
+  events:
+    company-updated:
+      enabled: false
+  dataExportEnabled: true
+  companyImages:
+    directory: /opt/artifacts/ui/company-images
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    jdbcUrl : jdbc:oracle:thin:@//10.1.70.92:49161/xe
+    username : kartoteks
+    password : 1234
+
+security:
+  host: 10.1.70.92
+  oauth2:
+    client:
+      checkTokenUri: http://${security.host}:9999/auth/oauth/check_token
+      accessTokenUri: http://${security.host}:9999/auth/oauth/token
+      userAuthorizationUri: http://${security.host}:9999/auth/oauth/authorize
+      clientId: oneorder
+      clientSecret: oneorder
+      scope: oneorder
+    resource:
+      userInfoUri: http://${security.host}:9999/auth/user
+
+eureka:
+  client:
+    registerWithEureka: false
+    serviceUrl:
+      defaultZone: http://10.1.70.92:8761/eureka/
+
+swagger:
+  enabled: true
+
+google:
+  maps:
+    api-url: http://10.1.70.92:30303
+
+logging:
+  level:
+    org.springframework.data.elasticsearch.core: DEBUG

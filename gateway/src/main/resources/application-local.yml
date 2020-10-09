@@ -1,0 +1,130 @@
+
+security:
+  host: 10.1.70.92
+  logoutUri: http://${security.host}:9999/auth/logout_page
+  oauth2:
+    client:
+      checkTokenUri: http://${security.host}:9999/auth/oauth/check_token
+      accessTokenUri: http://${security.host}:9999/auth/oauth/token
+      userAuthorizationUri: http://${security.host}:9999/auth/oauth/authorize
+      clientId: oneorder
+      clientSecret: oneorder
+      scope: oneorder
+    resource:
+      userInfoUri: http://${security.host}:9999/auth/user
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 300000
+
+ribbon:
+  ReadTimeout: 300000
+
+eureka:
+  client:
+    registerWithEureka: false
+    serviceUrl:
+      defaultZone: http://10.1.70.92:8761/eureka/
+
+
+zuul:
+  ignoreSecurityHeaders: false
+  routes:
+#    crm-activity-service:
+#      path: /crm-activity-service/**
+#      url: http://localhost:8760
+#    crm-quote-service:
+#      path: /crm-quote-service/**
+#      url: http://localhost:8761
+#    crm-account-service:
+#      path: /crm-account-service/**
+#      url: http://localhost:8762
+#    order-service:
+#      path: /order-service/**
+#      url: http://localhost:8763
+#    kartoteks-service:
+#      path: /kartoteks-service/**
+#      url: http://localhost:8764
+#    crm-quote-queue-service:
+#      path: /crm-quote-queue-service/**
+#      url: http://localhost:8766
+    kartoteks-ui:
+      path: /ui/kartoteks/**
+      url: http://localhost:8886
+    crm-ui:
+      path: /ui/crm/**
+      url: http://localhost:8887
+#    salesbox-service:
+#      path: /salesbox-service/**
+#      url: http://localhost:8888
+#    salesbox-ui:
+#      path: /ui/salesbox/**
+#      url: http://localhost:8889
+#    sales-price-service:
+#      path: /sales-price-service/**
+#      url: http://localhost:8890
+#    translator-service:
+#      path: /translator-service/**
+#      url: http://localhost:8891
+#    sales-ui:
+#      path: /ui/sales/**
+#      url: http://localhost:8892
+#    translatorui:
+#      path: /ui/translator/**
+#      url: http://localhost:8893
+#    crm-search-service:
+#      path: /crm-search-service/**
+#      url: http://localhost:8894
+#    crm-history-service:
+#      path: /crm-history-service/**
+#      url: http://localahost:8895
+#    agreement-service:
+#      path: /agreement-service/**
+#      url: http://localhost:8896
+#    agreement-ui:
+#      path: /ui/agreement/**
+#      url: http://localhost:8897
+#    agreement-queue-service:
+#      path: /agreement-queue-service/**
+#      url: http://localhost:8898
+#    management-ui:
+#      path: /ui/management/**
+#      url: http://localhost:8899
+#    crm-opportunity-service:
+#      path: /crm-opportunity-service/*
+#      url: http://localhost:8900
+#    taxoffice-verify-service:
+#      path: /taxoffice-verify-service/**
+#      url: http://localhost:8901
+#    authorization-service:
+#      path: /authorization-service/**
+#      url: http://localhost:8902
+#    file-service:
+#      path: /file-service/**
+#      url: http://localhost:8904
+#    userui:
+#      path: /ui/user/**
+#      url: http://localhost:8903
+
+    static:
+      path: /static/**
+      url: http://localhost:9000
+
+spring:
+  redis:
+    host: localhost
+    port: 6379
+  http:
+    multipart:
+      max-file-size: 10Mb
+      max-request-size: 10Mb
+
+logging:
+  level:
+    ROOT: INFO
+    ekol: DEBUG
+

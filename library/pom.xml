@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>ekol.oneorder</groupId>
+        <artifactId>parent-pom</artifactId>
+        <version>1.5.2</version>
+    </parent>
+
+    <artifactId>library</artifactId>
+    <version>1.0.15</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>test</module>
+        <module>logging</module>
+        <module>json</module>
+        <module>data</module>
+        <module>resource</module>
+        <module>hibernate5</module>
+        <module>mongodb</module>
+        <module>event</module>
+        <module>monitoring</module>
+        <module>excel</module>
+        <module>cache</module>
+        <module>notification</module>
+        <module>configuration</module>
+    </modules>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.sonatype.plugins</groupId>
+                    <artifactId>nexus-staging-maven-plugin</artifactId>
+                    <version>1.5.1</version>
+                    <executions>
+                        <execution>
+                            <id>default-deploy</id>
+                            <phase>deploy</phase>
+                            <goals>
+                                <goal>deploy</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <serverId>nexus</serverId>
+                        <nexusUrl>http://localhost:8081/nexus/</nexusUrl>
+                        <skipStaging>true</skipStaging>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <distributionManagement>
+        <repository>
+            <id>nexus-releases</id>
+            <name>Nexus Releases Repo</name>
+            <url>http://10.1.70.91:8081/content/repositories/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <name>Nexus Releases Repo</name>
+            <url>http://10.1.70.91:8081/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+</project>

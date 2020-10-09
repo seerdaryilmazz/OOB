@@ -1,0 +1,17 @@
+/Users/dogukan.sahinturk/oneorder-local-repo/library/mongodb/src/main/java/ekol/mongodb/serializer/DurationSerializer.java
+/Users/dogukan.sahinturk/oneorder-local-repo/library/mongodb/src/main/java/ekol/mongodb/config/OneOrderMongoApplication.java
+/Users/dogukan.sahinturk/oneorder-local-repo/library/mongodb/src/main/java/ekol/mongodb/domain/datetime/FixedZoneDateTimeWindow.java
+/Users/dogukan.sahinturk/oneorder-local-repo/library/mongodb/src/main/java/ekol/mongodb/serializer/DurationDeserializer.java
+/Users/dogukan.sahinturk/oneorder-local-repo/library/mongodb/src/main/java/ekol/mongodb/domain/datetime/UtcDateTime.java
+/Users/dogukan.sahinturk/oneorder-local-repo/library/mongodb/src/main/java/ekol/mongodb/serializer/FixedZoneDateTimeSerializer.java
+/Users/dogukan.sahinturk/oneorder-local-repo/library/mongodb/src/main/java/ekol/mongodb/domain/datetime/FixedZoneDateTime.java
+/Users/dogukan.sahinturk/oneorder-local-repo/library/mongodb/src/main/java/ekol/mongodb/domain/entity/BaseEntity.java
+/Users/dogukan.sahinturk/oneorder-local-repo/library/mongodb/src/main/java/ekol/mongodb/domain/controller/BaseController.java
+/Users/dogukan.sahinturk/oneorder-local-repo/library/mongodb/src/main/java/ekol/mongodb/serializer/FixedZoneDateTimeWindowDeserializer.java
+/Users/dogukan.sahinturk/oneorder-local-repo/library/mongodb/src/main/java/ekol/mongodb/config/AuditConfig.java
+/Users/dogukan.sahinturk/oneorder-local-repo/library/mongodb/src/main/java/ekol/mongodb/serializer/UtcDateTimeDeserializer.java
+/Users/dogukan.sahinturk/oneorder-local-repo/library/mongodb/src/main/java/ekol/mongodb/serializer/FixedZoneDateTimeDeserializer.java
+/Users/dogukan.sahinturk/oneorder-local-repo/library/mongodb/src/main/java/ekol/mongodb/serializer/FixedZoneDateTimeWindowSerializer.java
+/Users/dogukan.sahinturk/oneorder-local-repo/library/mongodb/src/main/java/ekol/mongodb/domain/datetime/Duration.java
+/Users/dogukan.sahinturk/oneorder-local-repo/library/mongodb/src/main/java/ekol/mongodb/domain/repository/ApplicationMongoRepository.java
+/Users/dogukan.sahinturk/oneorder-local-repo/library/mongodb/src/main/java/ekol/mongodb/serializer/UtcDateTimeSerializer.java

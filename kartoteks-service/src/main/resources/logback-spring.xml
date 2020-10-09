@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!--
+    Jenkins, integration testlerini çalıştırırken böyle bir hata verdi:
+        java.lang.IllegalStateException: Logback configuration error detected:
+        ERROR in ch.qos.logback.core.rolling.RollingFileAppender[FILE] - openFile(/tmp/spring.log,true) call failed.
+        java.io.FileNotFoundException: /tmp/spring.log (Permission denied)
+    Aşağıdaki ayar, bu hatasının çözümü için https://stackoverflow.com/a/39600960 adresinden alındı.
+    Bu ayarı yaptığımızda local'de integration testlerini çalıştırırken proje dizininde logs diye bir
+    dizin oluşturuluyor, içinde de spring.log diye bir dosya bulunuyor. Bu logs dizinin, versiyon kontrol tarafından
+    dikkate alınmaması için de .gitignore'a "logs/" şeklinde bir satır ekledik.
+    -->
+    <property name="LOG_TEMP" value="./logs"/>
+
+    <springProperty scope="global" name="facility" source="spring.application.name"/>
+
+    <include resource="oneorder-base.xml"/>
+
+    <springProfile name="local">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+    <springProfile name="dev">
+        <root level="INFO">
+            <appender-ref ref="DEV-GELF"/>
+        </root>
+    </springProfile>
+    <springProfile name="test">
+        <root level="WARN">
+            <appender-ref ref="TEST-GELF"/>
+        </root>
+    </springProfile>
+    <springProfile name="prod">
+        <root level="WARN">
+            <appender-ref ref="PROD-GELF"/>
+        </root>
+    </springProfile>
+</configuration>

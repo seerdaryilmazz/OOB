@@ -1,0 +1,4134 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+
+    <property name="DB_OWNER" value="LOCATION" context="dev,local"/>
+    <property name="DB_OWNER" value="ONEORDER" context="test,prod"/>
+    <property name="DB_OWNER" value="SYSTEM" context="integration"/>
+
+    <changeSet id="20161101 14:07:01" author="Ozer Senturk">
+
+        <createTable tableName="PORT">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_PORT"/>
+            </column>
+
+            <column name="NAME" type="VARCHAR2(255)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_PORT" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20161101 14:53:14" author="Ozer Senturk">
+
+        <sqlFile path="insert_ports.sql" encoding="utf8" relativeToChangelogFile="true"/>
+
+    </changeSet>
+
+    <changeSet id="20161101 15:03:01" author="Ozer Senturk">
+
+        <createTable tableName="ROUTE">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ROUTE"/>
+            </column>
+
+            <column name="DEPARTURE_PORT_ID" type="NUMBER(19,0)"/>
+
+            <column name="ARRIVAL_PORT_ID" type="NUMBER(19,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_ROUTE" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20161101 15:32:14" author="Ozer Senturk">
+
+        <sqlFile path="insert_routes.sql" encoding="utf8" relativeToChangelogFile="true"/>
+
+    </changeSet>
+
+    <changeSet id="20161102 10:37:14" author="Ozer Senturk">
+
+        <addNotNullConstraint
+                columnName="NAME"
+                tableName="PORT"/>
+
+        <addNotNullConstraint
+                columnName="DEPARTURE_PORT_ID"
+                tableName="ROUTE"/>
+
+        <addNotNullConstraint
+                columnName="ARRIVAL_PORT_ID"
+                tableName="ROUTE"/>
+
+        <addForeignKeyConstraint
+                baseColumnNames="DEPARTURE_PORT_ID"
+                baseTableName="ROUTE"
+                constraintName="FK_DEPARTURE_PORT_ID_PORT_ID"
+                referencedColumnNames="ID"
+                referencedTableName="PORT"/>
+
+        <addForeignKeyConstraint
+                baseColumnNames="ARRIVAL_PORT_ID"
+                baseTableName="ROUTE"
+                constraintName="FK_ARRIVAL_PORT_ID_PORT_ID"
+                referencedColumnNames="ID"
+                referencedTableName="PORT"/>
+
+        <addUniqueConstraint
+                columnNames="DEPARTURE_PORT_ID, ARRIVAL_PORT_ID"
+                constraintName="UNIQ_DEPARTURE_ARRIVAL"
+                tableName="ROUTE"/>
+
+    </changeSet>
+
+    <changeSet id="20161213 13:54:01" author="Ozer Senturk">
+
+        <createTable tableName="LCOUNTRY">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_LCOUNTRY"/>
+            </column>
+
+            <column name="NAME" type="VARCHAR2(100)"/>
+
+            <column name="ISO" type="VARCHAR2(2)"/>
+
+            <column name="PHONE_CODE" type="NUMBER(10,0)"/>
+
+            <column name="PHONE_FORMAT" type="VARCHAR2(100)"/>
+
+            <column name="LANGUAGE" type="VARCHAR2(2)"/>
+
+            <column name="ALLOWED_CHARS" type="VARCHAR2(100)"/>
+
+            <column name="CURRENCY" type="VARCHAR2(3)"/>
+
+            <column name="EU_MEMBER" type="NUMBER(1,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_LCOUNTRY" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20161213 14:15:14" author="Ozer Senturk">
+
+        <sqlFile path="insert_countries.sql" encoding="utf8" relativeToChangelogFile="true"/>
+
+    </changeSet>
+
+    <changeSet id="20161213 14:18:01" author="Ozer Senturk">
+
+        <createTable tableName="LCITY">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_LCITY"/>
+            </column>
+
+            <column name="COUNTRY_ID" type="NUMBER(19,0)"/>
+
+            <column name="NAME" type="VARCHAR2(100)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_LCITY" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20161213 14:19:01" author="Ozer Senturk">
+
+        <createTable tableName="REGION">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_REGION"/>
+            </column>
+
+            <column name="COUNTRY_ID" type="NUMBER(19,0)"/>
+
+            <column name="NAME" type="VARCHAR2(100)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_REGION" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20161213 14:32:14" author="Ozer Senturk">
+
+        <sqlFile path="insert_regions_cities.sql" encoding="utf8" relativeToChangelogFile="true"/>
+
+    </changeSet>
+
+    <changeSet id="20161213 14:36:14" author="Ozer Senturk">
+
+        <sqlFile path="update_regions_cities.sql" encoding="utf8" relativeToChangelogFile="true"/>
+
+    </changeSet>
+
+    <changeSet id="20161213 17:35:01" author="Ozer Senturk">
+
+        <createTable tableName="ZONE_TYPE">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ZONE_TYPE"/>
+            </column>
+
+            <column name="CODE" type="VARCHAR2(20)"/>
+
+            <column name="NAME" type="VARCHAR2(255)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_ZONE_TYPE" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20161213 17:39:14" author="Ozer Senturk">
+
+        <sqlFile path="insert_zone_types.sql" encoding="utf8" relativeToChangelogFile="true"/>
+
+    </changeSet>
+
+    <changeSet id="20161213 18:01:01" author="Ozer Senturk">
+
+        <createTable tableName="ZONE">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ZONE"/>
+            </column>
+
+            <column name="NAME" type="VARCHAR2(255)"/>
+
+            <column name="DESCRIPTION" type="VARCHAR2(255)"/>
+
+            <column name="ZONE_TYPE_ID" type="NUMBER(19,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_ZONE" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20161213 18:10:01" author="Ozer Senturk">
+
+        <createTable tableName="ZONE_TAG">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ZONE_TAG"/>
+            </column>
+
+            <column name="ZONE_ID" type="NUMBER(19,0)"/>
+
+            <column name="VALUE" type="VARCHAR2(255)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_ZONE_TAG" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20161214 08:57:01" author="Ozer Senturk">
+
+        <createTable tableName="ZONE_ZIP_CODE_TYPE">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ZONE_ZIP_CODE_TYPE"/>
+            </column>
+
+            <column name="CODE" type="VARCHAR2(20)"/>
+
+            <column name="NAME" type="VARCHAR2(255)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_ZONE_ZIP_CODE_TYPE" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20161214 08:58:14" author="Ozer Senturk">
+
+        <sqlFile path="insert_zone_zip_code_types.sql" encoding="utf8" relativeToChangelogFile="true"/>
+
+    </changeSet>
+
+    <changeSet id="20161214 09:08:14" author="Ozer Senturk">
+
+        <sqlFile path="update_zone_zip_code_types.sql" encoding="utf8" relativeToChangelogFile="true"/>
+
+    </changeSet>
+
+    <changeSet id="20161214 09:14:01" author="Ozer Senturk">
+
+        <createTable tableName="ZONE_ZIP_CODE">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ZONE_ZIP_CODE"/>
+            </column>
+
+            <column name="ZONE_ID" type="NUMBER(19,0)"/>
+
+            <column name="COUNTRY_ID" type="NUMBER(19,0)"/>
+
+            <column name="ZONE_ZIP_CODE_TYPE_ID" type="NUMBER(19,0)"/>
+
+            <column name="VALUE1" type="VARCHAR2(255)"/>
+
+            <column name="VALUE2" type="VARCHAR2(255)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_ZONE_ZIP_CODE" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20161214 09:26:01" author="Ozer Senturk">
+
+        <dropTable cascadeConstraints="true" tableName="ZONE_ZIP_CODE_TYPE"/>
+
+        <dropSequence sequenceName="SEQ_ZONE_ZIP_CODE_TYPE"/>
+
+        <renameColumn newColumnName="ZONE_ZIP_CODE_TYPE"
+                      oldColumnName="ZONE_ZIP_CODE_TYPE_ID"
+                      tableName="ZONE_ZIP_CODE"/>
+
+    </changeSet>
+
+    <changeSet id="20161214 09:34:01" author="Ozer Senturk">
+
+        <modifyDataType columnName="ZONE_ZIP_CODE_TYPE"
+                        newDataType="VARCHAR2(255)"
+                        tableName="ZONE_ZIP_CODE"/>
+
+    </changeSet>
+
+    <changeSet id="20161215 12:15:01" author="Eray Oral">
+
+        <createTable tableName="PLACEMARK">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_PLACEMARK"/>
+            </column>
+
+            <column name="NAME" type="VARCHAR2(255)"/>
+
+            <column name="DESCRIPTION" type="VARCHAR2(255)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <createSequence sequenceName="SEQ_PLACEMARK" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20161215 12:15:02" author="Eray Oral">
+
+        <createTable tableName="POLYGON">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_POLYGON"/>
+            </column>
+
+            <column name="PLACEMARK_ID" type="NUMBER(19,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <createSequence sequenceName="SEQ_POLYGON" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20161215 12:15:03" author="Eray Oral">
+
+        <createTable tableName="COORDINATES_CONTAINER">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_COORDINATES_CONTAINER"/>
+            </column>
+
+            <column name="POLYGON_ID" type="NUMBER(19,0)"/>
+
+            <column name="TYPE" type="VARCHAR2(50)"/>
+
+            <column name="ENCODED_COORDINATES_STRING" type="CLOB"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <createSequence sequenceName="SEQ_COORDINATES_CONTAINER" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20161215 12:15:04" author="Eray Oral">
+
+        <createTable tableName="COORDINATE">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_COORDINATE"/>
+            </column>
+
+            <column name="CONTAINER_ID" type="NUMBER(19,0)"/>
+
+            <column name="ORDER_NO" type="NUMBER(10,0)"/>
+
+            <column name="LONGITUDE" type="NUMBER"/>
+
+            <column name="LATITUDE" type="NUMBER"/>
+
+            <column name="ALTITUDE" type="NUMBER"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <createSequence sequenceName="SEQ_COORDINATE" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20161215 12:15:05" author="Eray Oral">
+
+        <addForeignKeyConstraint baseTableName="COORDINATE" baseColumnNames="CONTAINER_ID" constraintName="FK_COORD_COORDSCONTAINER"
+                                 referencedTableName="COORDINATES_CONTAINER" referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="COORDINATES_CONTAINER" baseColumnNames="POLYGON_ID" constraintName="FK_COORDSCONTAINER_POLYGON"
+                                 referencedTableName="POLYGON" referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="POLYGON" baseColumnNames="PLACEMARK_ID" constraintName="FK_POLYGON_PLACEMARK"
+                                 referencedTableName="PLACEMARK" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20161216 10:45:01" author="Eray Oral">
+
+        <createTable tableName="ADM_REGION">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ADM_REGION"/>
+            </column>
+
+            <column name="NAME" type="VARCHAR2(100)"/>
+
+            <!-- 'level' reserved word olduğu için zorluk çıkarıyor. -->
+            <column name="LVL" type="NUMBER(10,0)"/>
+
+            <column name="PARENT_ID" type="NUMBER(19,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <createSequence sequenceName="SEQ_ADM_REGION" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20161216 10:45:02" author="Eray Oral">
+
+        <createTable tableName="ADM_REGION_POSTCODE">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ADM_REGION_POSTCODE"/>
+            </column>
+
+            <column name="REGION_ID" type="NUMBER(19,0)"/>
+
+            <column name="POSTCODE" type="VARCHAR2(20)"/>
+
+            <column name="LATITUDE" type="NUMBER"/>
+
+            <column name="LONGITUDE" type="NUMBER"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <createSequence sequenceName="SEQ_ADM_REGION_POSTCODE" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20161216 10:45:03" author="Eray Oral">
+
+        <addForeignKeyConstraint baseTableName="ADM_REGION" baseColumnNames="PARENT_ID" constraintName="FK_ADMREGION_ADMREGION"
+                                 referencedTableName="ADM_REGION" referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="ADM_REGION_POSTCODE" baseColumnNames="REGION_ID" constraintName="FK_ADMREGIONPCODE_ADMREGION"
+                                 referencedTableName="ADM_REGION" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20161216 14:15:01" author="Eray Oral">
+
+        <dropForeignKeyConstraint baseTableName="POLYGON" constraintName="FK_POLYGON_PLACEMARK"/>
+
+        <dropColumn tableName="POLYGON" columnName="PLACEMARK_ID"/>
+
+        <dropSequence sequenceName="SEQ_PLACEMARK"/>
+
+        <dropTable tableName="PLACEMARK"/>
+
+        <addColumn tableName="POLYGON">
+            <column name="ADM_REGION_NAME" type="VARCHAR2(100)"/>
+            <column name="ADM_REGION_LEVEL" type="NUMBER(2,0)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20161216 14:15:02" author="Eray Oral">
+        <addColumn tableName="POLYGON">
+            <column name="PARENT_ADM_REGION_NAME" type="VARCHAR2(100)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20161216 19:25:01" author="Eray Oral">
+
+        <dropColumn tableName="POLYGON" columnName="ADM_REGION_NAME"/>
+
+        <dropColumn tableName="POLYGON" columnName="ADM_REGION_LEVEL"/>
+
+        <dropColumn tableName="POLYGON" columnName="PARENT_ADM_REGION_NAME"/>
+
+        <addColumn tableName="POLYGON">
+            <column name="ADM_REGION_NAME_FULL" type="VARCHAR2(500)"/>
+            <column name="ADM_REGION_NAME_GADM_DOT_ORG" type="VARCHAR2(100)"/>
+            <column name="ADM_REGION_LEVEL_GADM_DOT_ORG" type="NUMBER(2,0)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20161219 16:30:01" author="Eray Oral">
+        <addColumn tableName="ADM_REGION">
+            <column name="COUNTRY_ISO" type="VARCHAR2(2)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20161219 19:30:01" author="Eray Oral">
+
+        <createTable tableName="POLYGONS_CONTAINER">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_POLYGONS_CONTAINER"/>
+            </column>
+
+            <column name="REGION_HIERARCHY" type="VARCHAR2(500)"/>
+
+            <column name="REGION_GADM_DOT_ORG" type="VARCHAR2(100)"/>
+
+            <column name="REGION_LEVEL_GADM_DOT_ORG" type="NUMBER(2,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <createSequence sequenceName="SEQ_POLYGONS_CONTAINER" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20161219 19:30:02" author="Eray Oral">
+
+        <dropColumn tableName="POLYGON" columnName="ADM_REGION_NAME_FULL"/>
+        <dropColumn tableName="POLYGON" columnName="ADM_REGION_NAME_GADM_DOT_ORG"/>
+        <dropColumn tableName="POLYGON" columnName="ADM_REGION_LEVEL_GADM_DOT_ORG"/>
+
+        <addColumn tableName="POLYGON">
+            <column name="CONTAINER_ID" type="NUMBER(19,0)"/>
+        </addColumn>
+
+        <addForeignKeyConstraint baseTableName="POLYGON" baseColumnNames="CONTAINER_ID" constraintName="FK_POLYGON_POLYGONSCONTAINER"
+                                 referencedTableName="POLYGONS_CONTAINER" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20161220 10:00:01" author="Eray Oral">
+        <addColumn tableName="POLYGONS_CONTAINER">
+            <column name="HAS_UPPER_REGION_LEVEL" type="NUMBER(1,0)"/>
+            <column name="HAS_LOWER_REGION_LEVEL" type="NUMBER(1,0)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20161220 17:00:01" author="Eray Oral">
+        <addColumn tableName="ADM_REGION">
+            <column name="NAME_GADM_DOT_ORG" type="VARCHAR2(100)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20161220 17:00:02" author="Eray Oral">
+        <addColumn tableName="ADM_REGION">
+            <column name="LVL_GADM_DOT_ORG" type="NUMBER(2,0)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20161221 18:45:01" author="Eray Oral">
+
+        <createTable tableName="ADM_REGION_GADM">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ADM_REGION_GADM"/>
+            </column>
+
+            <column name="COUNTRY_ISO_CODE" type="CHAR(3)"/>
+
+            <column name="NAME" type="VARCHAR2(100)"/>
+
+            <column name="NORMALIZED_NAME" type="VARCHAR2(100)"/>
+
+            <column name="LOCAL_NAME" type="VARCHAR2(100)"/>
+
+            <column name="NORMALIZED_LOCAL_NAME" type="VARCHAR2(100)"/>
+
+            <column name="LVL" type="NUMBER(2,0)"/>
+
+            <column name="PARENT_ID" type="NUMBER(19,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <createSequence sequenceName="SEQ_ADM_REGION_GADM" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20161222 16:30:01" author="Eray Oral">
+
+        <sql>DELETE FROM COORDINATE</sql>
+        <dropTable tableName="COORDINATE"/>
+        <dropSequence sequenceName="SEQ_COORDINATE"/>
+
+        <sql>DELETE FROM COORDINATES_CONTAINER</sql>
+        <dropTable tableName="COORDINATES_CONTAINER"/>
+        <dropSequence sequenceName="SEQ_COORDINATES_CONTAINER"/>
+
+        <sql>DELETE FROM POLYGON</sql>
+        <dropTable tableName="POLYGON"/>
+        <dropSequence sequenceName="SEQ_POLYGON"/>
+
+        <sql>DELETE FROM POLYGONS_CONTAINER</sql>
+        <dropTable tableName="POLYGONS_CONTAINER"/>
+        <dropSequence sequenceName="SEQ_POLYGONS_CONTAINER"/>
+    </changeSet>
+
+    <changeSet id="20161222 16:30:02" author="Eray Oral">
+
+        <createTable tableName="POLYGON_REGION">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_POLYGON_REGION"/>
+            </column>
+
+            <column name="PARENT" type="VARCHAR2(500)"/>
+
+            <column name="COUNTRY_ISO_ALPHA3_CODE" type="CHAR(3)"/>
+
+            <column name="NAME" type="VARCHAR2(100)"/>
+
+            <column name="LOCAL_NAME" type="VARCHAR2(100)"/>
+
+            <column name="LVL" type="NUMBER(2,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <createSequence sequenceName="SEQ_POLYGON_REGION" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20161222 16:30:03" author="Eray Oral">
+
+        <createTable tableName="POLYGON">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_POLYGON"/>
+            </column>
+
+            <column name="REGION_ID" type="NUMBER(19,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <createSequence sequenceName="SEQ_POLYGON" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20161222 16:30:04" author="Eray Oral">
+
+        <createTable tableName="COORDINATE_RING">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_COORDINATE_RING"/>
+            </column>
+
+            <column name="POLYGON_ID" type="NUMBER(19,0)"/>
+
+            <column name="TYPE" type="VARCHAR2(50)"/>
+
+            <column name="ENCODED_COORDINATES_STRING" type="CLOB"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <createSequence sequenceName="SEQ_COORDINATE_RING" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20161222 16:30:05" author="Eray Oral">
+
+        <createTable tableName="COORDINATE">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_COORDINATE"/>
+            </column>
+
+            <column name="RING_ID" type="NUMBER(19,0)"/>
+
+            <column name="ORDER_NO" type="NUMBER(10,0)"/>
+
+            <column name="LONGITUDE" type="NUMBER"/>
+
+            <column name="LATITUDE" type="NUMBER"/>
+
+            <column name="ALTITUDE" type="NUMBER"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <createSequence sequenceName="SEQ_COORDINATE" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20161222 16:30:06" author="Eray Oral">
+        <sql>DELETE FROM ADM_REGION_GADM</sql>
+        <dropTable tableName="ADM_REGION_GADM"/>
+        <dropSequence sequenceName="SEQ_ADM_REGION_GADM"/>
+    </changeSet>
+
+    <changeSet id="20161222 16:30:07" author="Eray Oral">
+        <renameColumn tableName="POLYGON_REGION" oldColumnName="COUNTRY_ISO_ALPHA3_CODE" newColumnName="COUNTRY_ISO_ALPHA3CODE"/>
+    </changeSet>
+
+    <changeSet id="20161222 16:30:08" author="Eray Oral">
+
+        <addForeignKeyConstraint baseTableName="POLYGON" baseColumnNames="REGION_ID" constraintName="FK_POLYGON_POLYGONREGION"
+                                 referencedTableName="POLYGON_REGION" referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="COORDINATE_RING" baseColumnNames="POLYGON_ID" constraintName="FK_COORDRING_POLYGON"
+                                 referencedTableName="POLYGON" referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="COORDINATE" baseColumnNames="RING_ID" constraintName="FK_COORD_COORDRING"
+                                 referencedTableName="COORDINATE_RING" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20161222 16:30:09" author="Eray Oral">
+
+        <createIndex tableName="COORDINATE_RING" indexName="INDX_COORDRING_POLYDEL">
+            <column name="POLYGON_ID"/>
+            <column name="DELETED"/>
+        </createIndex>
+
+        <createIndex tableName="POLYGON" indexName="INDX_POLYGON_REGDEL">
+            <column name="REGION_ID"/>
+            <column name="DELETED"/>
+        </createIndex>
+
+        <createIndex tableName="POLYGON_REGION" indexName="INDX_POLYGON_ISODEL">
+            <column name="COUNTRY_ISO_ALPHA3CODE"/>
+            <column name="LVL"/>
+            <column name="DELETED"/>
+        </createIndex>
+
+        <createIndex tableName="POLYGON_REGION" indexName="INDX_POLYREG_PARENTDEL">
+            <column name="PARENT"/>
+            <column name="DELETED"/>
+        </createIndex>
+
+        <createIndex tableName="POLYGON_REGION" indexName="INDX_POLYREG_NAMEDEL">
+            <column name="NAME"/>
+            <column name="DELETED"/>
+        </createIndex>
+
+        <createIndex tableName="POLYGON_REGION" indexName="INDX_POLYREG_PARENTNAMEDEL">
+            <column name="PARENT"/>
+            <column name="NAME"/>
+            <column name="DELETED"/>
+        </createIndex>
+
+        <createIndex tableName="POLYGON_REGION" indexName="INDX_POLYREG_ISONAMELVLDEL">
+            <column name="COUNTRY_ISO_ALPHA3CODE"/>
+            <column name="NAME"/>
+            <column name="LVL"/>
+            <column name="DELETED"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="20161222 16:30:10" author="Eray Oral">
+
+        <createTable tableName="POLYGON_REGION_TO_ADM_REGION">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_POLYGONREGION_TO_ADMREGION"/>
+            </column>
+
+            <column name="COUNTRY_ISO_ALPHA3CODE" type="CHAR(3)"/>
+
+            <column name="POLYGON_REGION" type="VARCHAR2(500)"/>
+
+            <column name="ADM_REGION" type="VARCHAR2(500)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <createSequence sequenceName="SEQ_POLYGONREGION_TO_ADMREGION" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20161222 16:30:13" author="Eray Oral">
+        <dropColumn tableName="ADM_REGION" columnName="NAME_GADM_DOT_ORG"/>
+        <dropColumn tableName="ADM_REGION" columnName="LVL_GADM_DOT_ORG"/>
+    </changeSet>
+
+    <changeSet id="20161222 16:30:14" author="Eray Oral">
+        <dropColumn tableName="ADM_REGION_POSTCODE" columnName="LATITUDE"/>
+        <dropColumn tableName="ADM_REGION_POSTCODE" columnName="LONGITUDE"/>
+    </changeSet>
+
+    <changeSet id="20161222 16:30:15" author="Eray Oral">
+        <modifyDataType tableName="ADM_REGION" columnName="COUNTRY_ISO" newDataType="CHAR(2)"/>
+    </changeSet>
+
+    <changeSet id="20161226 15:55:01" author="Ozer Senturk">
+
+        <createTable tableName="ZONE_POLYGON_REGION">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ZONE_POLYGON_REGION"/>
+            </column>
+
+            <column name="ZONE_ID" type="NUMBER(19,0)"/>
+
+            <column name="PARENT" type="VARCHAR2(500)"/>
+
+            <column name="NAME" type="VARCHAR2(500)"/>
+
+            <column name="SELECTED" type="NUMBER(1,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_ZONE_POLYGON_REGION" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20161228 09:14:01" author="Ozer Senturk">
+
+        <addColumn tableName="LCOUNTRY">
+            <column name="ISO_ALPHA3_CODE" type="VARCHAR2(3)"/>
+        </addColumn>
+
+    </changeSet>
+
+    <changeSet id="20161228 09:23:01" author="Ozer Senturk">
+
+        <renameColumn newColumnName="ISO_ALPHA3CODE"
+                      oldColumnName="ISO_ALPHA3_CODE"
+                      tableName="LCOUNTRY"/>
+
+    </changeSet>
+
+    <changeSet id="20161228 09:45:01" author="Eray Oral">
+        <sqlFile path="update_country_iso_alpha3_code.sql" encoding="utf8" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="20161228 09:55:01" author="Eray Oral">
+
+        <createTable tableName="ADM_REGION_LIQUIBASE">
+
+            <column name="NEW_ID" type="NUMBER(19,0)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="PREVIOUS_ID" type="NUMBER(19,0)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20161229 10:30:01" author="Eray Oral">
+        <renameColumn tableName="ADM_REGION" oldColumnName="COUNTRY_ISO" newColumnName="COUNTRY_ISO_ALPHA2CODE"/>
+    </changeSet>
+
+    <changeSet id="20161229 16:35" author="kilimci">
+        <sqlFile path="insert_zone_types2.sql" encoding="utf8" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="20161230 13:01:01" author="Ozer Senturk">
+
+        <addColumn tableName="ZONE_POLYGON_REGION">
+            <column name="ZONE_ZIP_CODE_ID" type="NUMBER(19,0)"/>
+        </addColumn>
+
+    </changeSet>
+
+    <changeSet id="20161230 14:00:01" author="Eray Oral">
+        <dropTable tableName="ADM_REGION_LIQUIBASE"/>
+    </changeSet>
+
+    <changeSet id="20170317 11:20:01" author="Eray Oral">
+        <addColumn tableName="COORDINATE_RING">
+            <column name="MIN_LONGITUDE" type="NUMBER"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170317 11:20:02" author="Eray Oral">
+        <addColumn tableName="COORDINATE_RING">
+            <column name="MAX_LONGITUDE" type="NUMBER"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170317 11:20:03" author="Eray Oral">
+        <addColumn tableName="COORDINATE_RING">
+            <column name="MIN_LATITUDE" type="NUMBER"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170317 11:20:04" author="Eray Oral">
+        <addColumn tableName="COORDINATE_RING">
+            <column name="MAX_LATITUDE" type="NUMBER"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170317 11:20:05" author="Eray Oral">
+        <!--
+        Aşağıdaki sql her bir COORDINATE_RING için min ve max LNG/LAT değerlerini bulup
+        COORDINATE_RING tablosundaki ilgili alanları doldurur.
+        -->
+        <sql>
+            UPDATE COORDINATE_RING T
+            SET (T.MIN_LONGITUDE, T.MAX_LONGITUDE, T.MIN_LATITUDE, T.MAX_LATITUDE) =
+            (
+            SELECT
+            MIN(C.LONGITUDE), MAX(C.LONGITUDE), MIN(C.LATITUDE), MAX(C.LATITUDE)
+            FROM COORDINATE_RING CR
+            INNER JOIN COORDINATE C ON C.RING_ID = CR.ID AND C.DELETED = 0
+            WHERE CR.DELETED = 0 AND CR.ID = T.ID
+            )
+            WHERE EXISTS
+            (
+            SELECT
+            1
+            FROM COORDINATE_RING CR
+            INNER JOIN COORDINATE C ON C.RING_ID = CR.ID AND C.DELETED = 0
+            WHERE CR.DELETED = 0 AND CR.ID = T.ID
+            );
+        </sql>
+    </changeSet>
+
+    <changeSet id="20170317 11:20:06" author="Eray Oral">
+        <dropColumn tableName="COORDINATE" columnName="ALTITUDE"/>
+    </changeSet>
+
+    <changeSet id="20170317 14:15:01" author="Eray Oral">
+
+        <createTable tableName="ENCODED_COORDS_STR">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ENCODED_COORDS_STR"/>
+            </column>
+
+            <column name="RING_ID" type="NUMBER(19,0)"/>
+
+            <column name="VALUE" type="CLOB"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170317 14:15:02" author="Eray Oral">
+        <createSequence sequenceName="SEQ_ENCODED_COORDS_STR" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20170317 14:15:03" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="ENCODED_COORDS_STR" baseColumnNames="RING_ID" constraintName="FK_ENCODEDCOORDSSTR_COORDRING"
+                                 referencedTableName="COORDINATE_RING" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170317 14:15:04" author="Eray Oral">
+        <sql>
+            INSERT INTO ENCODED_COORDS_STR (ID, RING_ID, VALUE, DELETED, LAST_UPDATED, LAST_UPDATED_BY)
+            SELECT SEQ_ENCODED_COORDS_STR.NEXTVAL, ID, ENCODED_COORDINATES_STRING, 0, SYSTIMESTAMP, 'admin' FROM COORDINATE_RING;
+        </sql>
+    </changeSet>
+
+    <changeSet id="20170317 14:15:05" author="Eray Oral">
+        <dropColumn tableName="COORDINATE_RING" columnName="ENCODED_COORDINATES_STRING"/>
+    </changeSet>
+
+    <changeSet id="20170317 16:50:01" author="Eray Oral">
+        <addColumn tableName="COORDINATE_RING">
+            <column name="ENCODED_COORDS_STR_ID" type="NUMBER(19,0)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170317 16:50:02" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="COORDINATE_RING" baseColumnNames="ENCODED_COORDS_STR_ID" constraintName="FK_COORDRING_ENCODEDCOORDSSTR"
+                                 referencedTableName="ENCODED_COORDS_STR" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170317 16:50:03" author="Eray Oral">
+        <sql>
+            UPDATE COORDINATE_RING CR SET ENCODED_COORDS_STR_ID = (SELECT ECS.ID FROM ENCODED_COORDS_STR ECS WHERE ECS.RING_ID = CR.ID);
+        </sql>
+    </changeSet>
+
+    <changeSet id="20170317 16:50:04" author="Eray Oral">
+        <dropForeignKeyConstraint baseTableName="ENCODED_COORDS_STR" constraintName="FK_ENCODEDCOORDSSTR_COORDRING"/>
+    </changeSet>
+
+    <changeSet id="20170317 16:50:05" author="Eray Oral">
+        <dropColumn tableName="ENCODED_COORDS_STR" columnName="RING_ID"/>
+    </changeSet>
+
+    <changeSet id="20170317 19:00:01" author="Eray Oral">
+        <addColumn tableName="ENCODED_COORDS_STR">
+            <column name="RING_ID" type="NUMBER(19,0)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170317 19:00:02" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="ENCODED_COORDS_STR" baseColumnNames="RING_ID" constraintName="FK_ENCODEDCOORDSSTR_COORDRING"
+                                 referencedTableName="COORDINATE_RING" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170317 19:00:03" author="Eray Oral">
+        <sql>
+            UPDATE ENCODED_COORDS_STR ECS SET RING_ID = (SELECT CR.ID FROM COORDINATE_RING CR WHERE CR.ENCODED_COORDS_STR_ID = ECS.ID);
+        </sql>
+    </changeSet>
+
+    <changeSet id="20170317 19:00:04" author="Eray Oral">
+        <dropForeignKeyConstraint baseTableName="COORDINATE_RING" constraintName="FK_COORDRING_ENCODEDCOORDSSTR"/>
+    </changeSet>
+
+    <changeSet id="20170317 19:00:05" author="Eray Oral">
+        <dropColumn tableName="COORDINATE_RING" columnName="ENCODED_COORDS_STR_ID"/>
+    </changeSet>
+
+    <changeSet id="20170317 19:30:01" author="Eray Oral">
+        <addColumn tableName="COORDINATE_RING">
+            <column name="ENCODED_COORDS_STR_ID" type="NUMBER(19,0)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170317 19:30:02" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="COORDINATE_RING" baseColumnNames="ENCODED_COORDS_STR_ID" constraintName="FK_COORDRING_ENCODEDCOORDSSTR"
+                                 referencedTableName="ENCODED_COORDS_STR" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170317 19:30:03" author="Eray Oral">
+        <sql>
+            UPDATE COORDINATE_RING CR SET ENCODED_COORDS_STR_ID = (SELECT ECS.ID FROM ENCODED_COORDS_STR ECS WHERE ECS.RING_ID = CR.ID);
+        </sql>
+    </changeSet>
+
+    <changeSet id="20170317 19:30:04" author="Eray Oral">
+        <dropForeignKeyConstraint baseTableName="ENCODED_COORDS_STR" constraintName="FK_ENCODEDCOORDSSTR_COORDRING"/>
+    </changeSet>
+
+    <changeSet id="20170317 19:30:05" author="Eray Oral">
+        <dropColumn tableName="ENCODED_COORDS_STR" columnName="RING_ID"/>
+    </changeSet>
+
+    <changeSet id="20170404 12:11" author="bverid">
+        <createTable tableName="LOCATION">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_LOCATION"/>
+            </column>
+            <column name="GOOGLE_PLACE_ID" type="VARCHAR2(127)"></column>
+            <column name="GOOGLE_PLACE_URL" type="VARCHAR2(255)"></column>
+            <column name="NAME" type="VARCHAR2(80)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LOCAL_NAME" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="COUNTRY_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ADDRESS" type="VARCHAR2(255)"></column>
+            <column name="LAT" type="FLOAT"></column>
+            <column name="LNG" type="FLOAT"></column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <createSequence sequenceName="SEQ_LOCATION" incrementBy="50"/>
+
+        <addForeignKeyConstraint baseTableName="LOCATION" baseColumnNames="COUNTRY_ID" constraintName="FK_LOCATION_COUNTRY"
+                                 referencedTableName="LCOUNTRY" referencedColumnNames="ID"/>
+
+    </changeSet>
+
+    <changeSet id="20170412 12:45" author="bverid">
+        <addColumn tableName="LOCATION">
+            <column name="ACTIVE" type="NUMBER(1,0)"></column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170404 12:15" author="bverid">
+        <createTable tableName="LOCATION_PHONE">
+            <column name="LOCATION_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IS_DEFAULT" type="NUMBER(1,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PHONE_TYPE" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="COUNTRY_CODE" type="VARCHAR2(5)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REGION_CODE" type="VARCHAR2(5)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PHONE" type="VARCHAR2(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EXTENSION" type="VARCHAR2(6)"/>
+
+        </createTable>
+        <addForeignKeyConstraint baseTableName="LOCATION_PHONE" baseColumnNames="LOCATION_ID" constraintName="FK_LOCPHONE_LOC"
+                                 referencedTableName="LOCATION" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170410 12:15" author="bverid">
+        <createTable tableName="LOCATION_WORKINGHOUR">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_LOCATION_WORKINGHOUR"/>
+            </column>
+            <column name="LOCATION_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DAY" type="VARCHAR2(10)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createSequence sequenceName="SEQ_LOCATION_WORKINGHOUR" incrementBy="50"/>
+        <addForeignKeyConstraint baseTableName="LOCATION_WORKINGHOUR" baseColumnNames="LOCATION_ID" constraintName="FK_LOCWORKHOUR_LOC"
+                                 referencedTableName="LOCATION" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170410 12:16" author="bverid">
+
+        <createTable tableName="LOCATION_WORKINGHOUR_TIME">
+            <column name="WORKINGHOUR_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="START_TIME" type="VARCHAR2(5)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="END_TIME" type="VARCHAR2(5)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="LOCATION_WORKINGHOUR_TIME" baseColumnNames="WORKINGHOUR_ID" constraintName="LOC_WORKHOURTIME_LOCWORKHOUR"
+                                 referencedTableName="LOCATION_WORKINGHOUR" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170410 12:18" author="bverid">
+        <addUniqueConstraint tableName="LOCATION_WORKINGHOUR" columnNames="LOCATION_ID, DAY"></addUniqueConstraint>
+    </changeSet>
+
+    <changeSet id="20170411 12:23" author="bverid">
+        <createTable tableName="LOCATION_PORT">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_LOCATION_PORT" />
+            </column>
+            <column name="REGISTRATION_METHOD" type="VARCHAR2(30)" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="ENTRANCE_TIME_FROM" type="VARCHAR2(5)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ENTRANCE_TIME_TO" type="VARCHAR2(5)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ENTRANCE_GATE" type="VARCHAR2(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REGISTRATION_COMPANY_ID" type="NUMBER(19,0)"/>
+            <column name="REGISTRATION_LOCATION_ID" type="NUMBER(19,0)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170412 15:45" author="bverid">
+        <addColumn tableName="LOCATION_PORT">
+            <column name="REGISTRATION_COMPANY_NAME" type="VARCHAR2(255)"></column>
+            <column name="REGISTRATION_LOCATION_NAME" type="VARCHAR2(255)"></column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170413 11:55" author="bverid">
+        <createTable tableName="LOCATION_PORT_ASSET">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_LOCATION_PORT_ASSET"/>
+            </column>
+            <column name="LOCATION_PORT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TYPE" type="VARCHAR2(31)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="AMOUNT" type="NUMBER(5,0)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createSequence sequenceName="SEQ_LOCATION_PORT_ASSET" incrementBy="50"/>
+        <addForeignKeyConstraint baseTableName="LOCATION_PORT_ASSET" baseColumnNames="LOCATION_PORT_ID" constraintName="FK_LOCPORTASSET_LOCPORT"
+                                 referencedTableName="LOCATION_PORT" referencedColumnNames="ID"/>
+    </changeSet>
+
+
+    <changeSet id="20170413 13:55" author="bverid">
+        <sql>
+            delete from ROUTE
+        </sql>
+        <dropForeignKeyConstraint baseTableName="Route" constraintName="FK_DEPARTURE_PORT_ID_PORT_ID"/>
+        <dropForeignKeyConstraint baseTableName="Route" constraintName="FK_ARRIVAL_PORT_ID_PORT_ID"/>
+        <dropTable tableName="PORT"/>
+    </changeSet>
+
+    <changeSet id="20170413 13:56" author="bverid">
+        <renameTable oldTableName="LOCATION_PORT" newTableName="PORT"/>
+        <renameTable oldTableName="LOCATION_PORT_ASSET" newTableName="PORT_ASSET"/>
+    </changeSet>
+
+    <changeSet id="20170413 13:57" author="bverid">
+        <renameColumn tableName="PORT_ASSET" oldColumnName="LOCATION_PORT_ID" newColumnName="PORT_ID"/>
+    </changeSet>
+
+    <changeSet id="20170413 13:58" author="bverid">
+        <addForeignKeyConstraint
+                baseColumnNames="DEPARTURE_PORT_ID"
+                baseTableName="ROUTE"
+                constraintName="FK_DEPARTURE_PORT_ID_PORT_ID"
+                referencedColumnNames="ID"
+                referencedTableName="PORT"/>
+
+        <addForeignKeyConstraint
+                baseColumnNames="ARRIVAL_PORT_ID"
+                baseTableName="ROUTE"
+                constraintName="FK_ARRIVAL_PORT_ID_PORT_ID"
+                referencedColumnNames="ID"
+                referencedTableName="PORT"/>
+    </changeSet>
+
+    <changeSet id="20170413 13:59" author="bverid">
+        <sql>
+            ALTER TABLE PORT RENAME CONSTRAINT
+            PK_LOCATION_PORT TO PK_PORT;
+
+            ALTER TABLE PORT_ASSET RENAME CONSTRAINT
+            PK_LOCATION_PORT_ASSET TO PK_PORT_ASSET;
+
+            ALTER TABLE PORT_ASSET RENAME CONSTRAINT
+            FK_LOCPORTASSET_LOCPORT TO FK_PORTASSET_PORT;
+
+
+            RENAME SEQ_LOCATION_PORT_ASSET TO SEQ_PORT_ASSET;
+
+        </sql>
+    </changeSet>
+
+    <changeSet id="20170414 11:55" author="bverid">
+        <createTable tableName="CUSTOMER_WAREHOUSE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CUSTOMER__WAREHOUSE" />
+            </column>
+            <column name="BOOKING_TYPE" type="VARCHAR2(30)" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="BOOKING_URL" type="VARCHAR2(512)"/>
+            <column name="BOOKING_CONTACT_ID" type="VARCHAR2(5)"/>
+            <column name="BOOKING_CONTACT_NAME" type="VARCHAR2(5)"/>
+            <column name="LOADING_REQUIRES_BOOKING" type="VARCHAR2(16)"/>
+            <column name="UNLOADING_REQUIRES_BOOKING" type="VARCHAR2(16)"/>
+            <column name="REGISTRATION_COMPANY_ID" type="NUMBER(19,0)"/>
+            <column name="REGISTRATION_LOCATION_ID" type="NUMBER(19,0)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_CUSTOMER_WAREHOUSE" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20170414 11:56" author="bverid">
+        <createTable tableName="CW_BOOKINGSLOT">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_CW_BOOKINGSLOT"/>
+            </column>
+            <column name="CUSTOMER_WAREHOUSE_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TYPE" type="VARCHAR2(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DAY" type="VARCHAR2(10)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createSequence sequenceName="SEQ_CW_BOOKINGSLOT" incrementBy="50"/>
+        <addForeignKeyConstraint baseTableName="CW_BOOKINGSLOT" baseColumnNames="CUSTOMER_WAREHOUSE_ID" constraintName="FK_CWBOOKINGSLOT_CW"
+                                 referencedTableName="CUSTOMER_WAREHOUSE" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170414 11:57" author="bverid">
+
+        <createTable tableName="CW_BOOKINGSLOT_TIME">
+            <column name="CW_BOOKINGSLOT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="START_TIME" type="VARCHAR2(5)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="END_TIME" type="VARCHAR2(5)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="CW_BOOKINGSLOT_TIME" baseColumnNames="CW_BOOKINGSLOT_ID" constraintName="FK_CWBSTIME_CWBS"
+                                 referencedTableName="CW_BOOKINGSLOT" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170414 11:58" author="bverid">
+        <addUniqueConstraint constraintName="UK_CW_BOOKINGSLOT" tableName="CW_BOOKINGSLOT" columnNames="CUSTOMER_WAREHOUSE_ID, DAY, TYPE"></addUniqueConstraint>
+    </changeSet>
+
+    <changeSet id="20170413 23:50:01" author="Eray Oral">
+
+        <createTable tableName="LINEHAUL_ROUTE">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_LINEHAUL_ROUTE" />
+            </column>
+
+            <column name="TYPE" type="VARCHAR2(30)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="FROM_STATION_TYPE" type="VARCHAR2(30)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="FROM_STATION_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="TO_STATION_TYPE" type="VARCHAR2(30)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="TO_STATION_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170413 23:50:02" author="Eray Oral">
+        <createSequence sequenceName="SEQ_LINEHAUL_ROUTE" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20170414 12:00:01" author="Eray Oral">
+        <renameTable oldTableName="LINEHAUL_ROUTE" newTableName="LINEHAUL_ROUTE_LEG"/>
+    </changeSet>
+
+    <changeSet id="20170414 12:00:02" author="Eray Oral">
+        <sql>ALTER TABLE LINEHAUL_ROUTE_LEG RENAME CONSTRAINT PK_LINEHAUL_ROUTE TO PK_LINEHAUL_ROUTE_LEG</sql>
+    </changeSet>
+
+    <changeSet id="20170414 12:00:03" author="Eray Oral">
+        <sql>ALTER INDEX PK_LINEHAUL_ROUTE RENAME TO PK_LINEHAUL_ROUTE_LEG</sql>
+    </changeSet>
+
+    <changeSet id="20170414 12:00:04" author="Eray Oral">
+        <sql>RENAME SEQ_LINEHAUL_ROUTE TO SEQ_LINEHAUL_ROUTE_LEG</sql>
+    </changeSet>
+
+    <changeSet id="20170414 12:00:05" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="LINEHAUL_ROUTE_LEG" baseColumnNames="FROM_STATION_ID" constraintName="FK_LINEHROULEG_LOCFR"
+                                 referencedTableName="LOCATION" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170414 12:00:06" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="LINEHAUL_ROUTE_LEG" baseColumnNames="TO_STATION_ID" constraintName="FK_LINEHROULEG_LOCTO"
+                                 referencedTableName="LOCATION" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170414 12:30:01" author="Eray Oral">
+        <renameColumn tableName="LINEHAUL_ROUTE_LEG" oldColumnName="FROM_STATION_TYPE" newColumnName="FROM_LOCATION_TYPE"/>
+    </changeSet>
+
+    <changeSet id="20170414 12:30:02" author="Eray Oral">
+        <renameColumn tableName="LINEHAUL_ROUTE_LEG" oldColumnName="FROM_STATION_ID" newColumnName="FROM_LOCATION_ID"/>
+    </changeSet>
+
+    <changeSet id="20170414 12:30:03" author="Eray Oral">
+        <renameColumn tableName="LINEHAUL_ROUTE_LEG" oldColumnName="TO_STATION_TYPE" newColumnName="TO_LOCATION_TYPE"/>
+    </changeSet>
+
+    <changeSet id="20170414 12:30:04" author="Eray Oral">
+        <renameColumn tableName="LINEHAUL_ROUTE_LEG" oldColumnName="TO_STATION_ID" newColumnName="TO_LOCATION_ID"/>
+    </changeSet>
+
+    <changeSet id="20170414 14:50:01" author="Eray Oral">
+
+        <createTable tableName="LINEHAUL_ROUTE">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_LINEHAUL_ROUTE" />
+            </column>
+
+            <column name="NAME" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170414 14:50:02" author="Eray Oral">
+        <createSequence sequenceName="SEQ_LINEHAUL_ROUTE" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20170414 14:50:03" author="Eray Oral">
+
+        <createTable tableName="LINKED_LINEHAUL_ROUTE_LEG">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_LINKED_LINEHAUL_ROUTE_LEG" />
+            </column>
+
+            <column name="PARENT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="ORDER_NO" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="ACTUAL_LEG_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170414 14:50:04" author="Eray Oral">
+        <createSequence sequenceName="SEQ_LINKED_LINEHAUL_ROUTE_LEG" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20170414 14:50:05" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="LINKED_LINEHAUL_ROUTE_LEG" baseColumnNames="PARENT_ID" constraintName="FK_LNLINEHROULEG_LINEHROU"
+                                 referencedTableName="LINEHAUL_ROUTE" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170414 14:50:06" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="LINKED_LINEHAUL_ROUTE_LEG" baseColumnNames="ACTUAL_LEG_ID" constraintName="FK_LNLINEHROULEG_LINEHROULEG"
+                                 referencedTableName="LINEHAUL_ROUTE_LEG" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170417 16:14:10" author="Burak Verid">
+        <addColumn tableName="CUSTOMER_WAREHOUSE">
+            <column name="BOOKING_LATEST_TIME" type="NUMBER(2,0)"></column>
+            <column name="BOOKING_LATEST_TYPE" type="VARCHAR2(32)"></column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170417 15:15:01" author="Eray Oral">
+
+        <createTable tableName="LHAUL_ROUTE_FRAG">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_LHAUL_ROUTE_FRAG"/>
+            </column>
+
+            <column name="PARENT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="ORDER_NO" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="TYPE" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170417 15:15:02" author="Eray Oral">
+        <createSequence sequenceName="SEQ_LHAUL_ROUTE_FRAG" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20170417 15:15:03" author="Eray Oral">
+
+        <createTable tableName="ONE_LEG_LHAUL_ROUTE_FRAG">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ONE_LEG_LHAUL_ROUTE_FRAG"/>
+            </column>
+
+            <column name="LEG_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170417 15:15:04" author="Eray Oral">
+
+        <createTable tableName="MUL_LEG_LHAUL_ROUTE_FRAG">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_MUL_LEG_LHAUL_ROUTE_FRAG"/>
+            </column>
+
+            <column name="ROUTE_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170417 15:15:05" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="LHAUL_ROUTE_FRAG" baseColumnNames="PARENT_ID" constraintName="FK_LHROUTEFR_LHROUTE"
+                                 referencedTableName="LINEHAUL_ROUTE" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170417 15:15:06" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="ONE_LEG_LHAUL_ROUTE_FRAG" baseColumnNames="LEG_ID" constraintName="FK_ONELLHROUTEFR_LHROUTELEG"
+                                 referencedTableName="LINEHAUL_ROUTE_LEG" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170417 15:15:07" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="MUL_LEG_LHAUL_ROUTE_FRAG" baseColumnNames="ROUTE_ID" constraintName="FK_MULLLHROUTEFR_LHROUTE"
+                                 referencedTableName="LINEHAUL_ROUTE" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170418 13:20:01" author="Eray Oral">
+        <dropColumn tableName="LHAUL_ROUTE_FRAG" columnName="TYPE"/>
+    </changeSet>
+
+    <changeSet id="20170418 16:30:01" author="Eray Oral">
+        <dropTable tableName="ONE_LEG_LHAUL_ROUTE_FRAG" cascadeConstraints="true"/>
+    </changeSet>
+
+    <changeSet id="20170418 16:30:02" author="Eray Oral">
+        <dropTable tableName="MUL_LEG_LHAUL_ROUTE_FRAG" cascadeConstraints="true"/>
+    </changeSet>
+
+    <changeSet id="20170418 16:30:03" author="Eray Oral">
+        <sql>
+            DELETE FROM LHAUL_ROUTE_FRAG;
+        </sql>
+    </changeSet>
+
+    <changeSet id="20170418 16:30:04" author="Eray Oral">
+        <addColumn tableName="LHAUL_ROUTE_FRAG">
+            <column name="TYPE" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170418 16:30:05" author="Eray Oral">
+        <addColumn tableName="LHAUL_ROUTE_FRAG">
+            <column name="LEG_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170418 16:30:06" author="Eray Oral">
+        <addColumn tableName="LHAUL_ROUTE_FRAG">
+            <column name="ROUTE_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170418 16:30:07" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="LHAUL_ROUTE_FRAG" baseColumnNames="LEG_ID" constraintName="FK_LHROUTEFR_LHROUTELEG"
+                                 referencedTableName="LINEHAUL_ROUTE_LEG" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170418 16:30:08" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="LHAUL_ROUTE_FRAG" baseColumnNames="ROUTE_ID" constraintName="FK_LHROUTEFR_LHROUTE2"
+                                 referencedTableName="LINEHAUL_ROUTE" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170418 16:50:01" author="Eray Oral">
+        <sql>
+            ALTER TABLE LHAUL_ROUTE_FRAG MODIFY LEG_ID NULL;
+        </sql>
+    </changeSet>
+
+    <changeSet id="20170418 16:50:02" author="Eray Oral">
+        <sql>
+            ALTER TABLE LHAUL_ROUTE_FRAG MODIFY ROUTE_ID NULL;
+        </sql>
+    </changeSet>
+
+    <changeSet id="20170418 17:20:01" author="Eray Oral">
+        <dropTable tableName="LINKED_LINEHAUL_ROUTE_LEG" cascadeConstraints="true"/>
+    </changeSet>
+
+    <changeSet id="20170418 17:20:02" author="Eray Oral">
+        <dropSequence sequenceName="SEQ_LINKED_LINEHAUL_ROUTE_LEG"/>
+    </changeSet>
+
+    <changeSet id="20170418 17:30:01" author="Eray Oral">
+        <renameTable oldTableName="LINEHAUL_ROUTE" newTableName="LHAUL_ROUTE"/>
+    </changeSet>
+
+    <changeSet id="20170418 17:30:02" author="Eray Oral">
+        <renameTable oldTableName="LINEHAUL_ROUTE_LEG" newTableName="LHAUL_ROUTE_LEG"/>
+    </changeSet>
+
+    <changeSet id="20170418 17:30:03" author="Eray Oral">
+        <sql>
+            RENAME SEQ_LINEHAUL_ROUTE TO SEQ_LHAUL_ROUTE;
+        </sql>
+    </changeSet>
+
+    <changeSet id="20170418 17:30:04" author="Eray Oral">
+        <sql>
+            RENAME SEQ_LINEHAUL_ROUTE_LEG TO SEQ_LHAUL_ROUTE_LEG;
+        </sql>
+    </changeSet>
+
+    <changeSet id="20170418 17:30:05" author="Eray Oral">
+        <sql>ALTER TABLE LHAUL_ROUTE RENAME CONSTRAINT PK_LINEHAUL_ROUTE TO PK_LHAUL_ROUTE</sql>
+    </changeSet>
+
+    <changeSet id="20170418 17:30:06" author="Eray Oral">
+        <sql>ALTER INDEX PK_LINEHAUL_ROUTE RENAME TO PK_LHAUL_ROUTE</sql>
+    </changeSet>
+
+    <changeSet id="20170418 17:30:07" author="Eray Oral">
+        <sql>ALTER TABLE LHAUL_ROUTE_LEG RENAME CONSTRAINT PK_LINEHAUL_ROUTE_LEG TO PK_LHAUL_ROUTE_LEG</sql>
+    </changeSet>
+
+    <changeSet id="20170418 17:30:08" author="Eray Oral">
+        <sql>ALTER INDEX PK_LINEHAUL_ROUTE_LEG RENAME TO PK_LHAUL_ROUTE_LEG</sql>
+    </changeSet>
+
+    <changeSet id="20170418 17:30:09" author="Eray Oral">
+        <sql>ALTER TABLE LHAUL_ROUTE_LEG RENAME CONSTRAINT FK_LINEHROULEG_LOCFR TO FK_LHROUTELEG_LOCFR</sql>
+    </changeSet>
+
+    <changeSet id="20170418 17:30:10" author="Eray Oral">
+        <sql>ALTER TABLE LHAUL_ROUTE_LEG RENAME CONSTRAINT FK_LINEHROULEG_LOCTO TO FK_LHROUTELEG_LOCTO</sql>
+    </changeSet>
+
+    <changeSet id="20170420 13:45:01" author="Eray Oral">
+        <addColumn tableName="LHAUL_ROUTE">
+            <column name="FROM_LOCATION_ID" type="NUMBER(19,0)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170420 13:45:02" author="Eray Oral">
+        <addColumn tableName="LHAUL_ROUTE">
+            <column name="TO_LOCATION_ID" type="NUMBER(19,0)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170420 13:45:03" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="LHAUL_ROUTE" baseColumnNames="FROM_LOCATION_ID" constraintName="FK_LHROUTE_LOCFR"
+                                 referencedTableName="LOCATION" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170420 13:45:04" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="LHAUL_ROUTE" baseColumnNames="TO_LOCATION_ID" constraintName="FK_LHROUTE_LOCTO"
+                                 referencedTableName="LOCATION" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170421 12:15:04" author="b.verid">
+        <sql>
+            ALTER TABLE PORT MODIFY REGISTRATION_METHOD NULL;
+            ALTER TABLE PORT MODIFY ENTRANCE_GATE NULL;
+            ALTER TABLE PORT MODIFY ENTRANCE_TIME_FROM NULL;
+            ALTER TABLE PORT MODIFY ENTRANCE_TIME_TO NULL;
+
+        </sql>
+    </changeSet>
+
+
+    <changeSet id="20170426 10:05:01" author="Eray Oral">
+
+        <createTable tableName="LHAUL_ROUTE_LEG_STOP">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_LHAUL_ROUTE_LEG_STOP"/>
+            </column>
+
+            <column name="NAME" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="LAT" type="NUMBER">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="LNG" type="NUMBER">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170426 10:05:02" author="Eray Oral">
+        <createSequence sequenceName="SEQ_LHAUL_ROUTE_LEG_STOP" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20170426 10:05:03" author="Eray Oral">
+
+        <createTable tableName="LHAUL_ROUTE_LEG_STOP_TYPES">
+
+            <column name="PARENT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="TYPE" type="VARCHAR2(30)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170426 10:05:04" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="LHAUL_ROUTE_LEG_STOP_TYPES" baseColumnNames="PARENT_ID" constraintName="FK_LHROUTELEGSTT_LHROUTELEGST"
+                                 referencedTableName="LHAUL_ROUTE_LEG_STOP" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170426 10:05:05" author="Eray Oral">
+
+        <createTable tableName="LHAUL_ROUTE_LEG_STOP_TEMP">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_LHAUL_ROUTE_LEG_STOP_TEMP"/>
+            </column>
+
+            <column name="NAME" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="LAT" type="NUMBER">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="LNG" type="NUMBER">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="LOCATION_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170426 10:05:06" author="Eray Oral">
+        <sql>
+            INSERT INTO LHAUL_ROUTE_LEG_STOP_TEMP (ID, NAME, LAT, LNG, LOCATION_ID)
+            SELECT SEQ_LHAUL_ROUTE_LEG_STOP.NEXTVAL, NAME, NVL(LAT, 0), NVL(LNG, 0), ID FROM
+            (
+            SELECT DISTINCT L.ID, L.NAME, L.LAT, L.LNG FROM LHAUL_ROUTE_LEG LRL
+            INNER JOIN LOCATION L ON L.ID = LRL.FROM_LOCATION_ID OR L.ID = LRL.TO_LOCATION_ID
+            );
+        </sql>
+    </changeSet>
+
+    <changeSet id="20170426 10:05:07" author="Eray Oral">
+        <sql>
+            INSERT INTO LHAUL_ROUTE_LEG_STOP (ID, NAME, LAT, LNG, DELETED, LAST_UPDATED, LAST_UPDATED_BY)
+            SELECT ID, NAME, LAT, LNG, 0, SYSTIMESTAMP, 'admin' FROM LHAUL_ROUTE_LEG_STOP_TEMP;
+        </sql>
+    </changeSet>
+
+    <changeSet id="20170426 10:05:08" author="Eray Oral">
+        <sql>
+            INSERT INTO LHAUL_ROUTE_LEG_STOP_TYPES (PARENT_ID, TYPE)
+            SELECT T.ID, LRL.FROM_LOCATION_TYPE FROM LHAUL_ROUTE_LEG_STOP_TEMP T
+            INNER JOIN LHAUL_ROUTE_LEG LRL ON LRL.FROM_LOCATION_ID = T.LOCATION_ID
+            UNION
+            SELECT T.ID, LRL.TO_LOCATION_TYPE FROM LHAUL_ROUTE_LEG_STOP_TEMP T
+            INNER JOIN LHAUL_ROUTE_LEG LRL ON LRL.TO_LOCATION_ID = T.LOCATION_ID;
+        </sql>
+    </changeSet>
+
+    <changeSet id="20170426 10:05:09" author="Eray Oral">
+        <addColumn tableName="LHAUL_ROUTE_LEG">
+            <column name="FROM_ID" type="NUMBER(19,0)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170426 10:05:10" author="Eray Oral">
+        <addColumn tableName="LHAUL_ROUTE_LEG">
+            <column name="TO_ID" type="NUMBER(19,0)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170426 10:05:11" author="Eray Oral">
+        <sql>
+            UPDATE LHAUL_ROUTE_LEG LRL SET FROM_ID = (SELECT T.ID FROM LHAUL_ROUTE_LEG_STOP_TEMP T WHERE T.LOCATION_ID = LRL.FROM_LOCATION_ID);
+        </sql>
+    </changeSet>
+
+    <changeSet id="20170426 10:05:12" author="Eray Oral">
+        <sql>
+            UPDATE LHAUL_ROUTE_LEG LRL SET TO_ID = (SELECT T.ID FROM LHAUL_ROUTE_LEG_STOP_TEMP T WHERE T.LOCATION_ID = LRL.TO_LOCATION_ID);
+        </sql>
+    </changeSet>
+
+    <changeSet id="20170426 10:05:13" author="Eray Oral">
+        <addNotNullConstraint tableName="LHAUL_ROUTE_LEG" columnName="FROM_ID"/>
+    </changeSet>
+
+    <changeSet id="20170426 10:05:14" author="Eray Oral">
+        <addNotNullConstraint tableName="LHAUL_ROUTE_LEG" columnName="TO_ID"/>
+    </changeSet>
+
+    <changeSet id="20170426 10:05:15" author="Eray Oral">
+        <addColumn tableName="LHAUL_ROUTE">
+            <column name="FROM_ID" type="NUMBER(19,0)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170426 10:05:16" author="Eray Oral">
+        <addColumn tableName="LHAUL_ROUTE">
+            <column name="TO_ID" type="NUMBER(19,0)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170426 10:05:17" author="Eray Oral">
+        <sql>
+            UPDATE LHAUL_ROUTE LR SET FROM_ID = (SELECT T.ID FROM LHAUL_ROUTE_LEG_STOP_TEMP T WHERE T.LOCATION_ID = LR.FROM_LOCATION_ID);
+        </sql>
+    </changeSet>
+
+    <changeSet id="20170426 10:05:18" author="Eray Oral">
+        <sql>
+            UPDATE LHAUL_ROUTE LR SET TO_ID = (SELECT T.ID FROM LHAUL_ROUTE_LEG_STOP_TEMP T WHERE T.LOCATION_ID = LR.TO_LOCATION_ID);
+        </sql>
+    </changeSet>
+
+    <changeSet id="20170426 10:05:19" author="Eray Oral">
+        <addNotNullConstraint tableName="LHAUL_ROUTE" columnName="FROM_ID"/>
+    </changeSet>
+
+    <changeSet id="20170426 10:05:20" author="Eray Oral">
+        <addNotNullConstraint tableName="LHAUL_ROUTE" columnName="TO_ID"/>
+    </changeSet>
+
+    <changeSet id="20170426 10:05:21" author="Eray Oral">
+        <dropForeignKeyConstraint baseTableName="LHAUL_ROUTE_LEG" constraintName="FK_LHROUTELEG_LOCFR"/>
+    </changeSet>
+
+    <changeSet id="20170426 10:05:22" author="Eray Oral">
+        <dropForeignKeyConstraint baseTableName="LHAUL_ROUTE_LEG" constraintName="FK_LHROUTELEG_LOCTO"/>
+    </changeSet>
+
+    <changeSet id="20170426 10:05:23" author="Eray Oral">
+        <dropColumn tableName="LHAUL_ROUTE_LEG" columnName="FROM_LOCATION_TYPE"/>
+    </changeSet>
+
+    <changeSet id="20170426 10:05:24" author="Eray Oral">
+        <dropColumn tableName="LHAUL_ROUTE_LEG" columnName="FROM_LOCATION_ID"/>
+    </changeSet>
+
+    <changeSet id="20170426 10:05:25" author="Eray Oral">
+        <dropColumn tableName="LHAUL_ROUTE_LEG" columnName="TO_LOCATION_TYPE"/>
+    </changeSet>
+
+    <changeSet id="20170426 10:05:26" author="Eray Oral">
+        <dropColumn tableName="LHAUL_ROUTE_LEG" columnName="TO_LOCATION_ID"/>
+    </changeSet>
+
+    <changeSet id="20170426 10:05:27" author="Eray Oral">
+        <dropForeignKeyConstraint baseTableName="LHAUL_ROUTE" constraintName="FK_LHROUTE_LOCFR"/>
+    </changeSet>
+
+    <changeSet id="20170426 10:05:28" author="Eray Oral">
+        <dropForeignKeyConstraint baseTableName="LHAUL_ROUTE" constraintName="FK_LHROUTE_LOCTO"/>
+    </changeSet>
+
+    <changeSet id="20170426 10:05:29" author="Eray Oral">
+        <dropColumn tableName="LHAUL_ROUTE" columnName="FROM_LOCATION_ID"/>
+    </changeSet>
+
+    <changeSet id="20170426 10:05:30" author="Eray Oral">
+        <dropColumn tableName="LHAUL_ROUTE" columnName="TO_LOCATION_ID"/>
+    </changeSet>
+
+    <changeSet id="20170426 10:05:31" author="Eray Oral">
+        <dropTable tableName="LHAUL_ROUTE_LEG_STOP_TEMP" cascadeConstraints="true"/>
+    </changeSet>
+
+    <changeSet id="20170426 16:55:01" author="Eray Oral">
+        <sql>
+            ALTER TABLE LHAUL_ROUTE MODIFY FROM_ID NULL;
+        </sql>
+    </changeSet>
+
+    <changeSet id="20170426 16:55:02" author="Eray Oral">
+        <sql>
+            ALTER TABLE LHAUL_ROUTE MODIFY TO_ID NULL;
+        </sql>
+    </changeSet>
+
+    <!--LOCATION REFACTORING STARTS-->
+
+
+    <!--
+     <changeSet id="20170426 16:00:00" author="bverid">
+         <sql>
+             DROP TABLE O_LOCATION_WORKINGHOUR_TIME;
+             DROP TABLE O_LOCATION_WORKINGHOUR;
+             DROP TABLE O_PORT_ASSET;
+             DROP TABLE O_PORT;
+
+             DROP TABLE O_CW_BOOKINGSLOT_TIME;
+             DROP TABLE O_CW_BOOKINGSLOT;
+             DROP TABLE O_CUSTOMER_WAREHOUSE;
+
+             DROP TABLE O_LOCATION_PHONE;
+             DROP TABLE O_LOCATION;
+
+             DROP TABLE HT_LOCATION;
+             DROP TABLE HT_LOCATION_PORT;
+             DROP TABLE HT_PORT
+             DROP TABLE HT_CUSTOMER_WAREHOUSE;
+
+             DROP SEQUENCE O_SEQ_LOCATION_WORKINGHOUR;
+             DROP SEQUENCE O_SEQ_PORT_ASSET;
+             DROP SEQUENCE O_SEQ_CUSTOMER_WAREHOUSE;
+             DROP SEQUENCE O_SEQ_CW_BOOKINGSLOT;
+         </sql>
+     </changeSet>
+     -->
+
+    <changeSet id="20170426 16:00:00" author="bverid">
+        <renameTable oldTableName="LOCATION_WORKINGHOUR_TIME" newTableName="O_LOCATION_WORKINGHOUR_TIME"/>
+        <renameTable oldTableName="LOCATION_WORKINGHOUR" newTableName="O_LOCATION_WORKINGHOUR"/>
+        <renameTable oldTableName="PORT_ASSET" newTableName="O_PORT_ASSET"/>
+        <renameTable oldTableName="PORT" newTableName="O_PORT"/>
+
+        <renameTable oldTableName="CW_BOOKINGSLOT_TIME" newTableName="O_CW_BOOKINGSLOT_TIME"/>
+        <renameTable oldTableName="CW_BOOKINGSLOT" newTableName="O_CW_BOOKINGSLOT"/>
+        <renameTable oldTableName="CUSTOMER_WAREHOUSE" newTableName="O_CUSTOMER_WAREHOUSE"/>
+
+        <renameTable oldTableName="LOCATION_PHONE" newTableName="O_LOCATION_PHONE"/>
+        <renameTable oldTableName="LOCATION" newTableName="O_LOCATION"/>
+
+        <sql>
+            RENAME SEQ_LOCATION TO O_SEQ_LOCATION;
+            RENAME SEQ_LOCATION_WORKINGHOUR TO O_SEQ_LOCATION_WORKINGHOUR;
+            RENAME SEQ_PORT_ASSET  TO O_SEQ_PORT_ASSET;
+            RENAME SEQ_CUSTOMER_WAREHOUSE   TO O_SEQ_CUSTOMER_WAREHOUSE;
+            RENAME SEQ_CW_BOOKINGSLOT       TO O_SEQ_CW_BOOKINGSLOT;
+        </sql>
+    </changeSet>
+
+    <changeSet id="20170426 16:00:01" author="bverid">
+        <createTable tableName="PL_LOCATION">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_PL_LOCATION"/>
+            </column>
+
+            <column name="GOOGLE_PLACE_ID" type="VARCHAR2(127)"></column>
+            <column name="GOOGLE_PLACE_URL" type="VARCHAR2(255)"></column>
+
+            <column name="LAT" type="FLOAT"></column>
+            <column name="LNG" type="FLOAT"></column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <createSequence sequenceName="SEQ_PL_LOCATION" incrementBy="50"/>
+    </changeSet>
+
+
+    <changeSet id="20170426 16:00:02" author="bverid">
+        <createTable tableName="PL_ESTABLISHMENT">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_PL_ESTABLISHMENT"/>
+            </column>
+
+            <column name="OWNER_ID" type="NUMBER(19,0)"></column>
+            <column name="OWNER_NAME" type="VARCHAR2(255)"></column>
+
+            <column name="COUNTRY_ID" type="NUMBER(19,0)"/>
+            <column name="ADDRESS" type="VARCHAR2(255)"></column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <createSequence sequenceName="SEQ_PL_ESTABLISHMENT" incrementBy="50"/>
+
+        <addForeignKeyConstraint baseTableName="PL_ESTABLISHMENT" baseColumnNames="COUNTRY_ID" constraintName="FK_PL_ESTABLISHMENT_LCOUNTRY"
+                                 referencedTableName="LCOUNTRY" referencedColumnNames="ID"/>
+    </changeSet>
+
+
+    <changeSet id="20170426 16:00:03" author="bverid">
+        <createTable tableName="PL_WORKINGHOUR">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_PL_WORKINGHOUR"/>
+            </column>
+            <column name="ESTABLISHMENT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DAY" type="VARCHAR2(10)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createSequence sequenceName="SEQ_PL_WORKINGHOUR" incrementBy="50"/>
+
+        <addForeignKeyConstraint baseTableName="PL_WORKINGHOUR" baseColumnNames="ESTABLISHMENT_ID" constraintName="FK_PL_WORKINGH_PL_ESTABLISH"
+                                 referencedTableName="PL_ESTABLISHMENT" referencedColumnNames="ID"/>
+        <addUniqueConstraint tableName="PL_WORKINGHOUR" columnNames="ESTABLISHMENT_ID, DAY"></addUniqueConstraint>
+
+    </changeSet>
+
+    <changeSet id="20170426 16:00:04" author="bverid">
+        <createTable tableName="PL_WORKINGHOUR_TIME">
+            <column name="WORKINGHOUR_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="START_TIME" type="VARCHAR2(5)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="END_TIME" type="VARCHAR2(5)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="PL_WORKINGHOUR_TIME" baseColumnNames="WORKINGHOUR_ID" constraintName="FK_PL_WORKHTIME_PL_WORKH"
+                                 referencedTableName="PL_WORKINGHOUR" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170426 16:00:05" author="bverid">
+        <createTable tableName="PL_PHONE">
+            <column name="ESTABLISHMENT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IS_DEFAULT" type="NUMBER(1,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PHONE_TYPE" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="COUNTRY_CODE" type="VARCHAR2(5)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REGION_CODE" type="VARCHAR2(5)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PHONE" type="VARCHAR2(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EXTENSION" type="VARCHAR2(6)"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="PL_PHONE" baseColumnNames="ESTABLISHMENT_ID" constraintName="FK_PL_PHONE_PL_ESTABLISHMENT"
+                                 referencedTableName="PL_ESTABLISHMENT" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170426 16:00:06" author="bverid">
+        <createTable tableName="PLACE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="NAME" type="VARCHAR2(80)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LOCAL_NAME" type="VARCHAR2(255)"/>
+            <column name="IS_ACTIVE" type="NUMBER(1,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LOCATION_ID" type="NUMBER(19,0)"/>
+            <column name="ESTABLISHMENT_ID" type="NUMBER(19,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <createSequence sequenceName="SEQ_PLACE" incrementBy="50"/>
+
+        <addForeignKeyConstraint baseTableName="PLACE" baseColumnNames="LOCATION_ID" constraintName="FK_PLACE_PL_LOCATION"
+                                 referencedTableName="PL_LOCATION" referencedColumnNames="ID"/>
+        <addForeignKeyConstraint baseTableName="PLACE" baseColumnNames="ESTABLISHMENT_ID" constraintName="FK_PLACE_PL_ESTABLISHMENT"
+                                 referencedTableName="PL_ESTABLISHMENT" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <!--LOCATION REFACTORING ENDS-->
+
+
+
+    <!--LOCATION:  PORT / CUSTOMER WAREHOUSE REFACTORING STARTS-->
+
+
+    <changeSet id="20170426 17:00:00" author="bverid">
+        <sql>
+            alter table O_PORT rename constraint PK_PORT to O_PK_PORT;
+            rename SEQ_PORT to O_SEQ_PORT
+        </sql>
+    </changeSet>
+
+    <changeSet id="20170426 17:00:01" author="bverid">
+        <createTable tableName="PORT">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_PORT" />
+            </column>
+            <column name="REGISTRATION_METHOD" type="VARCHAR2(30)" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="ENTRANCE_TIME_FROM" type="VARCHAR2(5)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ENTRANCE_TIME_TO" type="VARCHAR2(5)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ENTRANCE_GATE" type="VARCHAR2(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REGISTRATION_COMPANY_ID" type="NUMBER(19,0)"/>
+            <column name="REGISTRATION_COMPANY_NAME" type="VARCHAR2(255)"></column>
+            <column name="REGISTRATION_LOCATION_ID" type="NUMBER(19,0)"/>
+            <column name="REGISTRATION_LOCATION_NAME" type="VARCHAR2(255)"></column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <createSequence sequenceName="SEQ_PORT" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20170426 17:00:02" author="bverid">
+        <sql>
+            alter table O_PORT_ASSET rename constraint PK_PORT_ASSET to O_PK_PORT_ASSET;
+        </sql>
+    </changeSet>
+
+    <changeSet id="20170426 17:00:03" author="bverid">
+        <createTable tableName="PORT_ASSET">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_PORT_ASSET"/>
+            </column>
+            <column name="PORT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TYPE" type="VARCHAR2(31)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="AMOUNT" type="NUMBER(5,0)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createSequence sequenceName="SEQ_PORT_ASSET" incrementBy="50"/>
+        <addForeignKeyConstraint baseTableName="PORT_ASSET" baseColumnNames="PORT_ID" constraintName="FK_PORT_ASSET_PORT"
+                                 referencedTableName="PORT" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170426 17:00:04" author="bverid">
+        <createTable tableName="CUSTOMER_WAREHOUSE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CUSTOMER_WAREHOUSE" />
+            </column>
+            <column name="BOOKING_TYPE" type="VARCHAR2(30)" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="BOOKING_URL" type="VARCHAR2(512)"/>
+            <column name="BOOKING_CONTACT_ID" type="VARCHAR2(5)"/>
+            <column name="BOOKING_CONTACT_NAME" type="VARCHAR2(5)"/>
+            <column name="LOADING_REQUIRES_BOOKING" type="VARCHAR2(16)"/>
+            <column name="UNLOADING_REQUIRES_BOOKING" type="VARCHAR2(16)"/>
+            <column name="REGISTRATION_COMPANY_ID" type="NUMBER(19,0)"/>
+            <column name="REGISTRATION_LOCATION_ID" type="NUMBER(19,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_CUSTOMER_WAREHOUSE" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20170426 17:00:05" author="bverid">
+        <sql>
+            alter table O_CW_BOOKINGSLOT rename constraint PK_CW_BOOKINGSLOT to O_PK_CW_BOOKINGSLOT;
+            alter table O_CW_BOOKINGSLOT rename constraint FK_CWBOOKINGSLOT_CW to O_FK_CWBOOKINGSLOT_CW;
+            alter table O_CW_BOOKINGSLOT rename constraint UK_CW_BOOKINGSLOT to O_UK_CW_BOOKINGSLOT;
+        </sql>
+    </changeSet>
+
+    <changeSet id="20170426 17:00:06" author="bverid">
+        <createTable tableName="CW_BOOKINGSLOT">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_CW_BOOKINGSLOT1"/>
+            </column>
+            <column name="CUSTOMER_WAREHOUSE_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TYPE" type="VARCHAR2(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DAY" type="VARCHAR2(10)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createSequence sequenceName="SEQ_CW_BOOKINGSLOT" incrementBy="50"/>
+        <addForeignKeyConstraint baseTableName="CW_BOOKINGSLOT" baseColumnNames="CUSTOMER_WAREHOUSE_ID" constraintName="FK_CWBOOKINGSLOT_CW"
+                                 referencedTableName="CUSTOMER_WAREHOUSE" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170426 17:00:07" author="bverid">
+        <addUniqueConstraint constraintName="UK_CW_BOOKINGSLOT1" tableName="CW_BOOKINGSLOT" columnNames="CUSTOMER_WAREHOUSE_ID, DAY, TYPE"></addUniqueConstraint>
+    </changeSet>
+
+
+    <changeSet id="20170426 17:00:08" author="bverid">
+
+        <createTable tableName="CW_BOOKINGSLOT_TIME">
+            <column name="CW_BOOKINGSLOT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="START_TIME" type="VARCHAR2(5)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="END_TIME" type="VARCHAR2(5)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="CW_BOOKINGSLOT_TIME" baseColumnNames="CW_BOOKINGSLOT_ID" constraintName="FK_CWBSTIME_CWBST"
+                                 referencedTableName="CW_BOOKINGSLOT" referencedColumnNames="ID"/>
+    </changeSet>
+
+
+    <changeSet id="20170428 10:00" author="kilimci">
+        <addColumn tableName="PORT">
+            <column name="NAME" type="VARCHAR2(80)" />
+            <column name="LOCAL_NAME" type="VARCHAR2(255)"/>
+            <column name="ACTIVE" type="NUMBER(1,0)" />
+            <column name="LOCATION_ID" type="NUMBER(19,0)"/>
+            <column name="ESTABLISHMENT_ID" type="NUMBER(19,0)"/>
+        </addColumn>
+        <addForeignKeyConstraint baseTableName="PORT" baseColumnNames="LOCATION_ID" constraintName="FK_PORT_LOCATION"
+                                 referencedTableName="PL_LOCATION" referencedColumnNames="ID"/>
+        <addForeignKeyConstraint baseTableName="PORT" baseColumnNames="ESTABLISHMENT_ID" constraintName="FK_PORT_ESTABLISHMENT"
+                                 referencedTableName="PL_ESTABLISHMENT" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170428 12:00" author="kilimci">
+        <dropColumn tableName="PL_ESTABLISHMENT" columnName="ADDRESS"/>
+        <addColumn tableName="PL_ESTABLISHMENT">
+            <column name="REGION" type="VARCHAR2(100)" />
+            <column name="CITY" type="VARCHAR2(100)" />
+            <column name="DISTRICT" type="VARCHAR2(100)" />
+            <column name="POSTAL_CODE" type="VARCHAR2(10)" />
+            <column name="STREET_ADDRESS" type="VARCHAR2(255)" />
+            <column name="FORMATTED_ADDRESS" type="VARCHAR2(255)" />
+        </addColumn>
+    </changeSet>
+
+    <!--LOCATION:  PORT / CUSTOMER WAREHOUSE REFACTORING ENDS-->
+
+    <changeSet id="20170428 15:00" author="kilimci">
+        <dropColumn tableName="PORT" columnName="ENTRANCE_TIME_FROM"/>
+        <dropColumn tableName="PORT" columnName="ENTRANCE_TIME_TO"/>
+    </changeSet>
+
+    <changeSet id="20170428 15:05" author="kilimci">
+        <addColumn tableName="PORT">
+            <column name="ENTRANCE_TIME_FROM" type="NUMBER(2,0)" />
+            <column name="ENTRANCE_TIME_TO" type="NUMBER(2,0)" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170428 15:06" author="kilimci">
+        <sql>update PORT set ENTRANCE_TIME_FROM = 1, ENTRANCE_TIME_TO = 2;</sql>
+    </changeSet>
+
+    <changeSet id="20170428 15:07" author="kilimci">
+        <addNotNullConstraint tableName="PORT" columnName="ENTRANCE_TIME_FROM"/>
+        <addNotNullConstraint tableName="PORT" columnName="ENTRANCE_TIME_TO"/>
+    </changeSet>
+
+
+    <changeSet id="20170428 16:05" author="kilimci">
+        <createTable tableName="TERMINAL">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TERMINAL" />
+            </column>
+            <column name="NAME" type="VARCHAR2(80)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LOCAL_NAME" type="VARCHAR2(255)"/>
+            <column name="ACTIVE" type="NUMBER(1,0)" />
+            <column name="LOCATION_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ESTABLISHMENT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="REGISTRATION_METHOD" type="VARCHAR2(30)" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="ENTRANCE_TIME_FROM" type="NUMBER(2,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ENTRANCE_TIME_TO" type="NUMBER(2,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ENTRANCE_GATE" type="VARCHAR2(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REGISTRATION_COMPANY_ID" type="NUMBER(19,0)"/>
+            <column name="REGISTRATION_COMPANY_NAME" type="VARCHAR2(255)"/>
+            <column name="REGISTRATION_LOCATION_ID" type="NUMBER(19,0)"/>
+            <column name="REGISTRATION_LOCATION_NAME" type="VARCHAR2(255)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <createSequence sequenceName="SEQ_TERMINAL" incrementBy="50"/>
+        <addForeignKeyConstraint baseTableName="TERMINAL" baseColumnNames="LOCATION_ID" constraintName="FK_TERMINAL_LOCATION"
+                                 referencedTableName="PL_LOCATION" referencedColumnNames="ID"/>
+        <addForeignKeyConstraint baseTableName="TERMINAL" baseColumnNames="ESTABLISHMENT_ID" constraintName="FK_TERMINAL_ESTABLISHMENT"
+                                 referencedTableName="PL_ESTABLISHMENT" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170426 16:10" author="kilimci">
+        <createTable tableName="TERMINAL_ASSET">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_TERMINAL_ASSET"/>
+            </column>
+            <column name="TERMINAL_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TYPE" type="VARCHAR2(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="AMOUNT" type="NUMBER(5,0)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createSequence sequenceName="SEQ_TERMINAL_ASSET" incrementBy="50"/>
+        <addForeignKeyConstraint baseTableName="TERMINAL_ASSET" baseColumnNames="TERMINAL_ID" constraintName="FK_TERMINAL_ASSET_TERMINAL"
+                                 referencedTableName="TERMINAL" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170502 11:05" author="kilimci">
+        <createTable tableName="TRAILER_PARK">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TRAILER_PARK" />
+            </column>
+            <column name="NAME" type="VARCHAR2(80)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LOCAL_NAME" type="VARCHAR2(255)"/>
+            <column name="ACTIVE" type="NUMBER(1,0)" />
+            <column name="LOCATION_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ESTABLISHMENT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="HAS_SECURITY_STAFF" type="NUMBER(1,0)" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="HAS_CAMERA" type="NUMBER(1,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <createSequence sequenceName="SEQ_TRAILER_PARK" incrementBy="50"/>
+        <addForeignKeyConstraint baseTableName="TRAILER_PARK" baseColumnNames="LOCATION_ID" constraintName="FK_TRAILER_PARK_LOCATION"
+                                 referencedTableName="PL_LOCATION" referencedColumnNames="ID"/>
+        <addForeignKeyConstraint baseTableName="TRAILER_PARK" baseColumnNames="ESTABLISHMENT_ID" constraintName="FK_TRAILER_PARK_ESTABLISHMENT"
+                                 referencedTableName="PL_ESTABLISHMENT" referencedColumnNames="ID"/>
+    </changeSet>
+
+
+    <changeSet id="20170502 12:00" author="kilimci">
+        <addColumn tableName="PORT">
+            <column name="ROUTE_LEG_STOP_ID" type="NUMBER(19,0)" />
+        </addColumn>
+        <addColumn tableName="TERMINAL">
+            <column name="ROUTE_LEG_STOP_ID" type="NUMBER(19,0)" />
+        </addColumn>
+        <addForeignKeyConstraint baseTableName="PORT" baseColumnNames="ROUTE_LEG_STOP_ID" constraintName="FK_PORT_ROUTE_LEG_STOP"
+                                 referencedTableName="LHAUL_ROUTE_LEG_STOP" referencedColumnNames="ID"/>
+        <addForeignKeyConstraint baseTableName="TERMINAL" baseColumnNames="ROUTE_LEG_STOP_ID" constraintName="FK_TERMINAL_ROUTE_LEG_STOP"
+                                 referencedTableName="LHAUL_ROUTE_LEG_STOP" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170502 14:00" author="kilimci">
+
+        <createTable tableName="WAREHOUSE">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_WAREHOUSE"/>
+            </column>
+            <column name="NAME" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LOCAL_NAME" type="VARCHAR2(255)"/>
+            <column name="ACTIVE" type="NUMBER(1,0)" />
+            <column name="LOCATION_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ESTABLISHMENT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ROUTE_LEG_STOP_ID" type="NUMBER(19,0)" />
+
+            <column name="CUSTOMER_LOCATION_ID" type="NUMBER(19,0)"/>
+            <column name="WAREHOUSE_OWNER_TYPE" type="VARCHAR2(100)"/>
+            <column name="AREA" type="NUMBER(10,4)"/>
+            <column name="NUMBER_OF_FLOORS" type="NUMBER(2)"/>
+            <column name="NUMBER_OF_RAMPS" type="NUMBER(3)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_WAREHOUSE" incrementBy="50"/>
+
+        <addForeignKeyConstraint baseTableName="WAREHOUSE" baseColumnNames="ROUTE_LEG_STOP_ID" constraintName="FK_WAREHOUSE_ROUTE_LEG_STOP"
+                                 referencedTableName="LHAUL_ROUTE_LEG_STOP" referencedColumnNames="ID"/>
+        <addForeignKeyConstraint baseTableName="WAREHOUSE" baseColumnNames="LOCATION_ID" constraintName="FK_WAREHOUSE_LOCATION"
+                                 referencedTableName="PL_LOCATION" referencedColumnNames="ID"/>
+        <addForeignKeyConstraint baseTableName="WAREHOUSE" baseColumnNames="ESTABLISHMENT_ID" constraintName="FK_WAREHOUSE_ESTABLISHMENT"
+                                 referencedTableName="PL_ESTABLISHMENT" referencedColumnNames="ID"/>
+
+
+        <createTable tableName="WAREHOUSE_ZONE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_WAREHOUSE_ZONE"/>
+            </column>
+            <column name="NAME" type="VARCHAR2(100)"/>
+            <column name="TYPE" type="VARCHAR2(100)"/>
+            <column name="AREA" type="NUMBER(10,4)"/>
+            <column name="HEIGHT" type="NUMBER(3)"/>
+            <column name="FLOOR_NUMBER" type="NUMBER(2,0)"/>
+            <column name="WAREHOUSE_ID" type="NUMBER(19,0)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_WAREHOUSE_ZONE" incrementBy="50"/>
+
+        <addForeignKeyConstraint
+                baseTableName="WAREHOUSE_ZONE"
+                baseColumnNames="WAREHOUSE_ID"
+                constraintName="FK_WAREHOUSE_ZONE_WAREHOUSE"
+                referencedTableName="WAREHOUSE"
+                referencedColumnNames="ID"/>
+
+
+        <createTable tableName="WAREHOUSE_RAMP">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_WAREHOUSE_RAMP"/>
+            </column>
+            <column name="PROPERTY" type="VARCHAR2(100)"/>
+            <column name="FLOOR_NUMBER" type="NUMBER(2,0)"/>
+            <column name="WAREHOUSE_ID" type="NUMBER(19,0)"/>
+            <column name="RAMP_FROM" type="Number(3)" />
+            <column name="RAMP_TO" type="Number(3)" />
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_WAREHOUSE_RAMP" incrementBy="50"/>
+
+        <addForeignKeyConstraint
+                baseTableName="WAREHOUSE_RAMP"
+                baseColumnNames="WAREHOUSE_ID"
+                constraintName="FK_WAREHOUSE_RAMP_WAREHOUSE"
+                referencedTableName="WAREHOUSE"
+                referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170502 16:30" author="kilimci">
+
+        <createTable tableName="WAREHOUSE_RAMP_USAGE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_WAREHOUSE_RAMP_USAGE"/>
+            </column>
+            <column name="RAMP_FROM" type="Number(3)"/>
+            <column name="RAMP_TO" type="Number(3)"/>
+            <column name="USAGE_TYPE" type="VARCHAR2(100)"/>
+            <column name="WAREHOUSE_ID" type="NUMBER(19,0)"/>
+            <column name="OPERATION_TYPE" type="VARCHAR2(100)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_WAREHOUSE_RAMP_USAGE" incrementBy="50"/>
+
+        <addForeignKeyConstraint
+                baseTableName="WAREHOUSE_RAMP_USAGE"
+                baseColumnNames="WAREHOUSE_ID"
+                constraintName="FK_WAREHOUSE_RMP_USG_WAREHOUSE"
+                referencedTableName="WAREHOUSE"
+                referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170502 17:15" author="kilimci">
+        <dropTable tableName="O_CUSTOMER_WAREHOUSE" cascadeConstraints="true"/>
+        <dropTable tableName="O_CW_BOOKINGSLOT" cascadeConstraints="true"/>
+        <dropTable tableName="O_CW_BOOKINGSLOT_TIME" cascadeConstraints="true"/>
+        <dropTable tableName="O_LOCATION" cascadeConstraints="true"/>
+        <dropTable tableName="O_LOCATION_PHONE" cascadeConstraints="true"/>
+        <dropTable tableName="O_LOCATION_WORKINGHOUR" cascadeConstraints="true"/>
+        <dropTable tableName="O_LOCATION_WORKINGHOUR_TIME" cascadeConstraints="true"/>
+        <dropTable tableName="O_PORT" cascadeConstraints="true"/>
+        <dropTable tableName="O_PORT_ASSET" cascadeConstraints="true"/>
+
+        <dropSequence sequenceName="O_SEQ_CUSTOMER_WAREHOUSE" />
+        <dropSequence sequenceName="O_SEQ_CW_BOOKINGSLOT" />
+        <dropSequence sequenceName="O_SEQ_LOCATION" />
+        <dropSequence sequenceName="O_SEQ_LOCATION_WORKINGHOUR" />
+        <dropSequence sequenceName="O_SEQ_PORT" />
+        <dropSequence sequenceName="O_SEQ_PORT_ASSET" />
+    </changeSet>
+
+    <!--LOCATION:  CUSTOMER WAREHOUSE REFACTORING STARTS-->
+    <changeSet id="20170502 10:00:00" author="bverid">
+        <dropTable tableName="CW_BOOKINGSLOT_TIME" />
+        <dropTable tableName="CW_BOOKINGSLOT" />
+        <dropTable tableName="CUSTOMER_WAREHOUSE" />
+        <dropSequence sequenceName="SEQ_CUSTOMER_WAREHOUSE"/>
+    </changeSet>
+
+    <changeSet id="20170502 10:00:01" author="bverid">
+        <createTable tableName="CUSTOMER_WAREHOUSE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CUSTOMER_WAREHOUSE" />
+            </column>
+
+            <column name="COMPANY_ID" type="NUMBER(19,0)"/>
+            <column name="COMPANY_NAME" type="VARCHAR2(255)"></column>
+
+            <column name="COMPANY_LOCATION_ID" type="NUMBER(19,0)"/>
+            <column name="COMPANY_LOCATION_NAME" type="VARCHAR2(255)"></column>
+
+            <column name="NAME" type="VARCHAR2(80)" />
+            <column name="LOCAL_NAME" type="VARCHAR2(255)"/>
+            <column name="ACTIVE" type="NUMBER(1,0)" />
+            <column name="LOCATION_ID" type="NUMBER(19,0)"/>
+            <column name="ESTABLISHMENT_ID" type="NUMBER(19,0)"/>
+
+            <column name="BOOKING_URL" type="VARCHAR2(512)"/>
+            <column name="BOOKING_CONTACT_ID" type="NUMBER(19,0)"/>
+            <column name="BOOKING_CONTACT_NAME" type="VARCHAR2(80)"/>
+
+            <column name="LOADING_REQUIRES_BOOKING" type="Number(1, 0)"/>
+            <column name="UNLOADING_REQUIRES_BOOKING" type="Number(1, 0)"/>
+            <column name="LOADING_BOOKING_TYPE" type="VARCHAR2(24)"/>
+            <column name="LOADING_BOOKING_TIME" type="Number(2, 0)"/>
+            <column name="UNLOADING_BOOKING_TYPE" type="VARCHAR2(24)"/>
+            <column name="UNLOADING_BOOKING_TIME" type="Number(2, 0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_CUSTOMER_WAREHOUSE" incrementBy="50"/>
+
+        <addForeignKeyConstraint baseTableName="CUSTOMER_WAREHOUSE" baseColumnNames="LOCATION_ID" constraintName="FK_CW_LOCATION"
+                                 referencedTableName="PL_LOCATION" referencedColumnNames="ID"/>
+        <addForeignKeyConstraint baseTableName="CUSTOMER_WAREHOUSE" baseColumnNames="ESTABLISHMENT_ID" constraintName="FK_CW_ESTABLISHMENT"
+                                 referencedTableName="PL_ESTABLISHMENT" referencedColumnNames="ID"/>
+    </changeSet>
+    <!--LOCATION:  CUSTOMER WAREHOUSE REFACTORING ENDS-->
+
+    <!-- CUSTOMER WAREHOUSE: Adds Trailer Pool data STARTS-->
+    <changeSet id="20170502 14:00:00" author="bverid">
+        <addColumn tableName="CUSTOMER_WAREHOUSE">
+            <column name="TRAILER_MIN_REQUIRED" type="Number(6, 0)"></column>
+            <column name="TRAILER_CAPACITY" type="Number(6, 0)"></column>
+            <column name="TRAILER_SUPPLIER_ID" type="Number(19, 0)"></column>
+            <column name="TRAILER_SUPPLIER_NAME" type="VARCHAR2(255)"></column>
+        </addColumn>
+    </changeSet>
+    <!-- CUSTOMER WAREHOUSE: Adds Trailer Pool data ENDS-->
+
+    <!-- CUSTOMER WAREHOUSE: Refactors booking/confirmation STARTS-->
+    <changeSet id="20170502 15:00:00" author="bverid">
+        <dropColumn tableName="CUSTOMER_WAREHOUSE" columnName="BOOKING_URL"/>
+        <dropColumn tableName="CUSTOMER_WAREHOUSE" columnName="BOOKING_CONTACT_ID"/>
+        <dropColumn tableName="CUSTOMER_WAREHOUSE" columnName="BOOKING_CONTACT_NAME"/>
+    </changeSet>
+
+    <changeSet id="20170502 15:00:01" author="bverid">
+        <addColumn tableName="CUSTOMER_WAREHOUSE">
+            <column name="LOADING_BOOKING_URL" type="VARCHAR2(255)"></column>
+            <column name="LOADING_BOOKING_CONTACT_ID" type="Number(19, 0)"></column>
+            <column name="LOADING_BOOKING_CONTACT_NAME" type="VARCHAR2(80)"></column>
+            <column name="UNLOADING_BOOKING_URL" type="VARCHAR2(255)"></column>
+            <column name="UNLOADING_BOOKING_CONTACT_ID" type="Number(19, 0)"></column>
+            <column name="UNLOADING_BOOKING_CONTACT_NAME" type="VARCHAR2(80)"></column>
+        </addColumn>
+    </changeSet>
+    <!-- CUSTOMER WAREHOUSE: Refactors booking/confirmation ENDS-->
+
+    <changeSet id="20170505 12:00" author="kilimci">
+        <dropNotNullConstraint tableName="PORT" columnName="REGISTRATION_METHOD"/>
+        <dropNotNullConstraint tableName="TERMINAL" columnName="REGISTRATION_METHOD"/>
+        <dropNotNullConstraint tableName="PORT" columnName="ENTRANCE_GATE"/>
+        <dropNotNullConstraint tableName="TERMINAL" columnName="ENTRANCE_GATE"/>
+    </changeSet>
+
+    <!--WAREHOUSE REFACTORING STARTS-->
+    <changeSet id="20170504 12:00:01" author="bverid">
+        <renameColumn tableName="WAREHOUSE" oldColumnName="CUSTOMER_LOCATION_ID" newColumnName="COMPANY_LOCATION_ID"/>
+        <addColumn tableName="WAREHOUSE">
+            <column name="COMPANY_LOCATION_NAME" type="VARCHAR2(255)"></column>
+        </addColumn>
+    </changeSet>
+
+    <!--WAREHOUSE REFACTORING ENDS-->
+
+    <changeSet id="20170504 14:50:01" author="Eray Oral">
+        <addColumn tableName="LHAUL_ROUTE_FRAG">
+            <column name="FROM_ID" type="NUMBER(19,0)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170504 14:50:02" author="Eray Oral">
+        <addColumn tableName="LHAUL_ROUTE_FRAG">
+            <column name="TO_ID" type="NUMBER(19,0)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170504 14:50:03" author="Eray Oral">
+        <sql>
+            UPDATE LHAUL_ROUTE_FRAG F SET FROM_ID = (SELECT L.FROM_ID FROM LHAUL_ROUTE_LEG L WHERE L.ID = F.LEG_ID)
+            WHERE F.LEG_ID IS NOT NULL;
+        </sql>
+    </changeSet>
+
+    <changeSet id="20170504 14:50:04" author="Eray Oral">
+        <sql>
+            UPDATE LHAUL_ROUTE_FRAG F SET TO_ID = (SELECT L.TO_ID FROM LHAUL_ROUTE_LEG L WHERE L.ID = F.LEG_ID)
+            WHERE F.LEG_ID IS NOT NULL;
+        </sql>
+    </changeSet>
+
+    <changeSet id="20170504 14:50:05" author="Eray Oral">
+        <sql>
+            UPDATE LHAUL_ROUTE_FRAG F SET FROM_ID = (SELECT R.FROM_ID FROM LHAUL_ROUTE R WHERE R.ID = F.ROUTE_ID)
+            WHERE F.ROUTE_ID IS NOT NULL;
+        </sql>
+    </changeSet>
+
+    <changeSet id="20170504 14:50:06" author="Eray Oral">
+        <sql>
+            UPDATE LHAUL_ROUTE_FRAG F SET TO_ID = (SELECT R.TO_ID FROM LHAUL_ROUTE R WHERE R.ID = F.ROUTE_ID)
+            WHERE F.ROUTE_ID IS NOT NULL;
+        </sql>
+    </changeSet>
+
+    <changeSet id="20170504 14:50:07" author="Eray Oral">
+        <addNotNullConstraint tableName="LHAUL_ROUTE_FRAG" columnName="FROM_ID"/>
+    </changeSet>
+
+    <changeSet id="20170504 14:50:08" author="Eray Oral">
+        <addNotNullConstraint tableName="LHAUL_ROUTE_FRAG" columnName="TO_ID"/>
+    </changeSet>
+
+    <!--ramp_usage will have more than one usage_type, it is converted to element collection-->
+    <changeSet id="20170504 14:50:07" author="bverid" >
+        <dropColumn tableName="WAREHOUSE_RAMP_USAGE" columnName="USAGE_TYPE" />
+    </changeSet>
+
+
+    <changeSet id="20170508 17:45:01" author="Eray Oral">
+
+        <createTable tableName="LHAUL_ROUTE_LEG_SCHDL">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_LHAUL_ROUTE_LEG_SCHDL"/>
+            </column>
+
+            <column name="PARENT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <!-- Not a FK, comes from an external system -->
+            <column name="COMPANY_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="COMPANY_NAME" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="FERRY_NAME" type="VARCHAR2(50)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DEPARTURE_DAY" type="VARCHAR2(9)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DEPARTURE_TIME" type="TIMESTAMP(6)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="ARRIVAL_DAY" type="VARCHAR2(9)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="ARRIVAL_TIME" type="TIMESTAMP(6)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170508 17:45:02" author="Eray Oral">
+        <createSequence sequenceName="SEQ_LHAUL_ROUTE_LEG_SCHDL" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20170508 17:45:03" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="LHAUL_ROUTE_LEG_SCHDL" baseColumnNames="PARENT_ID" constraintName="FK_LHROUTELEGSC_LHROUTELEG"
+                                 referencedTableName="LHAUL_ROUTE_LEG" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170509 12:15:01" author="Eray Oral">
+        <addColumn tableName="LHAUL_ROUTE_LEG_SCHDL">
+            <column name="DURATION" type="NUMBER(10,0)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170509 12:15:02" author="Eray Oral">
+        <!-- Buradaki 1110'un bir anlamı yok, sadece ilgili alanı doldurmak için rastgele bir değer. -->
+        <sql>
+            UPDATE LHAUL_ROUTE_LEG_SCHDL SET DURATION = 1110;
+        </sql>
+    </changeSet>
+
+    <changeSet id="20170509 12:15:03" author="Eray Oral">
+        <addNotNullConstraint tableName="LHAUL_ROUTE_LEG_SCHDL" columnName="DURATION"/>
+    </changeSet>
+
+    <changeSet id="20170509 12:15:04" author="Eray Oral">
+        <dropColumn tableName="LHAUL_ROUTE_LEG_SCHDL" columnName="ARRIVAL_DAY"/>
+    </changeSet>
+
+    <changeSet id="20170509 12:15:05" author="Eray Oral">
+        <dropColumn tableName="LHAUL_ROUTE_LEG_SCHDL" columnName="ARRIVAL_TIME"/>
+    </changeSet>
+
+    <changeSet id="20170510 12:00" author="kilimci">
+        <addColumn tableName="PL_LOCATION">
+            <column name="TIMEZONE" type="VARCHAR2(100)" />
+        </addColumn>
+        <addColumn tableName="LHAUL_ROUTE_LEG_STOP">
+            <column name="TIMEZONE" type="VARCHAR2(100)" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170510 12:25" author="kilimci">
+        <addColumn tableName="LCOUNTRY">
+            <column name="TIMEZONE" type="VARCHAR2(100)" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170504 15:50:12" author="bverid" >
+        <createTable tableName="WAREHOUSE_RAMP_USAGE_TYPE">
+            <column name="WAREHOUSE_RAMP_USAGE_ID" type="NUMBER(19)">
+                <constraints nullable="false" />
+            </column>
+            <column name="USAGE_TYPE" type="VARCHAR2(40)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="WAREHOUSE_RAMP_USAGE_TYPE" baseColumnNames="WAREHOUSE_RAMP_USAGE_ID" constraintName="FK_USAGE_TYPE_WHRAMP_USAGE"
+                                 referencedTableName="WAREHOUSE_RAMP_USAGE" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170511 09:50:34" author="bverid" >
+        <addColumn tableName="WAREHOUSE_RAMP">
+            <column name="ACTIVE" type="NUMBER(1,0)"></column>
+        </addColumn>
+        <sql>
+            update WAREHOUSE_RAMP set active = 1;
+        </sql>
+    </changeSet>
+
+    <changeSet id="20170512 16:35" author="kilimci">
+        <dropNotNullConstraint tableName="LHAUL_ROUTE_LEG_SCHDL" columnName="FERRY_NAME" />
+    </changeSet>
+
+    <changeSet id="20170515 15:10:00" author="bverid" >
+        <addColumn tableName="CUSTOMER_WAREHOUSE">
+            <column name="SIDE_LOADING_UNLOADING" type="NUMBER(1,0)"/>
+            <column name="RAMP_LOADING_UNLOADING" type="NUMBER(1,0)"/>
+            <column name="CRANE_LOADING_UNLOADING" type="NUMBER(1,0)"/>
+
+            <column name="REGISTRATION_COMPANY_ID" type="NUMBER(19,0)"/>
+            <column name="REGISTRATION_COMPANY_NAME" type="VARCHAR2(255)"></column>
+            <column name="REGISTRATION_COMPANY_LOC_ID" type="NUMBER(19,0)"/>
+            <column name="REGISTRATION_COMPANY_LOC_NAME" type="VARCHAR2(255)"></column>
+
+            <column name="DOC_CLAIM_COMPANY_ID" type="NUMBER(19,0)"/>
+            <column name="DOC_CLAIM_COMPANY_NAME" type="VARCHAR2(255)"></column>
+            <column name="DOC_CLAIM_COMPANY_LOC_ID" type="NUMBER(19,0)"/>
+            <column name="DOC_CLAIM_COMPANY_LOC_NAME" type="VARCHAR2(255)"></column>
+
+            <column name="FREE_TIME" type="VARCHAR2(6)"></column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170517 14:45:01" author="Eray Oral">
+
+        <createTable tableName="LHAUL_ROUTE_LEG_NON_SCHDL">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_LHAUL_ROUTE_LEG_NON_SCHDL"/>
+            </column>
+
+            <column name="PARENT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <!-- Not a FK, comes from an external system -->
+            <column name="COMPANY_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="COMPANY_NAME" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DURATION" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170517 14:45:02" author="Eray Oral">
+        <createSequence sequenceName="SEQ_LHAUL_ROUTE_LEG_NON_SCHDL" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20170517 14:45:03" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="LHAUL_ROUTE_LEG_NON_SCHDL" baseColumnNames="PARENT_ID" constraintName="FK_LHROUTELEGNOSC_LHROUTELEG"
+                                 referencedTableName="LHAUL_ROUTE_LEG" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170517 14:50:01" author="Eray Oral">
+        <dropNotNullConstraint tableName="LHAUL_ROUTE_LEG_SCHDL" columnName="COMPANY_ID"/>
+    </changeSet>
+
+    <changeSet id="20170517 14:50:02" author="Eray Oral">
+        <dropNotNullConstraint tableName="LHAUL_ROUTE_LEG_SCHDL" columnName="COMPANY_NAME"/>
+    </changeSet>
+
+    <changeSet id="20170517 14:50:03" author="Eray Oral">
+        <dropNotNullConstraint tableName="LHAUL_ROUTE_LEG_NON_SCHDL" columnName="COMPANY_ID"/>
+    </changeSet>
+
+    <changeSet id="20170517 14:50:04" author="Eray Oral">
+        <dropNotNullConstraint tableName="LHAUL_ROUTE_LEG_NON_SCHDL" columnName="COMPANY_NAME"/>
+    </changeSet>
+
+    <changeSet id="20170518 10:45:01" author="Eray Oral">
+        <modifyDataType tableName="POLYGON_REGION" columnName="LOCAL_NAME" newDataType="VARCHAR2(255)"/>
+    </changeSet>
+
+
+    <changeSet id="20170518 16:45:01" author="bverid">
+        <dropColumn tableName="CUSTOMER_WAREHOUSE" columnName="TRAILER_SUPPLIER_ID"/>
+        <dropColumn tableName="CUSTOMER_WAREHOUSE" columnName="TRAILER_SUPPLIER_NAME"/>
+    </changeSet>
+
+    <changeSet id="20170608 10:15:32" author="bverid">
+        <addColumn tableName="WAREHOUSE">
+            <column name="STORAGE_VOLUME" type="NUMBER(10, 0)"></column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170608 11:35:31" author="bverid">
+        <dropForeignKeyConstraint baseTableName="WAREHOUSE_RAMP_USAGE" constraintName="FK_WAREHOUSE_RMP_USG_WAREHOUSE"/>
+    </changeSet>
+
+    <changeSet id="20170608 11:35:32" author="bverid">
+        <dropTable tableName="WAREHOUSE_RAMP_USAGE_TYPE"/>
+        <dropTable tableName="WAREHOUSE_RAMP_USAGE"/>
+        <dropSequence sequenceName="SEQ_WAREHOUSE_RAMP_USAGE"/>
+    </changeSet>
+
+    <changeSet id="20170608 11:35:33" author="bverid">
+        <sql>
+            update warehouse_ramp set property = 'STANDARD_DOCK' where property = 'LOADING_FROM_RAMP';
+            update warehouse_ramp set property = 'SIDE_LOADING_DOCK' where property = 'SIDE_LOADING';
+            update warehouse_ramp set property = 'NOT_SUITABLE_FOR_CONTAINERS' where property = 'NOT_SUITABLE_FOR_CONTAINERS' or property = 'SUITABLE_FOR_SWAP_DOBY_CONTAINERS';
+        </sql>
+    </changeSet>
+
+    <changeSet id="20170612 16:30:01" author="Eray Oral">
+
+        <createTable tableName="OPERATION_RG">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_OPERATION_RG"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170612 16:30:02" author="Eray Oral">
+        <createSequence sequenceName="SEQ_OPERATION_RG" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20170612 16:30:03" author="Eray Oral">
+
+        <createTable tableName="OPERATION_RG_TO_POLYGON_RG">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_OPERATION_RG_TO_POLYGON_RG"/>
+            </column>
+
+            <column name="OPERATION_REGION_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="POLYGON_REGION_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170612 16:30:04" author="Eray Oral">
+        <createSequence sequenceName="SEQ_OPERATION_RG_TO_POLYGON_RG" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20170612 16:30:05" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="OPERATION_RG_TO_POLYGON_RG" baseColumnNames="OPERATION_REGION_ID" constraintName="FK_OPERRG2POLYRG_OPERRG"
+                                 referencedTableName="OPERATION_RG" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170612 16:30:06" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="OPERATION_RG_TO_POLYGON_RG" baseColumnNames="POLYGON_REGION_ID" constraintName="FK_OPERRG2POLYRG_POLYRG"
+                                 referencedTableName="POLYGON_REGION" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <!--Adds polygon table for location starts-->
+    <changeSet id="20170611 11:00:00" author="bverid">
+        <createTable tableName="PL_LOCATION_POLYGON_PATH">
+            <column name="LOCATION_ID" type="Number(19, 0)"></column>
+            <column name="LAT" type="FLOAT"></column>
+            <column name="LNG" type="FLOAT"></column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170611 11:00:01" author="bverid">
+        <addForeignKeyConstraint baseTableName="PL_LOCATION_POLYGON_PATH" baseColumnNames="LOCATION_ID"
+                                 constraintName="PL_POLYGONPATH_LOCATION"
+                                 referencedTableName="PL_LOCATION" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170611 16:00:01" author="bverid">
+        <renameColumn tableName="WAREHOUSE_RAMP" oldColumnName="RAMP_FROM" newColumnName="RAMP_NO"/>
+    </changeSet>
+    <!--Adds polygon table for location ends-->
+
+
+
+    <!--Adds goods in & goods out ramps for zones starts-->
+    <changeSet id="20170613 11:55:00" author="bverid">
+        <createTable tableName="WAREHOUSE_ZONE_GOODSIN_RAMP">
+            <column name="ZONE_ID" type="Number(19, 0)"></column>
+            <column name="RAMP_ID" type="Number(19, 0)"></column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170613 11:55:01" author="bverid">
+        <addForeignKeyConstraint baseTableName="WAREHOUSE_ZONE_GOODSIN_RAMP" baseColumnNames="ZONE_ID" constraintName="FK_WHZONE_GINRAMP_ZONE"
+                                 referencedTableName="WAREHOUSE_ZONE" referencedColumnNames="ID"/>
+        <addForeignKeyConstraint baseTableName="WAREHOUSE_ZONE_GOODSIN_RAMP" baseColumnNames="RAMP_ID" constraintName="FK_WHZONE_GINRAMP_RAMP"
+                                 referencedTableName="WAREHOUSE_RAMP" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170613 11:55:02" author="bverid">
+        <createTable tableName="WAREHOUSE_ZONE_GOODSOUT_RAMP">
+            <column name="ZONE_ID" type="Number(19, 0)"></column>
+            <column name="RAMP_ID" type="Number(19, 0)"></column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170613 11:55:03" author="bverid">
+        <addForeignKeyConstraint baseTableName="WAREHOUSE_ZONE_GOODSOUT_RAMP" baseColumnNames="ZONE_ID" constraintName="FK_WHZONE_GOUTRAMP_ZONE"
+                                 referencedTableName="WAREHOUSE_ZONE" referencedColumnNames="ID"/>
+        <addForeignKeyConstraint baseTableName="WAREHOUSE_ZONE_GOODSOUT_RAMP" baseColumnNames="RAMP_ID" constraintName="FK_WHZONE_GOUTRAMP_RAMP"
+                                 referencedTableName="WAREHOUSE_RAMP" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170613 11:55:04" author="bverid">
+        <addColumn tableName="WAREHOUSE_ZONE_GOODSIN_RAMP">
+            <column name="SORT_INDEX" type="Integer"></column>
+        </addColumn>
+        <addColumn tableName="WAREHOUSE_ZONE_GOODSOUT_RAMP">
+            <column name="SORT_INDEX" type="Integer"></column>
+        </addColumn>
+    </changeSet>
+    <!--Adds goods in & goods out ramps for zones ends-->
+
+    <changeSet id="20170613 15:30:01" author="Eray Oral">
+        <addColumn tableName="COORDINATE">
+            <column name="COUNTRY_ISO_ALPHA3CODE" type="CHAR(3)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170613 15:30:02" author="Eray Oral">
+        <addColumn tableName="COORDINATE">
+            <column name="LVL" type="NUMBER(2,0)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170613 15:30:03" author="Eray Oral">
+        <createIndex tableName="COORDINATE" indexName="INDX_COORDINATE_ISO3_LVL">
+            <column name="COUNTRY_ISO_ALPHA3CODE"/>
+            <column name="LVL"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="20170615 15:05:01" author="Eray Oral">
+        <addColumn tableName="POLYGON_REGION">
+            <column name="CENTER_LONGITUDE" type="NUMBER"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170615 15:05:02" author="Eray Oral">
+        <addColumn tableName="POLYGON_REGION">
+            <column name="CENTER_LATITUDE" type="NUMBER"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170615 15:20:01" author="Eray Oral">
+        <dropColumn tableName="POLYGON_REGION" columnName="CENTER_LONGITUDE"/>
+    </changeSet>
+
+    <changeSet id="20170615 15:20:02" author="Eray Oral">
+        <dropColumn tableName="POLYGON_REGION" columnName="CENTER_LATITUDE"/>
+    </changeSet>
+
+    <changeSet id="20170615 15:20:03" author="Eray Oral">
+        <addColumn tableName="LCOUNTRY">
+            <column name="CENTER_LAT" type="NUMBER"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170615 15:20:04" author="Eray Oral">
+        <addColumn tableName="LCOUNTRY">
+            <column name="CENTER_LNG" type="NUMBER"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170615 15:20:05" author="Eray Oral">
+        <!-- EKOL ülkeleri -->
+        <sql>
+            UPDATE LCOUNTRY SET CENTER_LAT = 43.915886, CENTER_LNG = 17.679076 WHERE ISO_ALPHA3CODE = 'BIH';
+            UPDATE LCOUNTRY SET CENTER_LAT = 42.733883, CENTER_LNG = 25.48583 WHERE ISO_ALPHA3CODE = 'BGR';
+            UPDATE LCOUNTRY SET CENTER_LAT = 49.817492, CENTER_LNG = 15.472962 WHERE ISO_ALPHA3CODE = 'CZE';
+            UPDATE LCOUNTRY SET CENTER_LAT = 46.227638, CENTER_LNG = 2.213749 WHERE ISO_ALPHA3CODE = 'FRA';
+            UPDATE LCOUNTRY SET CENTER_LAT = 51.165691, CENTER_LNG = 10.451526 WHERE ISO_ALPHA3CODE = 'DEU';
+            UPDATE LCOUNTRY SET CENTER_LAT = 39.074208, CENTER_LNG = 21.824312 WHERE ISO_ALPHA3CODE = 'GRC';
+            UPDATE LCOUNTRY SET CENTER_LAT = 47.162494, CENTER_LNG = 19.503304 WHERE ISO_ALPHA3CODE = 'HUN';
+            UPDATE LCOUNTRY SET CENTER_LAT = 32.427908, CENTER_LNG = 53.688046 WHERE ISO_ALPHA3CODE = 'IRN';
+            UPDATE LCOUNTRY SET CENTER_LAT = 41.871940, CENTER_LNG = 12.56738 WHERE ISO_ALPHA3CODE = 'ITA';
+            UPDATE LCOUNTRY SET CENTER_LAT = 51.919438, CENTER_LNG = 19.145136 WHERE ISO_ALPHA3CODE = 'POL';
+            UPDATE LCOUNTRY SET CENTER_LAT = 45.943161, CENTER_LNG = 24.96676 WHERE ISO_ALPHA3CODE = 'ROU';
+            UPDATE LCOUNTRY SET CENTER_LAT = 46.151241, CENTER_LNG = 14.995463 WHERE ISO_ALPHA3CODE = 'SVN';
+            UPDATE LCOUNTRY SET CENTER_LAT = 40.463667, CENTER_LNG = -3.74922 WHERE ISO_ALPHA3CODE = 'ESP';
+            UPDATE LCOUNTRY SET CENTER_LAT = 38.963745, CENTER_LNG = 35.243322 WHERE ISO_ALPHA3CODE = 'TUR';
+            UPDATE LCOUNTRY SET CENTER_LAT = 48.379433, CENTER_LNG = 31.16558 WHERE ISO_ALPHA3CODE = 'UKR';
+        </sql>
+    </changeSet>
+
+    <changeSet id="20170615 17:10:01" author="Eray Oral">
+        <addColumn tableName="OPERATION_RG">
+            <column name="NAME" type="VARCHAR2(255)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170615 17:10:02" author="Eray Oral">
+        <sql>
+            UPDATE OPERATION_RG SET NAME = 'OPERATION REGION ' || ID;
+        </sql>
+    </changeSet>
+
+    <changeSet id="20170615 17:10:03" author="Eray Oral">
+        <addNotNullConstraint tableName="OPERATION_RG" columnName="NAME"/>
+    </changeSet>
+
+    <changeSet id="20170615 17:10:04" author="Eray Oral">
+
+        <createTable tableName="OPERATION_RG_TAG">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_OPERATION_RG_TAG"/>
+            </column>
+
+            <column name="OPERATION_REGION_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="VALUE" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170615 17:10:05" author="Eray Oral">
+        <createSequence sequenceName="SEQ_OPERATION_RG_TAG" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20170615 17:10:06" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="OPERATION_RG_TAG" baseColumnNames="OPERATION_REGION_ID" constraintName="FK_OPERRGTAG_OPERRG"
+                                 referencedTableName="OPERATION_RG" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170619 11:10:00" author="bverid">
+        <addColumn tableName="PL_LOCATION_POLYGON_PATH">
+            <column name="SORT_INDEX" type="INTEGER"></column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170621 10:10:01" author="Eray Oral">
+
+        <createTable tableName="COLL_RG">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_COLL_RG"/>
+            </column>
+
+            <column name="OPERATION_REGION_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="NAME" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170621 10:10:02" author="Eray Oral">
+        <createSequence sequenceName="SEQ_COLL_RG" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20170621 10:10:03" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="COLL_RG" baseColumnNames="OPERATION_REGION_ID" constraintName="FK_COLLRG_OPERRG"
+                                 referencedTableName="OPERATION_RG" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170621 10:10:04" author="Eray Oral">
+
+        <createTable tableName="COLL_RG_TAG">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_COLL_RG_TAG"/>
+            </column>
+
+            <column name="COLLECTION_REGION_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="VALUE" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170621 10:10:05" author="Eray Oral">
+        <createSequence sequenceName="SEQ_COLL_RG_TAG" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20170621 10:10:06" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="COLL_RG_TAG" baseColumnNames="COLLECTION_REGION_ID" constraintName="FK_COLLRGTAG_COLLRG"
+                                 referencedTableName="COLL_RG" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170621 10:10:07" author="Eray Oral">
+
+        <createTable tableName="COLL_RG_TO_POLYGON_RG">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_COLL_RG_TO_POLYGON_RG"/>
+            </column>
+
+            <column name="COLLECTION_REGION_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="POLYGON_REGION_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="CATEGORY" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170621 10:10:08" author="Eray Oral">
+        <createSequence sequenceName="SEQ_COLL_RG_TO_POLYGON_RG" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20170621 10:10:09" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="COLL_RG_TO_POLYGON_RG" baseColumnNames="COLLECTION_REGION_ID" constraintName="FK_COLLRG2POLYRG_COLLRG"
+                                 referencedTableName="COLL_RG" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170621 10:10:10" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="COLL_RG_TO_POLYGON_RG" baseColumnNames="POLYGON_REGION_ID" constraintName="FK_COLLRG2POLYRG_POLYRG"
+                                 referencedTableName="POLYGON_REGION" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170621 10:10:11" author="Eray Oral">
+
+        <createTable tableName="DIST_RG">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_DIST_RG"/>
+            </column>
+
+            <column name="OPERATION_REGION_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="NAME" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170621 10:10:12" author="Eray Oral">
+        <createSequence sequenceName="SEQ_DIST_RG" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20170621 10:10:13" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="DIST_RG" baseColumnNames="OPERATION_REGION_ID" constraintName="FK_DISTRG_OPERRG"
+                                 referencedTableName="OPERATION_RG" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170621 10:10:14" author="Eray Oral">
+
+        <createTable tableName="DIST_RG_TAG">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_DIST_RG_TAG"/>
+            </column>
+
+            <column name="DISTRIBUTION_REGION_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="VALUE" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170621 10:10:15" author="Eray Oral">
+        <createSequence sequenceName="SEQ_DIST_RG_TAG" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20170621 10:10:16" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="DIST_RG_TAG" baseColumnNames="DISTRIBUTION_REGION_ID" constraintName="FK_DISTRGTAG_DISTRG"
+                                 referencedTableName="DIST_RG" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170621 10:10:17" author="Eray Oral">
+
+        <createTable tableName="DIST_RG_TO_POLYGON_RG">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_DIST_RG_TO_POLYGON_RG"/>
+            </column>
+
+            <column name="DISTRIBUTION_REGION_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="POLYGON_REGION_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="CATEGORY" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170621 10:10:18" author="Eray Oral">
+        <createSequence sequenceName="SEQ_DIST_RG_TO_POLYGON_RG" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20170621 10:10:19" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="DIST_RG_TO_POLYGON_RG" baseColumnNames="DISTRIBUTION_REGION_ID" constraintName="FK_DISTRG2POLYRG_DISTRG"
+                                 referencedTableName="DIST_RG" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170621 10:10:20" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="DIST_RG_TO_POLYGON_RG" baseColumnNames="POLYGON_REGION_ID" constraintName="FK_DISTRG2POLYRG_POLYRG"
+                                 referencedTableName="POLYGON_REGION" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170623 15:30:03" author="bverid">
+        <addColumn tableName="WAREHOUSE_ZONE">
+            <column name="RAMP_SELECTION_FOR_GOODS_IN" type="CHAR(14)"/>
+            <column name="RAMP_SELECTION_FOR_GOODS_OUT" type="CHAR(14)"/>
+        </addColumn>
+
+    </changeSet>
+
+    <changeSet id="20170705 15:50:01" author="Eray Oral">
+        <createIndex tableName="COORDINATE" indexName="INDX_COORDINATE_RINGDEL">
+            <column name="RING_ID"/>
+            <column name="DELETED"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="20170707 18:25:01" author="Eray Oral">
+
+        <createTable tableName="POSTCODE">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_POSTCODE"/>
+            </column>
+
+            <column name="VALUE" type="VARCHAR2(10)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="LATITUDE" type="NUMBER">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="LONGITUDE" type="NUMBER">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="COUNTRY_ISO_ALPHA3_CODE" type="CHAR(3)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="REGION_ID" type="NUMBER(19,0)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170707 18:25:02" author="Eray Oral">
+        <createSequence sequenceName="SEQ_POSTCODE" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20170707 18:25:03" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="POSTCODE" baseColumnNames="REGION_ID" constraintName="FK_POSTCODE_POLYRG"
+                                 referencedTableName="POLYGON_REGION" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170707 18:25:04" author="Eray Oral">
+        <createIndex tableName="POSTCODE" indexName="INDX_POSTCODE_REGIONDEL">
+            <column name="REGION_ID"/>
+            <column name="DELETED"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="20170707 18:25:05" author="Eray Oral">
+        <dropNotNullConstraint tableName="POSTCODE" columnName="LATITUDE"/>
+    </changeSet>
+
+    <changeSet id="20170707 18:25:06" author="Eray Oral">
+        <dropNotNullConstraint tableName="POSTCODE" columnName="LONGITUDE"/>
+    </changeSet>
+
+    <changeSet id="20170707 18:25:07" author="Eray Oral">
+        <renameColumn tableName="POSTCODE" oldColumnName="COUNTRY_ISO_ALPHA3_CODE" newColumnName="COUNTRY_ISO_ALPHA3CODE"/>
+    </changeSet>
+
+    <changeSet id="20170711 09:15:01" author="Eray Oral">
+        <dropIndex tableName="COORDINATE" indexName="INDX_COORDINATE_ISO3_LVL"/>
+    </changeSet>
+
+    <changeSet id="20170711 09:15:02" author="Eray Oral">
+        <dropColumn tableName="COORDINATE" columnName="COUNTRY_ISO_ALPHA3CODE"/>
+    </changeSet>
+
+    <changeSet id="20170711 09:15:03" author="Eray Oral">
+        <dropColumn tableName="COORDINATE" columnName="LVL"/>
+    </changeSet>
+
+    <changeSet id="20170711 11:05:01" author="Eray Oral">
+        <createIndex tableName="POSTCODE" indexName="INDX_POSTCODE_VALUEDEL">
+            <column name="VALUE"/>
+            <column name="DELETED"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="20171103 09:30" author="kilimci">
+        <sqlFile path="add-column-deleted-at.sql" encoding="utf8" relativeToChangelogFile="true" splitStatements="false"/>
+    </changeSet>
+
+    <changeSet id="20171113 01:46:01" author="Eray Oral">
+        <sql>UPDATE LCOUNTRY SET CURRENCY = 'TRY' WHERE CURRENCY = 'TRL'</sql>
+    </changeSet>
+
+    <changeSet id="20171211 15:46:00" author="bverid">
+        <createTable tableName="ROUTE_LEG_EXPEDITION">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ROUTE_LEG_EXPEDITION"/>
+            </column>
+
+            <column name="CODE" type="VARCHAR(10)"/>
+            <column name="KEY" type="NUMBER(8,0)"/>
+
+            <column name="ROUTE_LEG_ID" type="NUMBER(19,0)"/>
+            <column name="SCHEDULE_ID" type="NUMBER(19,0)"/>
+
+            <column name="DEPARTURE_DATE" type="TIMESTAMP"/>
+            <column name="DEPARTURE_DATE_TZ" type="VARCHAR(48)"/>
+            <column name="ARRIVAL_DATE" type="TIMESTAMP"/>
+            <column name="ARRIVAL_DATE_TZ" type="VARCHAR(48)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20171211 15:46:01" author="bverid">
+        <addForeignKeyConstraint
+                baseColumnNames="ROUTE_LEG_ID"
+                baseTableName="ROUTE_LEG_EXPEDITION"
+                constraintName="FK_EXPEDITION_ROUTELEG"
+                referencedColumnNames="ID"
+                referencedTableName="LHAUL_ROUTE_LEG"/>
+    </changeSet>
+
+    <changeSet id="20171211 15:46:02" author="bverid">
+        <addForeignKeyConstraint
+                baseColumnNames="SCHEDULE_ID"
+                baseTableName="ROUTE_LEG_EXPEDITION"
+                constraintName="FK_EXPEDITION_SCHEDULE"
+                referencedColumnNames="ID"
+                referencedTableName="LHAUL_ROUTE_LEG_SCHDL"/>
+    </changeSet>
+
+    <changeSet id="20171211 15:46:03" author="bverid">
+        <createSequence sequenceName="SEQ_ROUTE_LEG_EXPEDITION" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20171213 14:30:00" author="bverid">
+        <addColumn tableName="LHAUL_ROUTE_LEG_SCHDL">
+            <column name="CAPACITY" type="Number(4,0)"></column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20171213 14:30:01" author="bverid">
+        <addColumn tableName="ROUTE_LEG_EXPEDITION">
+            <column name="STATUS" type="VARCHAR2(12)"></column>
+        </addColumn>
+        <sql>update ROUTE_LEG_EXPEDITION set STATUS = 'PLANNING'</sql>
+    </changeSet>
+
+    <changeSet id="20171215 15:20:00" author="bverid">
+       <createTable tableName="ROUTE_LEG_EXPEDITION_TRIP">
+           <column name="ID" type="NUMBER(19,0)">
+               <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ROUTE_LEG_EXPEDITION_TRIP"/>
+           </column>
+
+           <column name="EXPEDITION_ID" type="NUMBER(19,0)"/>
+
+           <column name="TRIP_ID" type="NUMBER(19,0)"/>
+           <column name="TRIP_PLAN_CODE" type="VARCHAR2(8)"/>
+
+           <column name="TRAILER_ID" type="NUMBER(19,0)"/>
+           <column name="TRAILER_PLATE" type="VARCHAR2(20)"/>
+
+           <column name="NEXT_LOCATION_ID" type="NUMBER(19,0)"/>
+           <column name="NEXT_LOCATION_NAME" type="VARCHAR2(255)"/>
+           <column name="NEXT_LOCATION_POSTAL_CODE" type="VARCHAR2(10)"/>
+           <column name="NEXT_LOCATION_COUNTRY_CODE" type="VARCHAR2(5)"/>
+           <column name="FINAL_LOCATION_COUNTRY_CODE" type="VARCHAR2(5)"/>
+           <column name="NEXT_LOCATION_ETA" type="TIMESTAMP"/>
+           <column name="NEXT_LOCATION_ETA_TZ" type="VARCHAR(48)"/>
+
+           <column name="DELETED" type="NUMBER(1,0)"/>
+           <column name="DELETED_AT" type="TIMESTAMP(6)"/>
+           <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+           <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+       </createTable>
+    </changeSet>
+
+    <changeSet id="20171215 15:20:01" author="bverid">
+        <createSequence sequenceName="SEQ_ROUTE_LEG_EXPEDITION_TRIP" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20171215 15:20:02" author="bverid">
+        <addForeignKeyConstraint
+                baseColumnNames="EXPEDITION_ID"
+                baseTableName="ROUTE_LEG_EXPEDITION_TRIP"
+                constraintName="FK_EXPEDITIONTRIP_EXPEDITION"
+                referencedColumnNames="ID"
+                referencedTableName="ROUTE_LEG_EXPEDITION"/>
+    </changeSet>
+
+    <changeSet id="20171221 14:55:00" author="bverid">
+        <addColumn tableName="ROUTE_LEG_EXPEDITION">
+            <column name="CAPACITY_USAGE" type="Number(4,0)"></column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20171221 14:55:01" author="bverid">
+      <sql>
+          update ROUTE_LEG_EXPEDITION rle set CAPACITY_USAGE = (select count(*) from ROUTE_LEG_EXPEDITION_TRIP where expedition_Id = rle.id);
+      </sql>
+    </changeSet>
+
+    <changeSet id="20180104 12:00:00" author="bverid">
+        <addColumn tableName="ROUTE_LEG_EXPEDITION_TRIP">
+            <column name="SPOT_VEHICLE_ID" type="Number(19,0)"></column>
+            <column name="SPOT_VEHICLE_ROUTE_ID" type="Number(19,0)"></column>
+            <column name="SPOT_VEHICLE_CARRIER_PLATE" type="VARCHAR2(20)"></column>
+        </addColumn>
+    </changeSet>
+
+
+    <changeSet id="20180330 14:00:00" author="kilimci">
+        <createTable tableName="CUSTOMS">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CUSTOMS"/>
+            </column>
+
+            <column name="COUNTRY_ID" type="NUMBER(19,0)"/>
+            <column name="NAME" type="VARCHAR2(100)"/>
+            <column name="LOCAL_NAME" type="VARCHAR2(255)"/>
+            <column name="ACTIVE" type="NUMBER(1,0)" />
+            <column name="LOCATION_ID" type="NUMBER(19,0)"/>
+            <column name="ESTABLISHMENT_ID" type="NUMBER(19,0)"/>
+
+            <column name="CUSTOMS_CODE" type="VARCHAR2(20)"/>
+            <column name="BORDER" type="NUMBER(1,0)"/>
+            <column name="FREE_ZONE" type="NUMBER(1,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="20180330 14:05:00" author="kilimci">
+        <createSequence sequenceName="SEQ_CUSTOMS" incrementBy="50"/>
+    </changeSet>
+    <changeSet id="20180330 14:06:00" author="kilimci">
+        <addForeignKeyConstraint baseColumnNames="COUNTRY_ID" baseTableName="CUSTOMS" constraintName="FK_CUSTOMS_COUNTRY"
+                                 referencedColumnNames="ID" referencedTableName="LCOUNTRY"/>
+        <addForeignKeyConstraint baseTableName="CUSTOMS" baseColumnNames="LOCATION_ID" constraintName="FK_CUSTOMS_LOCATION"
+                                 referencedTableName="PL_LOCATION" referencedColumnNames="ID"/>
+        <addForeignKeyConstraint baseTableName="CUSTOMS" baseColumnNames="ESTABLISHMENT_ID" constraintName="FK_CUSTOMS_ESTABLISHMENT"
+                                 referencedTableName="PL_ESTABLISHMENT" referencedColumnNames="ID"/>
+    </changeSet>
+    <changeSet id="20180330 15:16:00" author="kilimci">
+        <dropForeignKeyConstraint baseTableName="CUSTOMS" constraintName="FK_CUSTOMS_COUNTRY" />
+        <dropColumn tableName="CUSTOMS" columnName="COUNTRY_ID" />
+    </changeSet>
+
+    <changeSet id="20180511 15:45" author="kilimci">
+        <dropColumn tableName="CUSTOMER_WAREHOUSE" columnName="LOADING_REQUIRES_BOOKING" />
+        <dropColumn tableName="CUSTOMER_WAREHOUSE" columnName="UNLOADING_REQUIRES_BOOKING" />
+        <dropColumn tableName="CUSTOMER_WAREHOUSE" columnName="LOADING_BOOKING_TIME" />
+        <dropColumn tableName="CUSTOMER_WAREHOUSE" columnName="UNLOADING_BOOKING_TIME" />
+        <addColumn tableName="CUSTOMER_WAREHOUSE">
+            <column name="LOADING_BOOKING_DAYS_BEFORE" type="NUMBER(3,0)" />
+        </addColumn>
+        <addColumn tableName="CUSTOMER_WAREHOUSE">
+            <column name="UNLOADING_BOOKING_DAYS_BEFORE" type="NUMBER(3,0)" />
+        </addColumn>
+        <addColumn tableName="CUSTOMER_WAREHOUSE">
+            <column name="LOADING_BOOKING_TIME_UNTIL" type="VARCHAR2(5)" />
+        </addColumn>
+        <addColumn tableName="CUSTOMER_WAREHOUSE">
+            <column name="UNLOADING_BOOKING_TIME_UNTIL" type="VARCHAR2(5)" />
+        </addColumn>
+    </changeSet>
+    <changeSet id="20180511 17:00" author="kilimci">
+        <addColumn tableName="CUSTOMER_WAREHOUSE">
+            <column name="LOADING_BOOKING_OPTION" type="VARCHAR2(20)" />
+        </addColumn>
+        <addColumn tableName="CUSTOMER_WAREHOUSE">
+            <column name="UNLOADING_BOOKING_OPTION" type="VARCHAR2(20)" />
+        </addColumn>
+    </changeSet>
+    <changeSet id="20180511 17:10" author="kilimci">
+        <modifyDataType tableName="CUSTOMER_WAREHOUSE" columnName="UNLOADING_BOOKING_TIME_UNTIL" newDataType="VARCHAR2(100)"/>
+        <modifyDataType tableName="CUSTOMER_WAREHOUSE" columnName="LOADING_BOOKING_TIME_UNTIL" newDataType="VARCHAR2(100)"/>
+    </changeSet>
+
+    <changeSet id="20180515 17:10" author="kilimci">
+        <dropColumn tableName="CUSTOMER_WAREHOUSE" columnName="SIDE_LOADING_UNLOADING" />
+        <dropColumn tableName="CUSTOMER_WAREHOUSE" columnName="RAMP_LOADING_UNLOADING" />
+        <dropColumn tableName="CUSTOMER_WAREHOUSE" columnName="CRANE_LOADING_UNLOADING" />
+        <dropColumn tableName="CUSTOMER_WAREHOUSE" columnName="FREE_TIME" />
+    </changeSet>
+
+    <changeSet id="20180607 10:40" author="kilimci">
+        <createTable tableName="CUSTOMS_OFFICE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CUSTOMS_OFFICE"/>
+            </column>
+
+            <column name="NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LOCAL_NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SHORT_NAME" type="VARCHAR(40)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="COUNTRY_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CUSTOMS_CODE" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="ACTIVE" type="NUMBER(1,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FREE_ZONE" type="NUMBER(1,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="BORDER_CUSTOMS" type="NUMBER(1,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <createSequence sequenceName="seq_customs_office" incrementBy="50"/>
+        <addForeignKeyConstraint baseTableName="CUSTOMS_OFFICE" baseColumnNames="COUNTRY_ID" constraintName="FK_CUSTOMS_OFFICE_COUNTRY"
+                                 referencedTableName="LCOUNTRY"
+                                 referencedColumnNames="ID"/>
+
+    </changeSet>
+    <changeSet id="20180611 10:20" author="kilimci">
+        <createTable tableName="CUSTOMS_OFFICE_LOCATION">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CUSTOMS_OFFICE_LOCATION"/>
+            </column>
+            <column name="CUSTOMS_OFFICE_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LOCAL_NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="COUNTRY_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="POSTAL_CODE" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ADDRESS" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="ACTIVE" type="NUMBER(1,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="OFFICE" type="NUMBER(1,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <createSequence sequenceName="seq_customs_office_location" incrementBy="50"/>
+        <addForeignKeyConstraint baseTableName="CUSTOMS_OFFICE_LOCATION" baseColumnNames="CUSTOMS_OFFICE_ID" constraintName="FK_CUSTOMS_OFF_LOCATION_OFFICE"
+                                 referencedTableName="CUSTOMS_OFFICE"
+                                 referencedColumnNames="ID"/>
+        <addForeignKeyConstraint baseTableName="CUSTOMS_OFFICE_LOCATION" baseColumnNames="COUNTRY_ID" constraintName="FK_CUSTOMS_OFFICE_LOC_COUNTRY"
+                                 referencedTableName="LCOUNTRY"
+                                 referencedColumnNames="ID"/>
+
+        <createTable tableName="CUSTOMS_OFFICE_LOCATION_PHONE">
+            <column name="CUSTOMS_OFFICE_LOCATION_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IS_DEFAULT" type="NUMBER(1,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PHONE_TYPE" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="COUNTRY_CODE" type="VARCHAR2(5)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REGION_CODE" type="VARCHAR2(5)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PHONE" type="VARCHAR2(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EXTENSION" type="VARCHAR2(6)"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="CUSTOMS_OFFICE_LOCATION_PHONE" baseColumnNames="CUSTOMS_OFFICE_LOCATION_ID" constraintName="FK_CUSTOMS_LOC_PHONE_LOCATION"
+                                 referencedTableName="CUSTOMS_OFFICE_LOCATION" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20180611 10:30" author="kilimci">
+        <createTable tableName="CUSTOMS_OFFICE_CONTACT">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CUSTOMS_OFFICE_CONTACT"/>
+            </column>
+            <column name="CUSTOMS_OFFICE_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="CUSTOMS_OFFICE_LOCATION_ID" type="NUMBER(19,0)" />
+
+            <column name="GENDER" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FIRST_NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LAST_NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="ACTIVE" type="NUMBER(1,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <createSequence sequenceName="seq_customs_office_contact" incrementBy="50"/>
+        <addForeignKeyConstraint baseTableName="CUSTOMS_OFFICE_CONTACT" baseColumnNames="CUSTOMS_OFFICE_ID" constraintName="FK_CUSTOMS_CONTACT_OFFICE"
+                                 referencedTableName="CUSTOMS_OFFICE"
+                                 referencedColumnNames="ID"/>
+        <addForeignKeyConstraint baseTableName="CUSTOMS_OFFICE_CONTACT" baseColumnNames="CUSTOMS_OFFICE_LOCATION_ID" constraintName="FK_CUSTOMS_CONTACT_LOCATION"
+                                 referencedTableName="CUSTOMS_OFFICE_LOCATION"
+                                 referencedColumnNames="ID"/>
+
+        <createTable tableName="CUSTOMS_OFFICE_CONTACT_PHONE">
+            <column name="CUSTOMS_OFFICE_CONTACT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PHONE_TYPE" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="COUNTRY_CODE" type="VARCHAR2(5)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REGION_CODE" type="VARCHAR2(5)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PHONE" type="VARCHAR2(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EXTENSION" type="VARCHAR2(6)"/>
+            <column name="IS_DEFAULT" type="NUMBER(1,0)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="CUSTOMS_OFFICE_CONTACT_PHONE" baseColumnNames="CUSTOMS_OFFICE_CONTACT_ID" constraintName="FK_CUSTOMS_CONT_PHONE_CONTACT"
+                                 referencedTableName="CUSTOMS_OFFICE_CONTACT" referencedColumnNames="ID"/>
+
+
+        <createTable tableName="CUSTOMS_OFFICE_CONTACT_EMAIL">
+            <column name="CUSTOMS_OFFICE_CONTACT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="USAGE_TYPE" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EMAIL" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IS_DEFAULT" type="NUMBER(1,0)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="CUSTOMS_OFFICE_CONTACT_EMAIL" baseColumnNames="CUSTOMS_OFFICE_CONTACT_ID" constraintName="FK_CUSTOMS_CONT_EMAIL_CONTACT"
+                                 referencedTableName="CUSTOMS_OFFICE_CONTACT" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20180611 15:50" author="kilimci">
+        <addColumn tableName="CUSTOMER_WAREHOUSE">
+            <column name="COMPANY_TYPE" type = "VARCHAR2(20)" />
+        </addColumn>
+        <sql>update CUSTOMER_WAREHOUSE set COMPANY_TYPE = 'COMPANY';</sql>
+        <addNotNullConstraint tableName="CUSTOMER_WAREHOUSE" columnName="COMPANY_TYPE" />
+    </changeSet>
+
+    <changeSet id="20180611 16:15" author="kilimci">
+        <addColumn tableName="CUSTOMS_OFFICE_LOCATION">
+            <column name="GOOGLE_PLACE_ID" type="VARCHAR2(255)" />
+            <column name="GOOGLE_PLACE_URL" type="VARCHAR2(255)" />
+            <column name="TIMEZONE" type="VARCHAR2(100)" />
+            <column name="LAT" type="FLOAT" />
+            <column name="LNG" type="FLOAT" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20180612 12:30" author="kilimci">
+        <createTable tableName="PL_CUSTOMS_DETAILS">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_PLACE_CUSTOMS_DETAILS"/>
+            </column>
+            <column name="CUSTOMS_OFFICE_ID" type="NUMBER(19,0)" />
+            <column name="CUSTOMS_TYPE" type="VARCHAR(20)" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="CUSTOMS_CODE" type="VARCHAR(20)" />
+            <column name="WAREHOUSE_CODE" type="VARCHAR(20)" />
+            <column name="ON_BOARD_CUSTOMS_CLEARANCE" type="NUMBER(1,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="USED_FOR_DANGEROUS_GOODS" type="NUMBER(1,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="USED_FOR_TEMP_CONTROLLED_GOODS" type="NUMBER(1,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DANGEROUS_GOODS_CODE" type="VARCHAR(20)" />
+            <column name="TEMP_CONTROLLED_GOODS_CODE" type="VARCHAR(20)" />
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <createSequence sequenceName="seq_pl_customs_details" incrementBy="50"/>
+        <addForeignKeyConstraint baseTableName="PL_CUSTOMS_DETAILS" baseColumnNames="CUSTOMS_OFFICE_ID" constraintName="FK_PL_CUSTOMS_DETAILS_CUSTOMS"
+                                 referencedTableName="CUSTOMS_OFFICE"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20180612 12:35" author="kilimci">
+        <addColumn tableName="CUSTOMER_WAREHOUSE">
+            <column name="CUSTOMS_DETAILS_ID" type = "NUMBER(19,0)" />
+        </addColumn>
+        <addColumn tableName="WAREHOUSE">
+            <column name="CUSTOMS_DETAILS_ID" type = "NUMBER(19,0)" />
+        </addColumn>
+    </changeSet>
+    <changeSet id="20180612 14:45" author="kilimci">
+        <modifyDataType tableName="PL_CUSTOMS_DETAILS" columnName="CUSTOMS_TYPE" newDataType="VARCHAR2(50)"/>
+    </changeSet>
+
+    <changeSet id="20180619 17:45" author="kilimci">
+        <renameColumn tableName="PL_CUSTOMS_DETAILS" oldColumnName="CUSTOMS_CODE" newColumnName="EUROPEAN_CUSTOMS_CODE"/>
+    </changeSet>
+
+    <changeSet id="20180626 09:50" author="kilimci">
+        <addColumn tableName="WAREHOUSE">
+            <column name="COMPANY_ID" type = "NUMBER(19,0)" />
+        </addColumn>
+        <addColumn tableName="WAREHOUSE">
+            <column name="COMPANY_NAME" type = "VARCHAR2(255)" />
+        </addColumn>
+    </changeSet>
+
+	<changeSet id="20180828 18:00:01" author="Ali Riza Bostanci">
+		<createTable tableName="EXTERNAL_SYSTEM_ID">
+			<column name="EXTERNAL_ID" type="VARCHAR2(20)">
+				<constraints nullable="false" />
+			</column>
+			<column name="ENTITY_NAME" type="VARCHAR2(40)">
+				<constraints nullable="false" />
+			</column>
+			<column name="EXTERNAL_SYSTEM" type="VARCHAR2(40)">
+				<constraints nullable="false" />
+			</column>
+			<column name="PARENT_ID" type="NUMBER(19,0)">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+
+		<createIndex tableName="EXTERNAL_SYSTEM_ID" indexName="IDX_ESI_EXTERNAL_ID">
+			<column name="EXTERNAL_ID" />
+		</createIndex>
+		<createIndex tableName="EXTERNAL_SYSTEM_ID" indexName="IDX_ESI_PARENT_ID">
+			<column name="PARENT_ID" />
+		</createIndex>
+	</changeSet>
+
+    <changeSet id="20190219 14:16:01" author="Eray Oral">
+        <modifyDataType tableName="PL_LOCATION" columnName="GOOGLE_PLACE_ID" newDataType="VARCHAR2(255)"/>
+    </changeSet>
+    
+    <changeSet id="20191025 20:13:01" author="AliRiza.Bostanci">
+        <modifyDataType tableName="PL_PHONE" columnName="PHONE" newDataType="VARCHAR2(15)"/>
+    </changeSet>
+    
+    <changeSet id="20200130 18:13:01" author="AliRiza.Bostanci">
+    	<dropNotNullConstraint tableName="PL_PHONE" columnName="REGION_CODE"/>
+    </changeSet>
+</databaseChangeLog>

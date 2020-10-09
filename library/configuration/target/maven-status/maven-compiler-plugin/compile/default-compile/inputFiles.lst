@@ -1,0 +1,9 @@
+/Users/dogukan.sahinturk/oneorder-local-repo/library/configuration/src/main/java/ekol/oneorder/configuration/ConfigurationService.java
+/Users/dogukan.sahinturk/oneorder-local-repo/library/configuration/src/main/java/ekol/oneorder/configuration/ConfigurationApi.java
+/Users/dogukan.sahinturk/oneorder-local-repo/library/configuration/src/main/java/ekol/oneorder/configuration/dto/BooleanOption.java
+/Users/dogukan.sahinturk/oneorder-local-repo/library/configuration/src/main/java/ekol/oneorder/configuration/dto/ListOption.java
+/Users/dogukan.sahinturk/oneorder-local-repo/library/configuration/src/main/java/ekol/oneorder/configuration/dto/TextOption.java
+/Users/dogukan.sahinturk/oneorder-local-repo/library/configuration/src/main/java/ekol/oneorder/configuration/dto/Option.java
+/Users/dogukan.sahinturk/oneorder-local-repo/library/configuration/src/main/java/ekol/oneorder/configuration/dto/NumberOption.java
+/Users/dogukan.sahinturk/oneorder-local-repo/library/configuration/src/main/java/ekol/oneorder/configuration/OneOrderEnableConfiguration.java
+/Users/dogukan.sahinturk/oneorder-local-repo/library/configuration/src/main/java/ekol/oneorder/configuration/ConfigurationCacheController.java

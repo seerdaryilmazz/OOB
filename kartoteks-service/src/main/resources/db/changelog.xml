@@ -1,0 +1,2702 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <property name="DB_OWNER" value="EKOL" context="local"/>
+    <property name="DB_OWNER" value="KARTOTEKS" context="dev"/>
+    <property name="DB_OWNER" value="ONEORDER" context="test,prod"/>
+    <property name="DB_OWNER" value="SYSTEM" context="integration"/>
+
+
+    <changeSet id="20160412 09:00" author="kilimci">
+        <createTable tableName="COUNTRY">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_COUNTRY"/>
+            </column>
+            <column name="NAME" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ISO" type="VARCHAR2(2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ISO3" type="VARCHAR2(3)"/>
+            <column name="PHONE_CODE" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PHONE_FORMAT" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_COUNTRY" incrementBy="50"/>
+
+        <createTable tableName="CITY">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_CITY"/>
+            </column>
+            <column name="COUNTRY_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="COUNTRY_CODE" type="VARCHAR2(2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REGION" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_CITY" incrementBy="50"/>
+        <addUniqueConstraint tableName="CITY" columnNames="NAME" constraintName="UC_CITY_NAME"/>
+
+        <createTable tableName="ZIP_CODE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_ZIPCODE"/>
+            </column>
+            <column name="ZIPCODE" type="VARCHAR2(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CITY_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="COUNTRY_CODE" type="VARCHAR2(2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LAT" type="FLOAT"/>
+            <column name="LNG" type="FLOAT"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_ZIPCODE" incrementBy="50"/>
+        <addForeignKeyConstraint baseTableName="ZIP_CODE" baseColumnNames="CITY_ID" constraintName="FK_ZIPCODE_CITY"
+                                 referencedTableName="CITY" referencedColumnNames="ID"/>
+
+        <createTable tableName="TAX_OFFICE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_TAXOFFICE"/>
+            </column>
+            <column name="NAME" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CITY_CODE" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="COUNTRY_CODE" type="VARCHAR(2)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_TAXOFFICE" incrementBy="50"/>
+        <addUniqueConstraint tableName="TAX_OFFICE" columnNames="NAME,CITY_CODE"/>
+
+        <createTable tableName="SECTOR">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_SECTOR"/>
+            </column>
+            <column name="NAME" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PARENT_ID" type="NUMBER(19,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="SECTOR" baseColumnNames="PARENT_ID"
+                                 referencedTableName="SECTOR" referencedColumnNames="ID"
+                                 constraintName="FK_SECTOR_SECTOR"/>
+        <createSequence sequenceName="SEQ_SECTOR" incrementBy="50"/>
+
+        <createTable tableName="SAMPLEPOSTALCODE">
+            <column name="ISO" type="VARCHAR2(5)"/>
+            <column name="COUNTRY" type="VARCHAR2(25)"/>
+            <column name="LANGUAGE" type="VARCHAR2(5)"/>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="REGION1" type="VARCHAR2(255)"/>
+            <column name="REGION2" type="VARCHAR2(255)"/>
+            <column name="REGION3" type="VARCHAR2(255)"/>
+            <column name="REGION4" type="VARCHAR2(255)"/>
+            <column name="LOCALITY" type="VARCHAR2(255)"/>
+            <column name="SUBURB" type="VARCHAR2(255)"/>
+            <column name="POSTCODE" type="VARCHAR2(255)"/>
+            <column name="LATITUDE" type="VARCHAR2(255)"/>
+            <column name="LONGITUDE" type="VARCHAR2(255)"/>
+            <column name="ELEVATION" type="VARCHAR2(255)"/>
+            <column name="ISO2" type="VARCHAR2(255)"/>
+            <column name="FIPS" type="VARCHAR2(255)"/>
+            <column name="NUTS" type="VARCHAR2(255)"/>
+            <column name="HASC" type="VARCHAR2(255)"/>
+            <column name="STAT" type="VARCHAR2(255)"/>
+            <column name="TIMEZONE" type="VARCHAR2(255)"/>
+            <column name="UTC" type="VARCHAR2(255)"/>
+            <column name="DST" type="VARCHAR2(255)"/>
+            <column name="CITY_NAME" type="VARCHAR2(255)"/>
+            <column name="COUNTY_NAME" type="VARCHAR2(255)"/>
+            <column name="QUARTER_NAME" type="VARCHAR2(255)"/>
+            <column name="DISTRICT" type="VARCHAR2(255)"/>
+            <column name="LONG_ADDRESS" type="VARCHAR2(255)"/>
+        </createTable>
+
+        <createTable tableName="COMPANY">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_COMPANY"/>
+            </column>
+            <column name="NAME" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="WEBSITE" type="VARCHAR2(100)"/>
+            <column name="EMAIL_DOMAIN" type="VARCHAR2(100)"/>
+            <column name="TYPE" type="VARCHAR2(100)"/>
+            <column name="TAXOFFICE_ID" type="NUMBER(19,0)"/>
+            <column name="TAXID" type="VARCHAR2(20)"/>
+            <column name="TCKN" type="VARCHAR2(20)"/>
+            <column name="LOGO_URL" type="VARCHAR2(255)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_COMPANY" incrementBy="50"/>
+        <addUniqueConstraint tableName="COMPANY" columnNames="NAME" constraintName="UC_COMPANY_NAME"/>
+
+        <createTable tableName="COMPANY_LOCATION">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_COMPANY_LOCATION"/>
+            </column>
+            <column name="NAME" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="COMPANY_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="ACTIVE" type="NUMBER(1,0)"/>
+            <column name="STREET_NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="POSTAL_CODE" type="VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="COUNTRY_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REGION" type="VARCHAR2(100)"/>
+            <column name="CITY" type="VARCHAR2(100)"/>
+            <column name="DISTRICT" type="VARCHAR2(100)"/>
+            <column name="LOCALITY" type="VARCHAR2(100)"/>
+            <column name="SUBURB" type="VARCHAR2(100)"/>
+            <column name="LOOKUP_ID" type="NUMBER(19,0)"/>
+            <column name="LAT" type="FLOAT"/>
+            <column name="LNG" type="FLOAT"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_COMPANYLOCATION" incrementBy="50"/>
+        <addForeignKeyConstraint baseTableName="COMPANY_LOCATION" baseColumnNames="COMPANY_ID" constraintName="FK_COMPLOCATION_COMPANY"
+                                 referencedTableName="COMPANY" referencedColumnNames="ID"/>
+        <addForeignKeyConstraint baseTableName="COMPANY_LOCATION" baseColumnNames="COUNTRY_ID" constraintName="FK_COMPLOCATION_COUNTRY"
+                                 referencedTableName="COUNTRY" referencedColumnNames="ID"/>
+
+
+        <createTable tableName="COMPANY_LOCATION_WORKINGDAYS">
+            <column name="COMPANY_LOCATION_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="WORKING_DAYS_KEY" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="START_HOUR" type="VARCHAR2(5)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="END_HOUR" type="VARCHAR2(5)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="COMPANY_LOCATION_WORKINGDAYS" baseColumnNames="COMPANY_LOCATION_ID" constraintName="FK_COMPLOCWORKDAY_COMPLOC"
+                                 referencedTableName="COMPANY_LOCATION" referencedColumnNames="ID"/>
+
+        <createTable tableName="COMPANY_LOCATION_PHONE">
+            <column name="COMPANY_LOCATION_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IS_DEFAULT" type="NUMBER(1,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NUMBER_TYPE" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="USAGE_TYPE" type="VARCHAR2(20)"/>
+            <column name="COUNTRY_CODE" type="VARCHAR2(5)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REGION_CODE" type="VARCHAR2(5)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PHONE" type="VARCHAR2(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EXTENSION" type="VARCHAR2(6)"/>
+
+        </createTable>
+        <addForeignKeyConstraint baseTableName="COMPANY_LOCATION_PHONE" baseColumnNames="COMPANY_LOCATION_ID" constraintName="FK_COMPLOCPHONE_COMPLOC"
+                                 referencedTableName="COMPANY_LOCATION" referencedColumnNames="ID"/>
+
+        <createTable tableName="COMPANY_LOCATION_TYPE">
+            <column name="COMPANY_LOCATION_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LOCATION_TYPES" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="COMPANY_LOCATION_TYPE" baseColumnNames="COMPANY_LOCATION_ID" constraintName="FK_COMPLOCTYPE_COMPLOC"
+                                 referencedTableName="COMPANY_LOCATION" referencedColumnNames="ID"/>
+
+        <createTable tableName="COMPANY_CONTACT">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_COMPANYCONTACT" />
+            </column>
+            <column name="COMPANY_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FIRST_NAME" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LAST_NAME" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="GENDER" type="VARCHAR2(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DEPARTMENT" type="VARCHAR2(20)"/>
+            <column name="TITLE" type="VARCHAR2(100)"/>
+            <column name="LOCATION_NAME" type="VARCHAR2(100)"/>
+            <column name="ACTIVE" type="NUMBER(1,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_COMPANYCONTACT" incrementBy="50"/>
+        <addForeignKeyConstraint baseTableName="COMPANY_CONTACT" baseColumnNames="COMPANY_ID" constraintName="FK_COMPANYCONTACT_COMPANY"
+                                 referencedTableName="COMPANY" referencedColumnNames="ID"/>
+
+        <createTable tableName="COMPANY_CONTACT_PHONE">
+            <column name="COMPANY_CONTACT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IS_DEFAULT" type="NUMBER(1,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NUMBER_TYPE" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="USAGE_TYPE" type="VARCHAR2(20)"/>
+            <column name="COUNTRY_CODE" type="VARCHAR2(5)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REGION_CODE" type="VARCHAR2(5)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PHONE" type="VARCHAR2(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EXTENSION" type="VARCHAR2(6)"/>
+
+        </createTable>
+        <addForeignKeyConstraint baseTableName="COMPANY_CONTACT_PHONE" baseColumnNames="COMPANY_CONTACT_ID" constraintName="FK_COMPCONTPHONE_COMPCONT"
+                                 referencedTableName="COMPANY_CONTACT" referencedColumnNames="ID"/>
+
+        <createTable tableName="COMPANY_CONTACT_EMAIL">
+            <column name="COMPANY_CONTACT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IS_DEFAULT" type="NUMBER(1,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="USAGE_TYPE" type="VARCHAR2(20)"/>
+            <column name="EMAIL_ACCOUNT" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EMAIL_DOMAIN" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="COMPANY_CONTACT_EMAIL" baseColumnNames="COMPANY_CONTACT_ID" constraintName="FK_COMPCONTEMAIL_COMPCONT"
+                                 referencedTableName="COMPANY_CONTACT" referencedColumnNames="ID"/>
+
+        <createTable tableName="COMPANY_CONTACT_SERVICE_TYPE">
+            <column name="COMPANY_CONTACT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="COMPANY_BUSINESS_SEGMENT_TYPES" type="VARCHAR2(30)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="COMPANY_CONTACT_SERVICE_TYPE" baseColumnNames="COMPANY_CONTACT_ID" constraintName="FK_COMPCONTSERTYPE_COMPCONT"
+                                 referencedTableName="COMPANY_CONTACT" referencedColumnNames="ID"/>
+
+        <createTable tableName="COMPANY_SECTOR">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_COMPANYSECTOR" />
+            </column>
+            <column name="COMPANY_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SECTOR_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IS_DEFAULT" type="NUMBER(1,0)">
+                <constraints nullable="false"/>
+            </column>
+
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_COMPANYSECTOR" incrementBy="50"/>
+        <addForeignKeyConstraint baseTableName="COMPANY_SECTOR" baseColumnNames="COMPANY_ID" constraintName="FK_COMPANYSECTOR_COMPANY"
+                                 referencedTableName="COMPANY" referencedColumnNames="ID"/>
+        <addForeignKeyConstraint baseTableName="COMPANY_SECTOR" baseColumnNames="SECTOR_ID" constraintName="FK_COMPANYSECTOR_SECTOR"
+                                 referencedTableName="SECTOR" referencedColumnNames="ID"/>
+
+        <createTable tableName="COMPANY_BUSINESS_SEGMENT">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_COMPANY_BUSINESS_SEGMENT" />
+            </column>
+            <column name="COMPANY_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TYPE" type="VARCHAR2(30)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_COMPANYBUSINESSSEGMENT" incrementBy="50"/>
+        <addForeignKeyConstraint baseTableName="COMPANY_BUSINESS_SEGMENT" baseColumnNames="COMPANY_ID" constraintName="FK_COMPBUSSEGMENT_COMPANY"
+                                 referencedTableName="COMPANY" referencedColumnNames="ID"/>
+
+        <createTable tableName="COMPANY_RELATION">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_COMPANY_RELATION" />
+            </column>
+            <column name="COMPANY_BUSINESS_SEGMENT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="START_DATE" type="DATE"/>
+            <column name="END_DATE" type="DATE"/>
+            <column name="COMPANY_RELATION_TYPE" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_COMPANYRELATION" incrementBy="50"/>
+        <addForeignKeyConstraint baseTableName="COMPANY_RELATION" baseColumnNames="COMPANY_BUSINESS_SEGMENT_ID" constraintName="FK_COMPRELATION_COMPBUSSEG"
+                                 referencedTableName="COMPANY_BUSINESS_SEGMENT" referencedColumnNames="ID"/>
+
+        <createTable tableName="COMPANY_CUSTOMER_RELATION">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_COMPANY_CUST_RELATION" />
+            </column>
+            <column name="COMPANY_RELATION_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EMPLOYEE_NAME" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EMPLOYEE_ROLE" type="VARCHAR2(30)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_COMPANYCUSTOMERRELATION" incrementBy="50"/>
+        <addForeignKeyConstraint baseTableName="COMPANY_CUSTOMER_RELATION" baseColumnNames="COMPANY_RELATION_ID" constraintName="FK_COMPCUSTREL_COMPREL"
+                                 referencedTableName="COMPANY_RELATION" referencedColumnNames="ID"/>
+
+
+        <createTable tableName="COMPANY_IMPORT_QUEUE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_COMPANY_IMPORT_QUEUE" />
+            </column>
+            <column name="USER_NAME" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATE_DATE" type="TIMESTAMP(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="APPLICATION" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SERVICE_NAME" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="STATUS" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DATA" type="CLOB">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_COMPANYIMPORTQUEUE" incrementBy="50"/>
+    </changeSet>
+    <changeSet id="20160412 12:00" author="kilimci">
+        <sqlFile path="insert_countries.sql" encoding="utf8" relativeToChangelogFile="true"/>
+    </changeSet>
+    <changeSet id="20160412 12:20" author="kilimci">
+        <sqlFile path="insert_taxoffices.sql" encoding="utf8" relativeToChangelogFile="true"/>
+    </changeSet>
+    <changeSet id="20160412 12:21" author="kilimci">
+        <sqlFile path="insert_sectors.sql" encoding="utf8" relativeToChangelogFile="true"/>
+    </changeSet>
+    <changeSet id="20160412 13:10" author="kilimci">
+        <sqlFile path="insert_samplepostalcodes_tr.sql" encoding="utf8" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="20160412 16:10" author="kilimci">
+        <addColumn tableName="COMPANY">
+            <column name="COUNTRY_ID" type="NUMBER(19,0)"></column>
+        </addColumn>
+        <addForeignKeyConstraint baseTableName="COMPANY" baseColumnNames="COUNTRY_ID" constraintName="FK_COMPANY_COUNTRY"
+                                 referencedTableName="COUNTRY" referencedColumnNames="ID" />
+        <addColumn tableName="COUNTRY">
+            <column name="LANGUAGE" type="VARCHAR2(2)"/>
+        </addColumn>
+        <addColumn tableName="COUNTRY">
+            <column name="ALLOWED_CHARS" type="VARCHAR2(100)" />
+        </addColumn>
+        <sql>
+            <![CDATA[
+            update COMPANY set COUNTRY_ID = 2;
+            ]]>
+        </sql>
+        <sql>
+            <![CDATA[
+            update COUNTRY set LANGUAGE = iso;
+            update COUNTRY set LANGUAGE = 'tr', ALLOWED_CHARS='ÇĞİÖŞÜ' where iso = 'TR';
+            update COUNTRY set LANGUAGE = 'de', ALLOWED_CHARS='ÄÖÜß' where iso = 'DE';
+            update COUNTRY set LANGUAGE = 'en', ALLOWED_CHARS='' where iso = 'GB';
+            ]]>
+        </sql>
+        <addNotNullConstraint tableName="COUNTRY" columnName="LANGUAGE"/>
+    </changeSet>
+    <changeSet id="20160412 17:10" author="kilimci">
+        <addNotNullConstraint tableName="COMPANY" columnName="COUNTRY_ID"/>
+    </changeSet>
+
+    <changeSet id="20160413 09:35" author="kilimci">
+        <createTable tableName="USERS">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_USER" />
+            </column>
+            <column name="ACCOUNT_NAME" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FIRST_NAME" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LAST_NAME" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EMAIL" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="STATUS" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_USERS" incrementBy="50"/>
+
+        <createTable tableName="USER_GROUP">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_USER_GROUP" />
+            </column>
+            <column name="NAME" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PARENT_ID" type="NUMBER(19,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_USERGROUP" incrementBy="50"/>
+        <addForeignKeyConstraint baseTableName="USER_GROUP" baseColumnNames="PARENT_ID" constraintName="FK_USERGROUP_USERGROUP"
+                                 referencedTableName="USER_GROUP" referencedColumnNames="ID"/>
+
+        <createTable tableName="USER_GROUP_MEMBERSHIP">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_USER_GROUP_MEMBERSHIP" />
+            </column>
+            <column name="USER_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="USERGROUP_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_USERGROUPMEMBERSHIP" incrementBy="50"/>
+        <addForeignKeyConstraint baseTableName="USER_GROUP_MEMBERSHIP" baseColumnNames="USER_ID" constraintName="FK_USERGROUPMEM_USER"
+                                 referencedTableName="USERS" referencedColumnNames="ID"/>
+        <addForeignKeyConstraint baseTableName="USER_GROUP_MEMBERSHIP" baseColumnNames="USERGROUP_ID" constraintName="FK_USERGROUPMEM_USERGROUP"
+                                 referencedTableName="USER_GROUP" referencedColumnNames="ID"/>
+
+
+        <createTable tableName="PERMISSION">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_PERMISSION" />
+            </column>
+            <column name="USER_ID" type="NUMBER(19,0)" />
+            <column name="USERGROUP_ID" type="NUMBER(19,0)"/>
+            <column name="START_DATE" type="TIMESTAMP(6)" />
+            <column name="END_DATE" type="TIMESTAMP(6)" />
+            <column name="ACTIVE" type="NUMBER(1,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="URL_TO_PERMIT" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_PERMISSION" incrementBy="50"/>
+        <addForeignKeyConstraint baseTableName="PERMISSION" baseColumnNames="USER_ID" constraintName="FK_PERMISSION_USER"
+                                 referencedTableName="USERS" referencedColumnNames="ID"/>
+        <addForeignKeyConstraint baseTableName="PERMISSION" baseColumnNames="USERGROUP_ID" constraintName="FK_PERMISSION_USERGROUP"
+                                 referencedTableName="USER_GROUP" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20160415 14:00" author="kilimci">
+        <addColumn tableName="COMPANY_LOCATION" >
+            <column name="IS_DEFAULT" type="NUMBER(1,0)" />
+        </addColumn>
+        <update tableName="COMPANY_LOCATION">
+            <column name="IS_DEFAULT" value="0"/>
+        </update>
+        <addNotNullConstraint tableName="COMPANY_LOCATION" columnName="IS_DEFAULT"/>
+    </changeSet>
+
+    <changeSet id="20160415 15:27" author="fatma">
+        <addColumn tableName="COMPANY_IMPORT_QUEUE">
+            <column name="COMPANY_ID" type = "NUMBER(19)"/>
+            <column  name="COMPANY_NAME"  type="VARCHAR2(100)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20160418 11:45" author="kilimci">
+        <addColumn tableName="COMPANY">
+            <column name="LOCAL_NAME" type = "VARCHAR2(255)"/>
+        </addColumn>
+        <sql>update COMPANY set LOCAL_NAME = NAME</sql>
+        <addNotNullConstraint tableName="COMPANY" columnName="LOCAL_NAME"/>
+    </changeSet>
+
+    <changeSet id="20160422 11:45" author="kilimci">
+        <addColumn tableName="TAX_OFFICE">
+            <column name="CODE" type = "VARCHAR2(6)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="20160422 11:50" author="kilimci">
+        <addUniqueConstraint tableName="TAX_OFFICE" columnNames="CODE"/>
+    </changeSet>
+    <changeSet id="20160422 11:55" author="kilimci">
+        <update tableName="COMPANY">
+            <column name="TAXOFFICE_ID" value="null"/>
+        </update>
+    </changeSet>
+    <changeSet id="20160422 12:05" author="kilimci">
+        <delete tableName="TAX_OFFICE"/>
+    </changeSet>
+    <changeSet id="20160422 12:08" author="kilimci">
+        <sqlFile path="insert_taxoffices_withcode.sql" encoding="utf8" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="20160423 16:30" author="kilimci">
+        <addColumn tableName="PERMISSION">
+            <column name="URL" type="VARCHAR2(255)"></column>
+        </addColumn>
+        <sql>update PERMISSION set URL = URL_TO_PERMIT</sql>
+        <dropColumn tableName="PERMISSION" columnName="URL_TO_PERMIT" />
+        <addNotNullConstraint tableName="PERMISSION" columnName="URL"/>
+    </changeSet>
+    <changeSet id="20160423 16:35" author="kilimci">
+        <addColumn tableName="PERMISSION">
+            <column name="PERMISSION_TYPE" type="VARCHAR2(20)"></column>
+        </addColumn>
+        <sql>update PERMISSION set PERMISSION_TYPE = 'DENY'</sql>
+        <addNotNullConstraint tableName="PERMISSION" columnName="PERMISSION_TYPE"/>
+    </changeSet>
+
+    <changeSet id="20160426 12:25" author="kilimci">
+        <dropColumn tableName="COUNTRY" columnName="ISO3"/>
+        <addColumn tableName="COUNTRY">
+            <column name="CURRENCY" type="VARCHAR2(3)" defaultValue="TRY"></column>
+        </addColumn>
+        <addColumn tableName="COUNTRY">
+            <column name="WORKING_WITH" type="NUMBER(1,0)" defaultValue="1"></column>
+        </addColumn>
+        <addNotNullConstraint tableName="COUNTRY" columnName="CURRENCY"/>
+        <addNotNullConstraint tableName="COUNTRY" columnName="WORKING_WITH"/>
+    </changeSet>
+
+    <changeSet id="20160427 11:16" author="ozyildirim" >
+        <addColumn tableName="COMPANY_IMPORT_QUEUE" >
+            <column name="APPLICATION_ID" type="NUMBER(19,0)" ></column>
+        </addColumn>
+    </changeSet>
+    <changeSet id="20160426 13:05" author="kilimci">
+        <sqlFile path="insert_countries_full.sql" encoding="utf8" relativeToChangelogFile="true"/>
+        <sql>update company set country_id = (select id from country where LAST_UPDATED_BY = 'migrated' and upper(iso) = (select upper(iso) from country where id = country_id))</sql>
+        <sql>update company_location set country_id = (select id from country where LAST_UPDATED_BY = 'migrated' and upper(iso) = (select upper(iso) from country where id = country_id))</sql>
+        <sql>delete from country where LAST_UPDATED_BY is null or LAST_UPDATED_BY != 'migrated'</sql>
+    </changeSet>
+
+    <changeSet id="20160428 10:40" author="kilimci">
+        <update tableName="COUNTRY">
+            <column name="ALLOWED_CHARS" value="ÖÇŞİĞÜ"/>
+            <where>iso = 'TR'</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="20160429 10:45" author="kilimci">
+        <renameTable oldTableName="COMPANY_CONTACT_SERVICE_TYPE" newTableName="COMPANY_CONTACT_SERV_TYPE"/>
+        <renameTable oldTableName="company_location_workingdays" newTableName="company_location_workdays"/>
+    </changeSet>
+
+    <changeSet id="20160429 10:50" author="kilimci">
+        <createTable tableName="REVISION_INFO">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LAST_UPDATED_AT" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <addPrimaryKey tableName="REVISION_INFO" columnNames="ID" constraintName="PK_REVISION_INFO"/>
+        <createSequence sequenceName="SEQ_REVISIONINFO" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20160429 10:51" author="kilimci">
+        <createTable tableName="AUD_COMPANY">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="NAME" type="VARCHAR2(255)" />
+            <column name="WEBSITE" type="VARCHAR2(100)"/>
+            <column name="EMAIL_DOMAIN" type="VARCHAR2(100)"/>
+            <column name="TYPE" type="VARCHAR2(100)"/>
+            <column name="TAXOFFICE_ID" type="NUMBER(19,0)"/>
+            <column name="TAXID" type="VARCHAR2(20)"/>
+            <column name="TCKN" type="VARCHAR2(20)"/>
+            <column name="LOGO_URL" type="VARCHAR2(255)"/>
+            <column name="COUNTRY_ID" type="NUMBER(19,0)"/>
+            <column name="LOCAL_NAME" type="VARCHAR2(255)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_COMPANY" columnNames="ID, REV" constraintName="PK_AUD_COMPANY"/>
+        <addForeignKeyConstraint baseTableName="AUD_COMPANY" baseColumnNames="REV" constraintName="FK_AUDCOMPANY_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+    <changeSet id="20160429 10:52" author="kilimci">
+        <createTable tableName="AUD_COMPANY_LOCATION">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="NAME" type="VARCHAR2(100)"/>
+            <column name="COMPANY_ID" type="NUMBER(19,0)"/>
+            <column name="ACTIVE" type="NUMBER(1,0)"/>
+            <column name="STREET_NAME" type="VARCHAR(255)"/>
+            <column name="POSTAL_CODE" type="VARCHAR(10)"/>
+            <column name="COUNTRY_ID" type="NUMBER(19,0)"/>
+            <column name="REGION" type="VARCHAR2(100)"/>
+            <column name="CITY" type="VARCHAR2(100)"/>
+            <column name="DISTRICT" type="VARCHAR2(100)"/>
+            <column name="LOCALITY" type="VARCHAR2(100)"/>
+            <column name="SUBURB" type="VARCHAR2(100)"/>
+            <column name="LOOKUP_ID" type="NUMBER(19,0)"/>
+            <column name="LAT" type="FLOAT"/>
+            <column name="LNG" type="FLOAT"/>
+            <column name="IS_DEFAULT" type="NUMBER(1,0)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_COMPANY_LOCATION" columnNames="ID, REV" constraintName="PK_AUD_COMPANY_LOCATION"/>
+        <addForeignKeyConstraint baseTableName="AUD_COMPANY_LOCATION" baseColumnNames="REV" constraintName="FK_AUDCOMPANYLOCATION_REV"
+                                 referencedTableName="REVISION_INFO" referencedColumnNames="ID"/>
+    </changeSet>
+    <changeSet id="20160429 10:53" author="kilimci">
+        <createTable tableName="AUD_COMPANY_CONTACT">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="COMPANY_ID" type="NUMBER(19,0)"/>
+            <column name="FIRST_NAME" type="VARCHAR2(100)"/>
+            <column name="LAST_NAME" type="VARCHAR2(100)"/>
+            <column name="GENDER" type="VARCHAR2(10)"/>
+            <column name="DEPARTMENT" type="VARCHAR2(20)"/>
+            <column name="TITLE" type="VARCHAR2(100)"/>
+            <column name="LOCATION_NAME" type="VARCHAR2(100)"/>
+            <column name="ACTIVE" type="NUMBER(1,0)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_COMPANY_CONTACT" columnNames="ID, REV" constraintName="PK_AUD_COMPANY_CONTACT"/>
+        <addForeignKeyConstraint baseTableName="AUD_COMPANY_CONTACT" baseColumnNames="REV" constraintName="FK_AUDCOMPANYCONTACT_REV"
+                                 referencedTableName="REVISION_INFO" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20160429 10:54" author="kilimci">
+        <createTable tableName="AUD_COMPANY_SECTOR">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="COMPANY_ID" type="NUMBER(19,0)"/>
+            <column name="SECTOR_ID" type="NUMBER(19,0)"/>
+            <column name="IS_DEFAULT" type="NUMBER(1,0)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_COMPANY_SECTOR" columnNames="ID, REV" constraintName="PK_AUD_COMPANY_SECTOR"/>
+        <addForeignKeyConstraint baseTableName="AUD_COMPANY_SECTOR" baseColumnNames="REV" constraintName="FK_AUDCOMPANYSECTOR_REV"
+                                 referencedTableName="REVISION_INFO" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20160429 10:55" author="kilimci">
+        <createTable tableName="AUD_COMPANY_LOCATION_PHONE">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="COMPANY_LOCATION_ID" type="NUMBER(19,0)"/>
+            <column name="IS_DEFAULT" type="NUMBER(1,0)"/>
+            <column name="NUMBER_TYPE" type="VARCHAR2(20)"/>
+            <column name="USAGE_TYPE" type="VARCHAR2(20)"/>
+            <column name="COUNTRY_CODE" type="VARCHAR2(5)"/>
+            <column name="REGION_CODE" type="VARCHAR2(5)"/>
+            <column name="PHONE" type="VARCHAR2(10)"/>
+            <column name="EXTENSION" type="VARCHAR2(6)"/>
+
+        </createTable>
+        <addPrimaryKey tableName="AUD_COMPANY_LOCATION_PHONE" columnNames="REV,REVTYPE,COMPANY_LOCATION_ID" constraintName="PK_AUD_COMPANY_LOCATION_PHONE"/>
+        <addForeignKeyConstraint baseTableName="AUD_COMPANY_LOCATION_PHONE" baseColumnNames="REV" constraintName="FK_AUDCOMPLOCATIONPHONE_REV"
+                                 referencedTableName="REVISION_INFO" referencedColumnNames="ID"/>
+    </changeSet>
+    <changeSet id="20160429 10:56" author="kilimci">
+        <createTable tableName="AUD_COMPANY_LOCATION_TYPE">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="COMPANY_LOCATION_ID" type="NUMBER(19,0)"/>
+            <column name="LOCATION_TYPES" type="VARCHAR2(20)"/>
+
+        </createTable>
+        <addPrimaryKey tableName="AUD_COMPANY_LOCATION_TYPE" columnNames="REV,COMPANY_LOCATION_ID,LOCATION_TYPES" constraintName="PK_AUD_COMPANY_LOCATION_TYPE"/>
+        <addForeignKeyConstraint baseTableName="AUD_COMPANY_LOCATION_TYPE" baseColumnNames="REV" constraintName="FK_AUDCOMPLOCATIONTYPE_REV"
+                                 referencedTableName="REVISION_INFO" referencedColumnNames="ID"/>
+    </changeSet>
+    <changeSet id="20160429 10:57" author="kilimci">
+        <createTable tableName="AUD_COMPANY_LOCATION_WORKDAYS">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="COMPANY_LOCATION_ID" type="NUMBER(19,0)"/>
+            <column name="WORKING_DAYS_KEY" type="NUMBER(10,0)"/>
+            <column name="START_HOUR" type="VARCHAR2(5)"/>
+            <column name="END_HOUR" type="VARCHAR2(5)"/>
+
+        </createTable>
+        <addPrimaryKey tableName="AUD_COMPANY_LOCATION_WORKDAYS" columnNames="REV,REVTYPE,COMPANY_LOCATION_ID,WORKING_DAYS_KEY" constraintName="PK_AUD_COMPANY_LOCATION_WDAYS"/>
+        <addForeignKeyConstraint baseTableName="AUD_COMPANY_LOCATION_WORKDAYS" baseColumnNames="REV" constraintName="FK_AUDCOMPLOCATIONWDAYS_REV"
+                                 referencedTableName="REVISION_INFO" referencedColumnNames="ID"/>
+    </changeSet>
+    <changeSet id="20160429 10:58" author="kilimci">
+        <createTable tableName="AUD_COMPANY_CONTACT_EMAIL">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="COMPANY_CONTACT_ID" type="NUMBER(19,0)"/>
+            <column name="IS_DEFAULT" type="NUMBER(1,0)"/>
+            <column name="USAGE_TYPE" type="VARCHAR2(20)"/>
+            <column name="EMAIL_ACCOUNT" type="VARCHAR2(100)"/>
+            <column name="EMAIL_DOMAIN" type="VARCHAR2(100)"/>
+
+        </createTable>
+        <addPrimaryKey tableName="AUD_COMPANY_CONTACT_EMAIL" columnNames="REV,REVTYPE,COMPANY_CONTACT_ID" constraintName="PK_AUD_COMPANY_CONTACT_EMAIL"/>
+        <addForeignKeyConstraint baseTableName="AUD_COMPANY_CONTACT_EMAIL" baseColumnNames="REV" constraintName="FK_AUDCOMPCONTACTEMAIL_REV"
+                                 referencedTableName="REVISION_INFO" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20160429 10:59" author="kilimci">
+        <createTable tableName="AUD_COMPANY_CONTACT_PHONE">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="COMPANY_CONTACT_ID" type="NUMBER(19,0)"/>
+            <column name="IS_DEFAULT" type="NUMBER(1,0)"/>
+            <column name="NUMBER_TYPE" type="VARCHAR2(20)"/>
+            <column name="USAGE_TYPE" type="VARCHAR2(20)"/>
+            <column name="COUNTRY_CODE" type="VARCHAR2(5)"/>
+            <column name="REGION_CODE" type="VARCHAR2(5)"/>
+            <column name="PHONE" type="VARCHAR2(10)"/>
+            <column name="EXTENSION" type="VARCHAR2(6)"/>
+
+        </createTable>
+        <addPrimaryKey tableName="AUD_COMPANY_CONTACT_PHONE" columnNames="REV,REVTYPE,COMPANY_CONTACT_ID" constraintName="PK_AUD_COMPANY_CONTACT_PHONE"/>
+        <addForeignKeyConstraint baseTableName="AUD_COMPANY_CONTACT_PHONE" baseColumnNames="REV" constraintName="FK_AUDCOMPCONTACTPHONE_REV"
+                                 referencedTableName="REVISION_INFO" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20160429 11:00" author="kilimci">
+        <createTable tableName="AUD_COMPANY_CONTACT_SERV_TYPE">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="COMPANY_CONTACT_ID" type="NUMBER(19,0)"/>
+            <column name="COMPANY_BUSINESS_SEGMENT_TYPES" type="VARCHAR2(30)"/>
+
+        </createTable>
+        <addPrimaryKey tableName="AUD_COMPANY_CONTACT_SERV_TYPE" columnNames="REV,COMPANY_CONTACT_ID,COMPANY_BUSINESS_SEGMENT_TYPES" constraintName="PK_AUD_COMP_CONTACT_SERV_TYPE"/>
+        <addForeignKeyConstraint baseTableName="AUD_COMPANY_CONTACT_SERV_TYPE" baseColumnNames="REV" constraintName="FK_AUDCOMPCONTACTSERVTYPE_REV"
+                                 referencedTableName="REVISION_INFO" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20160429 11:01" author="kilimci">
+        <createTable tableName="AUD_COMPANY_RELATION">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="COMPANY_BUSINESS_SEGMENT_ID" type="NUMBER(19,0)"/>
+            <column name="START_DATE" type="DATE"/>
+            <column name="END_DATE" type="DATE"/>
+            <column name="COMPANY_RELATION_TYPE" type="VARCHAR2(20)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+        <addPrimaryKey tableName="AUD_COMPANY_RELATION" columnNames="ID,REV" constraintName="PK_AUD_COMPANY_RELATION"/>
+        <addForeignKeyConstraint baseTableName="AUD_COMPANY_RELATION" baseColumnNames="REV" constraintName="FK_AUDCOMPANYRELATION_REV"
+                                 referencedTableName="REVISION_INFO" referencedColumnNames="ID"/>
+    </changeSet>
+    <changeSet id="20160429 11:02" author="kilimci">
+        <createTable tableName="AUD_COMPANY_CUSTOMER_RELATION">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="COMPANY_RELATION_ID" type="NUMBER(19,0)"/>
+            <column name="EMPLOYEE_NAME" type="VARCHAR2(100)"/>
+            <column name="EMPLOYEE_ROLE" type="VARCHAR2(30)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+        <addPrimaryKey tableName="AUD_COMPANY_CUSTOMER_RELATION" columnNames="ID,REV" constraintName="PK_AUD_COMP_CUSTOMER_RELATION"/>
+        <addForeignKeyConstraint baseTableName="AUD_COMPANY_CUSTOMER_RELATION" baseColumnNames="REV" constraintName="FK_AUDCOMPCUSTRELATION_REV"
+                                 referencedTableName="REVISION_INFO" referencedColumnNames="ID"/>
+    </changeSet>
+    <changeSet id="20160429 11:03" author="kilimci">
+        <createTable tableName="AUD_COMPANY_BUSINESS_SEGMENT">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="COMPANY_ID" type="NUMBER(19,0)"/>
+            <column name="TYPE" type="VARCHAR2(30)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_COMPANY_BUSINESS_SEGMENT" columnNames="ID,REV" constraintName="PK_AUD_COMP_BUSINESS_SEGMENT"/>
+        <addForeignKeyConstraint baseTableName="AUD_COMPANY_BUSINESS_SEGMENT" baseColumnNames="REV" constraintName="FK_AUDCOMPBUSSEGMENT_REV"
+                                 referencedTableName="REVISION_INFO" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20160429 14:00" author="kilimci">
+        <renameColumn tableName="REVISION_INFO" oldColumnName="LAST_UPDATED_AT" newColumnName="UPDATED_TIME"/>
+        <renameColumn tableName="REVISION_INFO" oldColumnName="LAST_UPDATED_BY" newColumnName="UPDATED_BY"/>
+    </changeSet>
+
+    <changeSet id="20160503 11:55" author="kilimci">
+        <addColumn tableName="SECTOR">
+            <column name="CODE" type="VARCHAR2(10)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="20160503 12:05" author="kilimci">
+        <sql>
+            <![CDATA[
+                insert into SECTOR values(-1, 'Dummy', null, 0, null, null, 'S000');
+                update company_sector set sector_id = -1;
+                delete from sector where code is null;
+            ]]>
+        </sql>
+        <sqlFile path="insert_sectors_withcode.sql" encoding="utf8" relativeToChangelogFile="true"/>
+        <sql>
+            <![CDATA[
+                update company_sector set sector_id = (select min(id) from sector where code is not null and name != 'Dummy');
+                delete from sector where code = 'S000';
+            ]]>
+        </sql>
+    </changeSet>
+    <changeSet id="20160503 12:10" author="kilimci">
+        <addNotNullConstraint tableName="SECTOR" columnName="CODE"/>
+    </changeSet>
+
+
+    <changeSet id="20160503 11:45" author="ozyildirim">
+        <createTable tableName="LOCATION_TYPE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_LOCATION_TYPE"/>
+            </column>
+            <column name="VALUE" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="STATUS_TYPE" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_LOCATIONTYPE" incrementBy="50"/>
+        <addUniqueConstraint tableName="LOCATION_TYPE" columnNames="VALUE" constraintName="UC_LOCATIONTYPE_VALUE"/>
+    </changeSet>
+    <changeSet id="20160505 15:53" author="ozyildirim">
+        <addColumn tableName="COMPANY_LOCATION_TYPE">
+            <column name="LOCATION_TYPES_" type="NUMBER(19,0)"/>
+        </addColumn>
+        <sql>UPDATE company_location_type clt
+            SET (LOCATION_TYPES_) = (SELECT lt.id
+            FROM location_type lt
+            WHERE clt.LOCATION_TYPES= lt.value);</sql>
+
+    </changeSet>
+    <changeSet id="20160505 15:54" author="ozyildirim">
+        <dropColumn tableName="COMPANY_LOCATION_TYPE" columnName="LOCATION_TYPES"></dropColumn>
+        <renameColumn
+                columnDataType="NUMBER(19,0)"
+                newColumnName="LOCATION_TYPES"
+                oldColumnName="LOCATION_TYPES_"
+                tableName="COMPANY_LOCATION_TYPE"/>
+    </changeSet>
+
+    <changeSet id="20160504 13:37" author="ozyildirim">
+        <createTable tableName="PHONE_TYPE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_PHONE_TYPE"/>
+            </column>
+            <column name="VALUE" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="STATUS_TYPE" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_PHONETYPE" incrementBy="50"/>
+        <addUniqueConstraint tableName="PHONE_TYPE" columnNames="VALUE" constraintName="UC_PHONE_TYPE_VALUE"/>
+
+    </changeSet>
+
+    <changeSet id="20160505 15:55" author="ozyildirim">
+        <addColumn tableName="COMPANY_LOCATION_PHONE">
+            <column name="NUMBER_TYPE_" type="NUMBER(19,0)"/>
+        </addColumn>
+        <sql>UPDATE company_location_phone clt
+            SET (NUMBER_TYPE_) = (SELECT lt.id
+            FROM PHONE_type lt
+            WHERE clt.NUMBER_TYPE= lt.value);</sql>
+
+    </changeSet>
+    <changeSet id="20160505 15:56" author="ozyildirim">
+        <dropColumn tableName="COMPANY_LOCATION_PHONE" columnName="NUMBER_TYPE"></dropColumn>
+        <renameColumn
+                columnDataType="NUMBER(19,0)"
+                newColumnName="NUMBER_TYPE"
+                oldColumnName="NUMBER_TYPE_"
+                tableName="COMPANY_LOCATION_PHONE"/>
+    </changeSet>
+
+    <changeSet id="20160504 11:50" author="kilimci">
+        <addColumn tableName="COMPANY_CONTACT">
+            <column name="LINKEDIN_URL" type="VARCHAR2(255)"/>
+        </addColumn>
+        <addColumn tableName="AUD_COMPANY_CONTACT">
+            <column name="LINKEDIN_URL" type="VARCHAR2(255)"/>
+        </addColumn>
+
+    </changeSet>
+
+
+    <changeSet id="20160505 12:17" author="ozyildirim">
+        <createTable tableName="BUSINESS_SEGMENT_TYPE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_BUSINESS_SEGMENT_TYPE"/>
+            </column>
+            <column name="VALUE" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="STATUS_TYPE" type="VARCHAR(20)">
+
+                <constraints nullable="false"/>
+            </column>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <createSequence sequenceName="SEQ_BUSINESSSEGMENTTYPE" incrementBy="50"/>
+        <addUniqueConstraint tableName="BUSINESS_SEGMENT_TYPE" columnNames="VALUE" constraintName="UC_BUSINESS_SEGMENT_TYPE_VALUE"/>
+
+    </changeSet>
+
+
+
+    <changeSet id="20160505 15:58" author="ozyildirim">
+        <addColumn tableName="COMPANY_BUSINESS_SEGMENT">
+            <column name="TYPE_" type="NUMBER(19,0)"/>
+        </addColumn>
+        <sql>UPDATE COMPANY_BUSINESS_SEGMENT clt
+            SET (TYPE_) = (SELECT lt.id
+            FROM BUSINESS_SEGMENT_type lt
+            WHERE clt.TYPE= lt.value);</sql>
+
+    </changeSet>
+    <changeSet id="20160505 15:59" author="ozyildirim">
+        <dropColumn tableName="COMPANY_BUSINESS_SEGMENT" columnName="TYPE"></dropColumn>
+        <renameColumn
+                columnDataType="NUMBER(19,0)"
+                newColumnName="TYPE"
+                oldColumnName="TYPE_"
+                tableName="COMPANY_BUSINESS_SEGMENT"/>
+
+
+    </changeSet>
+
+    <changeSet id="20160504 13:50" author="kilimci">
+        <createTable tableName="COMPANY_ID_MAPPING">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_COMPANY_ID_MAPPING"/>
+            </column>
+            <column name="COMPANY_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="APPLICATION" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="APPLICATION_COMPANY_ID" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_COMPANYIDMAPPING" incrementBy="50"/>
+        <addForeignKeyConstraint baseTableName="COMPANY_ID_MAPPING" baseColumnNames="COMPANY_ID" constraintName="FK_COMPANYIDMAPPING_COMPANY"
+                                 referencedTableName="COMPANY" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20160504 17:15" author="kilimci">
+        <createTable tableName="COMPANY_LOCATION_ID_MAPPING">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_COMPANY_LOCATION_ID_MAPPING"/>
+            </column>
+            <column name="COMPANY_LOCATION_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="APPLICATION" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="APPLICATION_LOCATION_ID" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_COMPANYLOCATIONIDMAPPING" incrementBy="50"/>
+        <addForeignKeyConstraint baseTableName="COMPANY_LOCATION_ID_MAPPING" baseColumnNames="COMPANY_LOCATION_ID" constraintName="FK_COMPLOCIDMAPPING_COMPLOC"
+                                 referencedTableName="COMPANY_LOCATION" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20160505" author="kilimci">
+        <dropColumn tableName="COMPANY_IMPORT_QUEUE" columnName="SERVICE_NAME"/>
+
+    </changeSet>
+
+    <changeSet id="20160506 13:40" author="kilimci">
+        <createTable tableName="CONTACT_DEPARTMENT">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_CONTACT_DEPARTMENT"/>
+            </column>
+            <column name="CODE" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="STATUS" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_CONTACTDEPARTMENT" incrementBy="50"/>
+        <createTable tableName="CONTACT_TITLE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_CONTACT_TITLE"/>
+            </column>
+            <column name="CODE" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="STATUS" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_CONTACTTITLE" incrementBy="50"/>
+    </changeSet>
+    <changeSet id="20160506 13:45" author="kilimci">
+        <sqlFile path="insert_contact_depandtitle.sql" encoding="utf8" relativeToChangelogFile="true"/>
+    </changeSet>
+    <changeSet id="20160506 14:00" author="kilimci">
+        <dropColumn tableName="COMPANY_CONTACT" columnName="DEPARTMENT" />
+        <dropColumn tableName="COMPANY_CONTACT" columnName="TITLE" />
+        <addColumn tableName="COMPANY_CONTACT">
+            <column name="DEPARTMENT_ID" type="NUMBER(19,0)"/>
+            <column name="TITLE_ID" type="NUMBER(19,0)"/>
+        </addColumn>
+        <addForeignKeyConstraint baseTableName="COMPANY_CONTACT" baseColumnNames="DEPARTMENT_ID" constraintName="FK_COMPANYCONTACT_DEPARTMENT"
+                                 referencedTableName="CONTACT_DEPARTMENT" referencedColumnNames="ID"/>
+        <addForeignKeyConstraint baseTableName="COMPANY_CONTACT" baseColumnNames="TITLE_ID" constraintName="FK_COMPANYCONTACT_TITLE"
+                                 referencedTableName="CONTACT_TITLE" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20160505 16:00" author="ozyildirim">
+        <addColumn tableName="COMPANY_CONTACT_SERV_TYPE">
+            <column name="COMPANY_BUSINESS_SEGMENT_TYPE_" type="NUMBER(19,0)"/>
+        </addColumn>
+        <sql>UPDATE COMPANY_CONTACT_SERV_TYPE clt
+            SET (COMPANY_BUSINESS_SEGMENT_TYPE_) = (SELECT lt.id
+            FROM BUSINESS_SEGMENT_type lt
+            WHERE clt.COMPANY_BUSINESS_SEGMENT_TYPES= lt.value);</sql>
+
+    </changeSet>
+    <changeSet id="20160505 16:01" author="ozyildirim">
+        <dropColumn tableName="COMPANY_CONTACT_SERV_TYPE" columnName="COMPANY_BUSINESS_SEGMENT_TYPES"></dropColumn>
+        <renameColumn
+                columnDataType="NUMBER(19,0)"
+                newColumnName="COMPANY_BUSINESS_SEGMENT_TYPES"
+                oldColumnName="COMPANY_BUSINESS_SEGMENT_TYPE_"
+                tableName="COMPANY_CONTACT_SERV_TYPE"/>
+    </changeSet>
+    <changeSet id="20160506 13:16" author="ozyildirim">
+        <renameColumn tableName="COMPANY_CONTACT_SERV_TYPE"
+                      oldColumnName="COMPANY_BUSINESS_SEGMENT_TYPES"
+                      newColumnName="COMPANY_SERVICE_TYPES"/>
+    </changeSet>
+
+    <changeSet id="20160506 15:00" author="kilimci">
+        <addUniqueConstraint tableName="CONTACT_TITLE" columnNames="CODE" constraintName="UC_CONTACTTITLE_CODE"/>
+        <addUniqueConstraint tableName="CONTACT_DEPARTMENT" columnNames="CODE" constraintName="UC_CONTACTDEPARTMENT_CODE"/>
+    </changeSet>
+
+    <changeSet id="20160506 15:05" author="kilimci">
+        <addColumn tableName="LOCATION_TYPE">
+            <column name="CODE" type="VARCHAR2(20)"/>
+            <column name="NAME" type="VARCHAR2(255)"/>
+            <column name="STATUS" type="VARCHAR2(20)"/>
+        </addColumn>
+        <sql>
+            update LOCATION_TYPE set CODE = VALUE, NAME = VALUE, STATUS = STATUS_TYPE;
+        </sql>
+        <dropColumn tableName="LOCATION_TYPE" columnName="STATUS_TYPE"/>
+        <dropColumn tableName="LOCATION_TYPE" columnName="VALUE"/>
+        <addNotNullConstraint tableName="LOCATION_TYPE" columnName="CODE"/>
+        <addNotNullConstraint tableName="LOCATION_TYPE" columnName="NAME"/>
+        <addNotNullConstraint tableName="LOCATION_TYPE" columnName="STATUS"/>
+        <addUniqueConstraint tableName="LOCATION_TYPE" columnNames="CODE" constraintName="UC_LOCATIONTYPE_CODE"/>
+    </changeSet>
+
+    <changeSet id="20160506 16:00" author="kilimci">
+        <addColumn tableName="PHONE_TYPE">
+            <column name="CODE" type="VARCHAR2(20)"/>
+            <column name="NAME" type="VARCHAR2(255)"/>
+            <column name="STATUS" type="VARCHAR2(20)"/>
+        </addColumn>
+        <sql>
+            update PHONE_TYPE set CODE = VALUE, NAME = VALUE, STATUS = STATUS_TYPE;
+        </sql>
+        <dropColumn tableName="PHONE_TYPE" columnName="STATUS_TYPE"/>
+        <dropColumn tableName="PHONE_TYPE" columnName="VALUE"/>
+        <addNotNullConstraint tableName="PHONE_TYPE" columnName="CODE"/>
+        <addNotNullConstraint tableName="PHONE_TYPE" columnName="NAME"/>
+        <addNotNullConstraint tableName="PHONE_TYPE" columnName="STATUS"/>
+        <addUniqueConstraint tableName="PHONE_TYPE" columnNames="CODE" constraintName="UC_PHONETYPE_CODE"/>
+    </changeSet>
+
+    <changeSet id="20160506 16:20" author="kilimci">
+        <addColumn tableName="BUSINESS_SEGMENT_TYPE">
+            <column name="CODE" type="VARCHAR2(20)"/>
+            <column name="NAME" type="VARCHAR2(255)"/>
+            <column name="STATUS" type="VARCHAR2(20)"/>
+        </addColumn>
+        <sql>
+            update BUSINESS_SEGMENT_TYPE set CODE = VALUE, NAME = VALUE, STATUS = STATUS_TYPE;
+        </sql>
+        <dropColumn tableName="BUSINESS_SEGMENT_TYPE" columnName="STATUS_TYPE"/>
+        <dropColumn tableName="BUSINESS_SEGMENT_TYPE" columnName="VALUE"/>
+        <addNotNullConstraint tableName="BUSINESS_SEGMENT_TYPE" columnName="CODE"/>
+        <addNotNullConstraint tableName="BUSINESS_SEGMENT_TYPE" columnName="NAME"/>
+        <addNotNullConstraint tableName="BUSINESS_SEGMENT_TYPE" columnName="STATUS"/>
+        <addUniqueConstraint tableName="BUSINESS_SEGMENT_TYPE" columnNames="CODE" constraintName="UC_BUSINESSSEGMENTTYPE_CODE"/>
+    </changeSet>
+
+    <changeSet id="20160506 16:30" author="kilimci">
+        <createTable tableName="EMPLOYEE_CUSTOMER_RELATION">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_EMPLOYEE_CUSTOMER_RELATION"/>
+            </column>
+            <column name="CODE" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="STATUS" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_EMPLOYEECUSTOMERRELATION" incrementBy="50"/>
+        <addUniqueConstraint tableName="EMPLOYEE_CUSTOMER_RELATION" columnNames="CODE"/>
+    </changeSet>
+    <changeSet id="20160506 16:31" author="kilimci">
+        <sql>
+            insert into EMPLOYEE_CUSTOMER_RELATION(ID,CODE,NAME,STATUS,DELETED) values(SEQ_EMPLOYEECUSTOMERRELATION.nextval, 'ACCOUNT_OWNER', 'Account Owner', 'ACTIVE', 0);
+            insert into EMPLOYEE_CUSTOMER_RELATION(ID,CODE,NAME,STATUS,DELETED) values(SEQ_EMPLOYEECUSTOMERRELATION.nextval, 'SALES_REP', 'Sales Rep.', 'ACTIVE', 0);
+            insert into EMPLOYEE_CUSTOMER_RELATION(ID,CODE,NAME,STATUS,DELETED) values(SEQ_EMPLOYEECUSTOMERRELATION.nextval, 'CUSTOMER_SERVICE_REP', 'Customer Service Rep.', 'ACTIVE', 0);
+            insert into EMPLOYEE_CUSTOMER_RELATION(ID,CODE,NAME,STATUS,DELETED) values(SEQ_EMPLOYEECUSTOMERRELATION.nextval, 'COLLECTION_REP', 'Collection Rep.', 'ACTIVE', 0);
+        </sql>
+    </changeSet>
+    <changeSet id="20160506 16:35" author="kilimci">
+        <addColumn tableName="COMPANY_CUSTOMER_RELATION">
+            <column name="employee_customer_relation_id" type="NUMBER(19,0)"></column>
+        </addColumn>
+        <addForeignKeyConstraint baseTableName="COMPANY_CUSTOMER_RELATION" baseColumnNames="employee_customer_relation_id" constraintName="FK_COMPCUSTREL_EMPCUSTREL"
+                                 referencedTableName="EMPLOYEE_CUSTOMER_RELATION" referencedColumnNames="ID"/>
+    </changeSet>
+    <changeSet id="20160506 16:36" author="kilimci">
+        <sql>
+            update COMPANY_CUSTOMER_RELATION ccr set ccr.employee_customer_relation_id=(select id from EMPLOYEE_CUSTOMER_RELATION where code = ccr.EMPLOYEE_ROLE);
+        </sql>
+    </changeSet>
+    <changeSet id="20160506 16:40" author="kilimci">
+        <dropColumn tableName="COMPANY_CUSTOMER_RELATION" columnName="EMPLOYEE_ROLE"/>
+    </changeSet>
+
+    <changeSet id="20160506 17:05" author="kilimci">
+        <createTable tableName="COMPANY_RELATION_TYPE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_COMPANY_RELATION_TYPE"/>
+            </column>
+            <column name="CODE" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="STATUS" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_COMPANYRELATIONTYPE" incrementBy="50"/>
+        <addUniqueConstraint tableName="COMPANY_RELATION_TYPE" columnNames="CODE"/>
+    </changeSet>
+
+    <changeSet id="20160506 17:06" author="kilimci">
+        <sql>
+            insert into COMPANY_RELATION_TYPE(ID,CODE,NAME,STATUS,DELETED) values(SEQ_COMPANYRELATIONTYPE.nextval, 'PROSPECT', 'Prospect', 'ACTIVE', 0);
+            insert into COMPANY_RELATION_TYPE(ID,CODE,NAME,STATUS,DELETED) values(SEQ_COMPANYRELATIONTYPE.nextval, 'CUSTOMER', 'Customer', 'ACTIVE', 0);
+            insert into COMPANY_RELATION_TYPE(ID,CODE,NAME,STATUS,DELETED) values(SEQ_COMPANYRELATIONTYPE.nextval, 'PARTNER', 'Partner', 'ACTIVE', 0);
+            insert into COMPANY_RELATION_TYPE(ID,CODE,NAME,STATUS,DELETED) values(SEQ_COMPANYRELATIONTYPE.nextval, 'SUPPLIER', 'Supplier', 'ACTIVE', 0);
+            insert into COMPANY_RELATION_TYPE(ID,CODE,NAME,STATUS,DELETED) values(SEQ_COMPANYRELATIONTYPE.nextval, 'COMPETITOR', 'Competitor', 'ACTIVE', 0);
+            insert into COMPANY_RELATION_TYPE(ID,CODE,NAME,STATUS,DELETED) values(SEQ_COMPANYRELATIONTYPE.nextval, 'FIRM', 'Firm', 'ACTIVE', 0);
+            insert into COMPANY_RELATION_TYPE(ID,CODE,NAME,STATUS,DELETED) values(SEQ_COMPANYRELATIONTYPE.nextval, 'EKOL', 'Ekol', 'ACTIVE', 0);
+            insert into COMPANY_RELATION_TYPE(ID,CODE,NAME,STATUS,DELETED) values(SEQ_COMPANYRELATIONTYPE.nextval, 'LEGAL', 'Legal', 'ACTIVE', 0);
+        </sql>
+    </changeSet>
+    <changeSet id="20160506 17:07" author="kilimci">
+        <addColumn tableName="COMPANY_RELATION">
+            <column name="company_relation_type_id" type="NUMBER(19,0)"></column>
+        </addColumn>
+        <addForeignKeyConstraint baseTableName="COMPANY_RELATION" baseColumnNames="company_relation_type_id" constraintName="FK_COMPRELATION_COMPRELTYPE"
+                                 referencedTableName="COMPANY_RELATION_TYPE" referencedColumnNames="ID"/>
+    </changeSet>
+    <changeSet id="20160506 17:08" author="kilimci">
+        <sql>
+            update COMPANY_RELATION cr set cr.company_relation_type_id=(select id from COMPANY_RELATION_TYPE where code = cr.COMPANY_RELATION_TYPE);
+        </sql>
+    </changeSet>
+    <changeSet id="20160506 17:15" author="kilimci">
+        <dropColumn tableName="COMPANY_RELATION" columnName="COMPANY_RELATION_TYPE"/>
+    </changeSet>
+    <changeSet id="20160506 17:25" author="kilimci">
+        <sql>
+            insert into BUSINESS_SEGMENT_TYPE(ID,CODE,NAME,STATUS,DELETED) values(SEQ_BUSINESSSEGMENTTYPE.nextval, 'ROAD', 'Road', 'ACTIVE', 0);
+            insert into BUSINESS_SEGMENT_TYPE(ID,CODE,NAME,STATUS,DELETED) values(SEQ_BUSINESSSEGMENTTYPE.nextval, 'SEA', 'Marine', 'ACTIVE', 0);
+            insert into BUSINESS_SEGMENT_TYPE(ID,CODE,NAME,STATUS,DELETED) values(SEQ_BUSINESSSEGMENTTYPE.nextval, 'AIR', 'Air', 'ACTIVE', 0);
+            insert into BUSINESS_SEGMENT_TYPE(ID,CODE,NAME,STATUS,DELETED) values(SEQ_BUSINESSSEGMENTTYPE.nextval, 'EXH', 'Exhibition', 'ACTIVE', 0);
+            insert into BUSINESS_SEGMENT_TYPE(ID,CODE,NAME,STATUS,DELETED) values(SEQ_BUSINESSSEGMENTTYPE.nextval, 'DTR', 'Domestic Transport', 'ACTIVE', 0);
+            insert into BUSINESS_SEGMENT_TYPE(ID,CODE,NAME,STATUS,DELETED) values(SEQ_BUSINESSSEGMENTTYPE.nextval, 'CCL', 'Customs', 'ACTIVE', 0);
+            insert into BUSINESS_SEGMENT_TYPE(ID,CODE,NAME,STATUS,DELETED) values(SEQ_BUSINESSSEGMENTTYPE.nextval, 'BWH', 'Bounded Warehouse', 'ACTIVE', 0);
+            insert into BUSINESS_SEGMENT_TYPE(ID,CODE,NAME,STATUS,DELETED) values(SEQ_BUSINESSSEGMENTTYPE.nextval, 'RLW', 'Railway', 'ACTIVE', 0);
+            insert into BUSINESS_SEGMENT_TYPE(ID,CODE,NAME,STATUS,DELETED) values(SEQ_BUSINESSSEGMENTTYPE.nextval, 'WHM', 'Warehouse Management', 'ACTIVE', 0);
+            insert into BUSINESS_SEGMENT_TYPE(ID,CODE,NAME,STATUS,DELETED) values(SEQ_BUSINESSSEGMENTTYPE.nextval, 'INS', 'Insurance', 'ACTIVE', 0);
+            insert into BUSINESS_SEGMENT_TYPE(ID,CODE,NAME,STATUS,DELETED) values(SEQ_BUSINESSSEGMENTTYPE.nextval, 'RORO', 'Ro/Ro', 'ACTIVE', 0);
+        </sql>
+    </changeSet>
+
+    <changeSet id="20160507 13:15" author="kilimci">
+        <createTable tableName="USAGE_TYPE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_USAGE_TYPE"/>
+            </column>
+            <column name="CODE" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="STATUS" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_USAGETYPE" incrementBy="50"/>
+        <addUniqueConstraint tableName="USAGE_TYPE" columnNames="CODE"/>
+    </changeSet>
+    <changeSet id="20160507 13:16" author="kilimci">
+        <sql>
+            insert into USAGE_TYPE(ID,CODE,NAME,STATUS,DELETED) values(SEQ_USAGETYPE.nextval, 'WORK', 'Work', 'ACTIVE', 0);
+            insert into USAGE_TYPE(ID,CODE,NAME,STATUS,DELETED) values(SEQ_USAGETYPE.nextval, 'PERSONAL', 'Personal', 'ACTIVE', 0);
+        </sql>
+    </changeSet>
+    <changeSet id="20160507 13:17" author="kilimci">
+        <addColumn tableName="COMPANY_CONTACT_PHONE">
+            <column name="usage_type_id" type="NUMBER(19,0)"></column>
+        </addColumn>
+        <addColumn tableName="AUD_COMPANY_CONTACT_PHONE">
+            <column name="usage_type_id" type="NUMBER(19,0)"></column>
+        </addColumn>
+        <addForeignKeyConstraint baseTableName="COMPANY_CONTACT_PHONE" baseColumnNames="usage_type_id" constraintName="FK_COMPCONTPHONE_USAGETYPE"
+                                 referencedTableName="USAGE_TYPE" referencedColumnNames="ID"/>
+    </changeSet>
+    <changeSet id="20160507 13:18" author="kilimci">
+        <addColumn tableName="COMPANY_CONTACT_EMAIL">
+            <column name="usage_type_id" type="NUMBER(19,0)"></column>
+        </addColumn>
+        <addColumn tableName="AUD_COMPANY_CONTACT_EMAIL">
+            <column name="usage_type_id" type="NUMBER(19,0)"></column>
+        </addColumn>
+        <addForeignKeyConstraint baseTableName="COMPANY_CONTACT_EMAIL" baseColumnNames="usage_type_id" constraintName="FK_COMPCONTEMAIL_USAGETYPE"
+                                 referencedTableName="USAGE_TYPE" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20160507 13:19" author="kilimci">
+        <addColumn tableName="COMPANY_LOCATION_PHONE">
+            <column name="usage_type_id" type="NUMBER(19,0)"></column>
+        </addColumn>
+        <addColumn tableName="AUD_COMPANY_LOCATION_PHONE">
+            <column name="usage_type_id" type="NUMBER(19,0)"></column>
+        </addColumn>
+        <addForeignKeyConstraint baseTableName="COMPANY_LOCATION_PHONE" baseColumnNames="usage_type_id" constraintName="FK_COMPLOCPHONE_USAGETYPE"
+                                 referencedTableName="USAGE_TYPE" referencedColumnNames="ID"/>
+    </changeSet>
+    <changeSet id="20160507 13:20" author="kilimci">
+        <sql>
+            update COMPANY_CONTACT_PHONE ccp set ccp.usage_type_id=(select id from USAGE_TYPE where code = ccp.USAGE_TYPE);
+            update AUD_COMPANY_CONTACT_PHONE ccp set ccp.usage_type_id=(select id from USAGE_TYPE where code = ccp.USAGE_TYPE);
+            update COMPANY_CONTACT_EMAIL ccp set ccp.usage_type_id=(select id from USAGE_TYPE where code = ccp.USAGE_TYPE);
+            update AUD_COMPANY_CONTACT_EMAIL ccp set ccp.usage_type_id=(select id from USAGE_TYPE where code = ccp.USAGE_TYPE);
+            update COMPANY_LOCATION_PHONE ccp set ccp.usage_type_id=(select id from USAGE_TYPE where code = ccp.USAGE_TYPE);
+            update AUD_COMPANY_LOCATION_PHONE ccp set ccp.usage_type_id=(select id from USAGE_TYPE where code = ccp.USAGE_TYPE);
+        </sql>
+    </changeSet>
+    <changeSet id="20160507 13:21" author="kilimci">
+        <dropColumn tableName="COMPANY_CONTACT_PHONE" columnName="USAGE_TYPE"/>
+        <dropColumn tableName="AUD_COMPANY_CONTACT_PHONE" columnName="USAGE_TYPE"/>
+    </changeSet>
+    <changeSet id="20160507 13:22" author="kilimci">
+        <dropColumn tableName="COMPANY_CONTACT_EMAIL" columnName="USAGE_TYPE"/>
+        <dropColumn tableName="AUD_COMPANY_CONTACT_EMAIL" columnName="USAGE_TYPE"/>
+    </changeSet>
+    <changeSet id="20160507 13:23" author="kilimci">
+        <dropColumn tableName="COMPANY_LOCATION_PHONE" columnName="USAGE_TYPE"/>
+        <dropColumn tableName="AUD_COMPANY_LOCATION_PHONE" columnName="USAGE_TYPE"/>
+    </changeSet>
+
+    <changeSet id="20160507 13:55" author="kilimci">
+        <createTable tableName="COMPANY_TYPE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_COMPANY_TYPE"/>
+            </column>
+            <column name="CODE" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="STATUS" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_COMPANYTYPE" incrementBy="50"/>
+        <addUniqueConstraint tableName="COMPANY_TYPE" columnNames="CODE"/>
+    </changeSet>
+    <changeSet id="20160507 13:56" author="kilimci">
+        <sql>
+            insert into COMPANY_TYPE(ID,CODE,NAME,STATUS,DELETED) values(SEQ_COMPANYTYPE.nextval, 'CORPORATE', 'Corporate', 'ACTIVE', 0);
+            insert into COMPANY_TYPE(ID,CODE,NAME,STATUS,DELETED) values(SEQ_COMPANYTYPE.nextval, 'PERSONAL', 'Personal', 'ACTIVE', 0);
+            insert into COMPANY_TYPE(ID,CODE,NAME,STATUS,DELETED) values(SEQ_COMPANYTYPE.nextval, 'FREEZONE', 'Free Zone', 'ACTIVE', 0);
+        </sql>
+    </changeSet>
+    <changeSet id="20160507 13:57" author="kilimci">
+        <addColumn tableName="COMPANY">
+            <column name="company_type_id" type="NUMBER(19,0)"></column>
+        </addColumn>
+        <addColumn tableName="AUD_COMPANY">
+            <column name="company_type_id" type="NUMBER(19,0)"></column>
+        </addColumn>
+        <addForeignKeyConstraint baseTableName="COMPANY" baseColumnNames="company_type_id" constraintName="FK_COMPANY_COMPANYTYPE"
+                                 referencedTableName="COMPANY_TYPE" referencedColumnNames="ID"/>
+    </changeSet>
+    <changeSet id="20160507 13:58" author="kilimci">
+        <sql>
+            update COMPANY c set c.company_type_id=(select id from COMPANY_TYPE where code = c.TYPE);
+            update AUD_COMPANY c set c.company_type_id=(select id from COMPANY_TYPE where code = c.TYPE);
+
+        </sql>
+    </changeSet>
+    <changeSet id="20160507 13:59" author="kilimci">
+        <dropColumn tableName="COMPANY" columnName="TYPE"/>
+        <dropColumn tableName="AUD_COMPANY" columnName="TYPE"/>
+    </changeSet>
+    <changeSet id="20160511 15:55" author="ozyildirim">
+        <createTable tableName="LOOKUP_SUGGESTION">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_LOOKUP_SUGGESTION" />
+            </column>
+            <column name="DESCRIPTION" type="VARCHAR2(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SUGGESTED_LOOKUP" type="VARCHAR2(30)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_LOOKUPSUGGESTION" incrementBy="50"/>
+
+
+    </changeSet>
+    <changeSet id="20160512 14:00" author="kilimci">
+        <delete tableName="AUD_COMPANY_CONTACT_PHONE">
+            <where></where>
+        </delete>
+        <dropPrimaryKey tableName="AUD_COMPANY_CONTACT_PHONE" constraintName="PK_AUD_COMPANY_CONTACT_PHONE"></dropPrimaryKey>
+        <addColumn tableName="AUD_COMPANY_CONTACT_PHONE">
+            <column name="SETORDINAL" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <addPrimaryKey tableName="AUD_COMPANY_CONTACT_PHONE" columnNames="REV,REVTYPE,COMPANY_CONTACT_ID,SETORDINAL" constraintName="PK_AUD_COMPANY_CONTACT_PHONE"/>
+    </changeSet>
+
+    <changeSet id="20160512 14:40" author="kilimci">
+        <delete tableName="AUD_COMPANY_CONTACT_EMAIL">
+            <where></where>
+        </delete>
+        <dropPrimaryKey tableName="AUD_COMPANY_CONTACT_EMAIL" constraintName="PK_AUD_COMPANY_CONTACT_EMAIL"></dropPrimaryKey>
+        <addColumn tableName="AUD_COMPANY_CONTACT_EMAIL">
+            <column name="SETORDINAL" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <addPrimaryKey tableName="AUD_COMPANY_CONTACT_EMAIL" columnNames="REV,REVTYPE,COMPANY_CONTACT_ID,SETORDINAL" constraintName="AUD_COMPANY_CONTACT_EMAIL"/>
+    </changeSet>
+
+    <changeSet id="20160512 14:45" author="kilimci">
+        <delete tableName="AUD_COMPANY_LOCATION_PHONE">
+            <where></where>
+        </delete>
+        <dropPrimaryKey tableName="AUD_COMPANY_LOCATION_PHONE" constraintName="PK_AUD_COMPANY_LOCATION_PHONE"></dropPrimaryKey>
+        <addColumn tableName="AUD_COMPANY_LOCATION_PHONE">
+            <column name="SETORDINAL" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <addPrimaryKey tableName="AUD_COMPANY_LOCATION_PHONE" columnNames="REV,REVTYPE,COMPANY_LOCATION_ID,SETORDINAL" constraintName="PK_AUD_COMPANY_LOCATION_PHONE"/>
+    </changeSet>
+    <changeSet id = "20160516 14:45" author = "ozyildirim" >
+        <addColumn tableName = "LOOKUP_SUGGESTION">
+            <column name = "TYPE" type = "VARCHAR(20)">
+                <constraints nullable="false"/>
+
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet id = "20160524 14:00" author = "ozyildirim" >
+        <addColumn tableName = "COMPANY">
+            <column name = "CODE" type = "NUMBER(10,0)">
+
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet id="20160524 14:56" author="ozyildirim" failOnError="false">
+        <renameTable oldTableName="SAMPLEPOSTALCODE" newTableName="POSTALCODE"></renameTable>
+    </changeSet>
+    <changeSet id = "20160524 15:03" author = "ozyildirim" >
+        <addColumn tableName = "AUD_COMPANY">
+            <column name = "CODE" type = "NUMBER(10,0)">
+
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id = "20160524 16:05" author = "kilimci" >
+        <addColumn tableName="COMPANY_CONTACT" >
+            <column name="IS_DEFAULT" type="NUMBER(1,0)" />
+        </addColumn>
+        <update tableName="COMPANY_CONTACT">
+            <column name="IS_DEFAULT" value="0"/>
+        </update>
+        <addNotNullConstraint tableName="COMPANY_CONTACT" columnName="IS_DEFAULT"/>
+    </changeSet>
+
+    <changeSet id="20160524 15:58" author="verid">
+        <sql>INSERT INTO LOCATION_TYPE (ID, DELETED, CODE, NAME, STATUS) VALUES ('-1', '0', '1', 'OFFICE', 'ACTIVE');</sql>
+    </changeSet>
+
+    <changeSet id = "20160524 17:36" author = "verid" >
+        <addColumn tableName="AUD_COMPANY_CONTACT" >
+            <column name="IS_DEFAULT" type="NUMBER(1,0)" />
+        </addColumn>
+        <update tableName="AUD_COMPANY_CONTACT">
+            <column name="IS_DEFAULT" value="0"/>
+        </update>
+        <addNotNullConstraint tableName="AUD_COMPANY_CONTACT" columnName="IS_DEFAULT"/>
+    </changeSet>
+
+    <changeSet id="20160525 09:14" author="kilimci">
+        <dropNotNullConstraint tableName="COMPANY_CONTACT" columnName="FIRST_NAME"/>
+        <dropNotNullConstraint tableName="COMPANY_CONTACT" columnName="LAST_NAME"/>
+        <dropNotNullConstraint tableName="COMPANY_CONTACT" columnName="GENDER"/>
+    </changeSet>
+
+    <changeSet id="20160526 09:45" author="kilimci">
+        <dropColumn tableName="COMPANY_TYPE" columnName="STATUS"/>
+        <dropColumn tableName="USAGE_TYPE" columnName="STATUS"/>
+        <dropColumn tableName="COMPANY_RELATION_TYPE" columnName="STATUS"/>
+        <dropColumn tableName="EMPLOYEE_CUSTOMER_RELATION" columnName="STATUS"/>
+        <dropColumn tableName="BUSINESS_SEGMENT_TYPE" columnName="STATUS"/>
+        <dropColumn tableName="PHONE_TYPE" columnName="STATUS"/>
+        <dropColumn tableName="CONTACT_DEPARTMENT" columnName="STATUS"/>
+        <dropColumn tableName="CONTACT_TITLE" columnName="STATUS"/>
+        <dropColumn tableName="LOCATION_TYPE" columnName="STATUS"/>
+    </changeSet>
+
+    <changeSet id="20160527 11:00" author="kilimci">
+        <sql splitStatements="false">
+            <![CDATA[
+                declare
+                    ucName VARCHAR2(30);
+                begin
+                    select INDEX_NAME into ucName from USER_IND_COLUMNS cols where cols.table_name='COMPANY_TYPE' and cols.COLUMN_NAME='CODE';
+                    execute immediate 'ALTER TABLE COMPANY_TYPE DROP CONSTRAINT ' || ucName;
+
+                    select INDEX_NAME into ucName from USER_IND_COLUMNS cols where cols.table_name='USAGE_TYPE' and cols.COLUMN_NAME='CODE';
+                    execute immediate 'ALTER TABLE USAGE_TYPE DROP CONSTRAINT ' || ucName;
+
+                    select INDEX_NAME into ucName from USER_IND_COLUMNS cols where cols.table_name='COMPANY_RELATION_TYPE' and cols.COLUMN_NAME='CODE';
+                    execute immediate 'ALTER TABLE COMPANY_RELATION_TYPE DROP CONSTRAINT ' || ucName;
+
+                    select INDEX_NAME into ucName from USER_IND_COLUMNS cols where cols.table_name='EMPLOYEE_CUSTOMER_RELATION' and cols.COLUMN_NAME='CODE';
+                    execute immediate 'ALTER TABLE EMPLOYEE_CUSTOMER_RELATION DROP CONSTRAINT ' || ucName;
+
+                    select INDEX_NAME into ucName from USER_IND_COLUMNS cols where cols.table_name='BUSINESS_SEGMENT_TYPE' and cols.COLUMN_NAME='CODE';
+                    execute immediate 'ALTER TABLE BUSINESS_SEGMENT_TYPE DROP CONSTRAINT ' || ucName;
+
+                    select INDEX_NAME into ucName from USER_IND_COLUMNS cols where cols.table_name='PHONE_TYPE' and cols.COLUMN_NAME='CODE';
+                    execute immediate 'ALTER TABLE PHONE_TYPE DROP CONSTRAINT ' || ucName;
+
+                    select INDEX_NAME into ucName from USER_IND_COLUMNS cols where cols.table_name='CONTACT_DEPARTMENT' and cols.COLUMN_NAME='CODE';
+                    execute immediate 'ALTER TABLE CONTACT_DEPARTMENT DROP CONSTRAINT ' || ucName;
+
+                    select INDEX_NAME into ucName from USER_IND_COLUMNS cols where cols.table_name='CONTACT_TITLE' and cols.COLUMN_NAME='CODE';
+                    execute immediate 'ALTER TABLE CONTACT_TITLE DROP CONSTRAINT ' || ucName;
+
+                    select INDEX_NAME into ucName from USER_IND_COLUMNS cols where cols.table_name='LOCATION_TYPE' and cols.COLUMN_NAME='CODE';
+                    execute immediate 'ALTER TABLE LOCATION_TYPE DROP CONSTRAINT ' || ucName;
+                end;
+            ]]>
+        </sql>
+    </changeSet>
+
+    <changeSet id="20160603 14:45" author="kilimci">
+        <addColumn tableName="COMPANY_IMPORT_QUEUE">
+            <column name="APPLICATION_COMPANY_ID" type="NUMBER(19,0)"></column>
+        </addColumn>
+        <dropColumn tableName="COMPANY_IMPORT_QUEUE" columnName="APPLICATION_ID"/>
+    </changeSet>
+    <changeSet id="20160606 16:45" author="kilimci">
+        <renameColumn tableName="COMPANY_IMPORT_QUEUE" oldColumnName="APPLICATION_COMPANY_ID" newColumnName="APPLICATION_COMPANY_ID_OLD"/>
+        <addColumn tableName="COMPANY_IMPORT_QUEUE">
+            <column name="APPLICATION_COMPANY_ID" type="VARCHAR2(50)"></column>
+        </addColumn>
+        <sql>
+            update COMPANY_IMPORT_QUEUE set APPLICATION_COMPANY_ID = to_char(APPLICATION_COMPANY_ID_OLD);
+        </sql>
+        <dropColumn tableName="COMPANY_IMPORT_QUEUE" columnName="APPLICATION_COMPANY_ID_OLD"/>
+    </changeSet>
+
+
+    <changeSet id="20160613 14:45" author="kilimci">
+        <createTable tableName="COMPANY_ROLE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_COMPANY_ROLE" />
+            </column>
+            <column name="COMPANY_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SEGMENT_TYPE_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="RELATION_TYPE_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="START_DATE" type="DATE"/>
+            <column name="END_DATE" type="DATE"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_COMPANYROLE" incrementBy="50"/>
+        <addForeignKeyConstraint baseTableName="COMPANY_ROLE" baseColumnNames="COMPANY_ID" constraintName="FK_COMPANYROLE_COMPANY"
+                                 referencedTableName="COMPANY" referencedColumnNames="ID"/>
+        <addForeignKeyConstraint baseTableName="COMPANY_ROLE" baseColumnNames="SEGMENT_TYPE_ID" constraintName="FK_COMPROLE_BUSSEGMENTTYPE"
+                                 referencedTableName="BUSINESS_SEGMENT_TYPE" referencedColumnNames="ID"/>
+        <addForeignKeyConstraint baseTableName="COMPANY_ROLE" baseColumnNames="RELATION_TYPE_ID" constraintName="FK_COMPROLE_COMPRELATIONTYPE"
+                                 referencedTableName="COMPANY_RELATION_TYPE" referencedColumnNames="ID"/>
+    </changeSet>
+    <changeSet id="20160613 14:46" author="kilimci">
+        <createTable tableName="COMPANY_EMPLOYEE_RELATION">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_COMPANY_EMPLOYEE_RELATION" />
+            </column>
+            <column name="COMPANY_ROLE_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="EMPLOYEE_ACCOUNT" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="RELATION_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_COMPANYEMPLOYEERELATION" incrementBy="50"/>
+        <addForeignKeyConstraint baseTableName="COMPANY_EMPLOYEE_RELATION" baseColumnNames="COMPANY_ROLE_ID" constraintName="FK_COMPEMPRELATION_COMPROLE"
+                                 referencedTableName="COMPANY_ROLE" referencedColumnNames="ID"/>
+        <addForeignKeyConstraint baseTableName="COMPANY_EMPLOYEE_RELATION" baseColumnNames="RELATION_ID" constraintName="FK_COMPEMPRELATION_EMPCUSTREL"
+                                 referencedTableName="EMPLOYEE_CUSTOMER_RELATION" referencedColumnNames="ID"/>
+    </changeSet>
+    <changeSet id="20160613 14:47" author="kilimci">
+        <createTable tableName="AUD_COMPANY_ROLE">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="COMPANY_ID" type="NUMBER(19,0)"/>
+            <column name="SEGMENT_TYPE_ID" type="NUMBER(19,0)"/>
+            <column name="RELATION_TYPE_ID" type="NUMBER(19,0)"/>
+            <column name="START_DATE" type="DATE"/>
+            <column name="END_DATE" type="DATE"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_COMPANY_ROLE" columnNames="ID,REV" constraintName="PK_AUD_COMPANY_ROLE"/>
+        <addForeignKeyConstraint baseTableName="AUD_COMPANY_ROLE" baseColumnNames="REV" constraintName="FK_AUDCOMPANYROLE_REV"
+                                 referencedTableName="REVISION_INFO" referencedColumnNames="ID"/>
+    </changeSet>
+    <changeSet id="20160613 14:48" author="kilimci">
+        <createTable tableName="AUD_COMPANY_EMPLOYEE_RELATION">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="COMPANY_ROLE_ID" type="NUMBER(19,0)"/>
+            <column name="EMPLOYEE_ACCOUNT" type="VARCHAR2(100)"/>
+            <column name="RELATION_ID" type="NUMBER(19,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_COMPANY_EMPLOYEE_RELATION" columnNames="ID,REV" constraintName="PK_AUDCOMPANYEMPLOYEERELATION"/>
+        <addForeignKeyConstraint baseTableName="AUD_COMPANY_EMPLOYEE_RELATION" baseColumnNames="REV" constraintName="FK_AUDCOMPEMPRELATION_REV"
+                                 referencedTableName="REVISION_INFO" referencedColumnNames="ID"/>
+    </changeSet>
+    <changeSet id="20160614 12:00" author="kilimci">
+        <dropNotNullConstraint tableName="COMPANY_CONTACT_PHONE" columnName="COUNTRY_CODE"/>
+        <dropNotNullConstraint tableName="COMPANY_CONTACT_PHONE" columnName="REGION_CODE"/>
+        <dropNotNullConstraint tableName="COMPANY_LOCATION_PHONE" columnName="COUNTRY_CODE"/>
+        <dropNotNullConstraint tableName="COMPANY_LOCATION_PHONE" columnName="REGION_CODE"/>
+    </changeSet>
+
+    <changeSet id="20160614 12:05" author="kilimci">
+        <renameColumn tableName="COMPANY_CONTACT_PHONE" oldColumnName="PHONE" newColumnName="OLD_PHONE"/>
+        <addColumn tableName="COMPANY_CONTACT_PHONE">
+            <column name="PHONE" type="VARCHAR2(20)"></column>
+        </addColumn>
+        <sql>update COMPANY_CONTACT_PHONE set PHONE = OLD_PHONE</sql>
+        <dropColumn tableName="COMPANY_CONTACT_PHONE" columnName="OLD_PHONE"/>
+
+        <renameColumn tableName="AUD_COMPANY_CONTACT_PHONE" oldColumnName="PHONE" newColumnName="OLD_PHONE"/>
+        <addColumn tableName="AUD_COMPANY_CONTACT_PHONE">
+            <column name="PHONE" type="VARCHAR2(20)"></column>
+        </addColumn>
+        <sql>update AUD_COMPANY_CONTACT_PHONE set PHONE = OLD_PHONE</sql>
+        <dropColumn tableName="AUD_COMPANY_CONTACT_PHONE" columnName="OLD_PHONE"/>
+
+    </changeSet>
+
+    <changeSet id="20160614 12:10" author="kilimci">
+        <renameColumn tableName="COMPANY_LOCATION_PHONE" oldColumnName="PHONE" newColumnName="OLD_PHONE"/>
+        <addColumn tableName="COMPANY_LOCATION_PHONE">
+            <column name="PHONE" type="VARCHAR2(20)"></column>
+        </addColumn>
+        <sql>update COMPANY_LOCATION_PHONE set PHONE = OLD_PHONE</sql>
+        <dropColumn tableName="COMPANY_LOCATION_PHONE" columnName="OLD_PHONE"/>
+
+        <renameColumn tableName="AUD_COMPANY_LOCATION_PHONE" oldColumnName="PHONE" newColumnName="OLD_PHONE"/>
+        <addColumn tableName="AUD_COMPANY_LOCATION_PHONE">
+            <column name="PHONE" type="VARCHAR2(20)"></column>
+        </addColumn>
+        <sql>update AUD_COMPANY_LOCATION_PHONE set PHONE = OLD_PHONE</sql>
+        <dropColumn tableName="AUD_COMPANY_LOCATION_PHONE" columnName="OLD_PHONE"/>
+
+    </changeSet>
+    <changeSet id="20160615 11:30" author="kilimci">
+        <dropSequence sequenceName="SEQ_COMPANYCUSTOMERRELATION"/>
+        <dropSequence sequenceName="SEQ_COMPANYRELATION"/>
+        <dropSequence sequenceName="SEQ_COMPANYBUSINESSSEGMENT"/>
+        <dropForeignKeyConstraint baseTableName="COMPANY_CUSTOMER_RELATION" constraintName="FK_COMPCUSTREL_COMPREL"/>
+        <dropForeignKeyConstraint baseTableName="COMPANY_RELATION" constraintName="FK_COMPRELATION_COMPBUSSEG"/>
+        <dropForeignKeyConstraint baseTableName="COMPANY_BUSINESS_SEGMENT" constraintName="FK_COMPBUSSEGMENT_COMPANY"/>
+        <dropTable tableName="COMPANY_CUSTOMER_RELATION" cascadeConstraints="true"/>
+        <dropTable tableName="COMPANY_RELATION" cascadeConstraints="true"/>
+        <dropTable tableName="COMPANY_BUSINESS_SEGMENT" cascadeConstraints="true"/>
+    </changeSet>
+
+    <changeSet id="20160615 12:10" author="kilimci">
+        <dropUniqueConstraint tableName="COMPANY" constraintName="UC_COMPANY_NAME"/>
+    </changeSet>
+    <changeSet id="20160615 13:10" author="kilimci">
+        <dropTable tableName="AUD_COMPANY_CUSTOMER_RELATION" cascadeConstraints="true"/>
+        <dropTable tableName="AUD_COMPANY_RELATION" cascadeConstraints="true"/>
+        <dropTable tableName="AUD_COMPANY_BUSINESS_SEGMENT" cascadeConstraints="true"/>
+    </changeSet>
+
+    <changeSet id="20160615 13:20" author="kilimci">
+        <addColumn tableName="COMPANY_LOCATION">
+            <column name="FORMATTED_ADDRESS" type="VARCHAR2(255)"/>
+            <column name="DOOR_NUMBER" type="VARCHAR2(10)"/>
+        </addColumn>
+        <addColumn tableName="AUD_COMPANY_LOCATION">
+            <column name="FORMATTED_ADDRESS" type="VARCHAR2(255)"/>
+            <column name="DOOR_NUMBER" type="VARCHAR2(10)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="20160615 14:10" author="kilimci">
+        <createTable tableName="COMPANY_LOCATION_ADR_COMP">
+            <column name="COMPANY_LOCATION_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ADDRESS_COMPONENTS_KEY" type="VARCHAR2(100)"/>
+            <column name="ADDRESS_COMPONENTS" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="20160615 14:50" author="kilimci">
+        <createTable tableName="AUD_COMPANY_LOCATION_ADR_COMP">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="COMPANY_LOCATION_ID" type="NUMBER(19,0)"/>
+            <column name="ADDRESS_COMPONENTS_KEY" type="VARCHAR2(100)"/>
+            <column name="ADDRESS_COMPONENTS" type="VARCHAR2(100)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_COMPANY_LOCATION_ADR_COMP" columnNames="REV,REVTYPE,COMPANY_LOCATION_ID,ADDRESS_COMPONENTS_KEY" constraintName="PK_AUD_COMPANY_LOCATION_ACOMP"/>
+        <addForeignKeyConstraint baseTableName="AUD_COMPANY_LOCATION_ADR_COMP" baseColumnNames="REV" constraintName="FK_AUDCOMPLOCATIONACOMP_REV"
+                                 referencedTableName="REVISION_INFO" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20160615 15:20" author="kilimci">
+        <addColumn tableName="COMPANY_LOCATION">
+            <column name="STREET_NUMBER" type="VARCHAR2(10)"/>
+        </addColumn>
+        <addColumn tableName="AUD_COMPANY_LOCATION">
+            <column name="STREET_NUMBER" type="VARCHAR2(10)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20160624 15:00" author="kilimci">
+
+        <createTable tableName="COMPANY_ROLE_TYPE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_COMPANY_ROLE_TYPE"/>
+            </column>
+            <column name="CODE" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_COMPANYROLETYPE" incrementBy="50"/>
+        <addUniqueConstraint tableName="COMPANY_ROLE_TYPE" columnNames="CODE"/>
+
+    </changeSet>
+
+    <changeSet id="20160624 15:01" author="kilimci">
+        <sql>
+            <![CDATA[
+                INSERT INTO COMPANY_ROLE_TYPE
+                  SELECT *
+                    FROM COMPANY_RELATION_TYPE;
+            ]]>
+        </sql>
+    </changeSet>
+
+    <changeSet id="20160624 15:02" author="kilimci">
+        <dropForeignKeyConstraint baseTableName="COMPANY_ROLE" constraintName="FK_COMPROLE_COMPRELATIONTYPE"/>
+    </changeSet>
+
+    <changeSet id="20160624 15:05" author="kilimci">
+        <addColumn tableName="COMPANY_ROLE">
+            <column name="role_type_id" type="NUMBER(19,0)"></column>
+        </addColumn>
+        <addColumn tableName="AUD_COMPANY_ROLE">
+            <column name="role_type_id" type="NUMBER(19,0)"></column>
+        </addColumn>
+        <addForeignKeyConstraint baseTableName="COMPANY_ROLE" baseColumnNames="role_type_id" constraintName="FK_COMPANYROLE_ROLETYPE"
+                                 referencedTableName="COMPANY_ROLE_TYPE" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20160624 15:10" author="kilimci">
+        <sql>
+            <![CDATA[
+                update COMPANY_ROLE set role_type_id = relation_type_id;
+                update AUD_COMPANY_ROLE set role_type_id = relation_type_id;
+            ]]>
+        </sql>
+    </changeSet>
+
+    <changeSet id="20160624 15:12" author="kilimci">
+        <dropColumn tableName="COMPANY_ROLE" columnName="relation_type_id"/>
+        <dropColumn tableName="AUD_COMPANY_ROLE" columnName="relation_type_id"/>
+    </changeSet>
+
+    <changeSet id="20160624 15:20" author="kilimci">
+        <sql>
+            <![CDATA[
+                delete from COMPANY_RELATION_TYPE;
+            ]]>
+        </sql>
+    </changeSet>
+
+
+    <changeSet id="20160624 16:00" author="kilimci">
+        <createTable tableName="COMPANY_RELATION">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_COMPANY_RELATION" />
+            </column>
+            <column name="ACTIVE_COMPANY_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PASSIVE_COMPANY_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="RELATION_TYPE_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_COMPANYRELATION" incrementBy="50"/>
+        <addForeignKeyConstraint baseTableName="COMPANY_RELATION" baseColumnNames="ACTIVE_COMPANY_ID" constraintName="FK_COMPRELATION_ACTIVECOMP"
+                                 referencedTableName="COMPANY" referencedColumnNames="ID"/>
+        <addForeignKeyConstraint baseTableName="COMPANY_RELATION" baseColumnNames="PASSIVE_COMPANY_ID" constraintName="FK_COMPRELATION_PASSIVECOMP"
+                                 referencedTableName="COMPANY" referencedColumnNames="ID"/>
+        <addForeignKeyConstraint baseTableName="COMPANY_RELATION" baseColumnNames="RELATION_TYPE_ID" constraintName="FK_COMPRELATION_COMPRELTYPE"
+                                 referencedTableName="COMPANY_RELATION_TYPE" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20160624 16:05" author="kilimci">
+        <createTable tableName="AUD_COMPANY_RELATION">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="ACTIVE_COMPANY_ID" type="NUMBER(19,0)"/>
+            <column name="PASSIVE_COMPANY_ID" type="NUMBER(19,0)"/>
+            <column name="RELATION_TYPE_ID" type="NUMBER(19,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_COMPANY_RELATION" columnNames="ID,REV" constraintName="PK_AUD_COMPANY_RELATION"/>
+        <addForeignKeyConstraint baseTableName="AUD_COMPANY_RELATION" baseColumnNames="REV" constraintName="FK_AUDCOMPANYRELATION_REV"
+                                 referencedTableName="REVISION_INFO" referencedColumnNames="ID"/>
+    </changeSet>
+    <changeSet id="20160624 16:15" author="kilimci">
+        <sql>
+            <![CDATA[
+                insert into COMPANY_RELATION_TYPE values(-1, 'ZCHM03', 'Corporate Family Has the Member', 0, null, null);
+                insert into COMPANY_RELATION_TYPE values(-2, 'ZCPG01', 'Has the Agent', 0, null, null);
+                insert into COMPANY_RELATION_TYPE values(-3, 'ZCPG02', 'Has the Retailer', 0, null, null);
+                insert into COMPANY_RELATION_TYPE values(-4, 'ZCPG03', 'Has the Carrier Customer', 0, null, null);
+                insert into COMPANY_RELATION_TYPE values(-5, 'ZCPG04', 'Has the Representative', 0, null, null);
+                insert into COMPANY_RELATION_TYPE values(-6, 'ZCRME1', 'Has the Supplier', 0, null, null);
+                insert into COMPANY_RELATION_TYPE values(-7, 'ZCRME2', 'Has the Logistics Partner', 0, null, null);
+                insert into COMPANY_RELATION_TYPE values(-8, 'ZCRMH4', 'Has the Bill-To Party', 0, null, null);
+            ]]>
+
+        </sql>
+    </changeSet>
+    <changeSet id="20160624 16:45" author="kilimci">
+        <modifyDataType tableName="LOOKUP_SUGGESTION" columnName="TYPE" newDataType="VARCHAR2(30)"/>
+    </changeSet>
+    <changeSet id="20160624 18:00" author="kilimci">
+        <addColumn tableName="COMPANY_RELATION_TYPE">
+            <column name="ALT_NAME" type="VARCHAR2(255)"></column>
+        </addColumn>
+    </changeSet>
+    <changeSet id="20160630 16:00" author="kilimci">
+        <createTable tableName="SALES_PORTFOLIO">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_SALES_PORTFOLIO"/>
+            </column>
+            <column name="CODE" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_SALESPORTFOLIO" incrementBy="50"/>
+    </changeSet>
+    <changeSet id="20160630 16:05" author="kilimci">
+        <addColumn tableName="COMPANY_ROLE">
+            <column name="SALES_PORTFOLIO_ID" type="NUMBER(19,0)"/>
+        </addColumn>
+        <addColumn tableName="AUD_COMPANY_ROLE">
+            <column name="SALES_PORTFOLIO_ID" type="NUMBER(19,0)"/>
+        </addColumn>
+        <addForeignKeyConstraint baseTableName="COMPANY_ROLE" baseColumnNames="SALES_PORTFOLIO_ID" constraintName="FK_COMPANYROLE_SALESPORTFOLIO"
+                                 referencedTableName="SALES_PORTFOLIO" referencedColumnNames="ID"/>
+    </changeSet>
+    <changeSet id="20160630 16:35" author="kilimci">
+        <sqlFile path="insert_sales_portfolio.sql" encoding="utf8" relativeToChangelogFile="true"/>
+    </changeSet>
+    <changeSet id="20160727 09:06" author="kilimci">
+        <dropNotNullConstraint tableName="COMPANY_CONTACT_EMAIL" columnName="EMAIL_DOMAIN"/>
+    </changeSet>
+    <changeSet id="20160802 10:30" author="kilimci">
+        <createTable tableName="COMPANY_EXPORT_QUEUE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_COMPANY_EXPORT_QUEUE" />
+            </column>
+            <column name="CREATE_DATE" type="TIMESTAMP(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="APPLICATION" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="COMPANY_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="STATUS" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DATA" type="CLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LATEST_EXECUTE_DATE" type="TIMESTAMP(6)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_COMPANYEXPORTQUEUE" incrementBy="50"/>
+        <addForeignKeyConstraint baseTableName="COMPANY_EXPORT_QUEUE" baseColumnNames="COMPANY_ID" constraintName="FK_COMPEXPORTQUEUE_COMPANY"
+                                 referencedTableName="COMPANY" referencedColumnNames="ID"/>
+    </changeSet>
+    <changeSet id="20160802 11:50" author="kilimci">
+        <addColumn tableName="COMPANY_EXPORT_QUEUE">
+            <column name="APPLICATION_COMPANY_ID" type="VARCHAR2(50)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20160810 14:50" author="kilimci">
+        <addColumn tableName="COUNTRY">
+            <column name="EU_MEMBER" type="NUMBER(1,0)"/>
+        </addColumn>
+        <sql>update COUNTRY set EU_MEMBER = 1 where currency = 'EUR'</sql>
+        <sql>update COUNTRY set EU_MEMBER = 0 where currency != 'EUR'</sql>
+    </changeSet>
+
+    <changeSet id="20160812 14:20" author="kilimci">
+        <addColumn tableName="COMPANY_EXPORT_QUEUE">
+            <column name="RETRY_COUNT" type="NUMBER(10,0)"/>
+        </addColumn>
+        <sql>update COMPANY_EXPORT_QUEUE set RETRY_COUNT = 0;</sql>
+    </changeSet>
+    <changeSet id="20160819 15:40" author="kilimci">
+        <dropNotNullConstraint tableName="COMPANY_EMPLOYEE_RELATION" columnName="EMPLOYEE_ACCOUNT"/>
+    </changeSet>
+
+    <changeSet id="20160909 10:00" author="kilimci">
+
+        <createTable tableName="COMPANY_SEGMENT_TYPE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_COMPANY_SEGMENT_TYPE"/>
+            </column>
+            <column name="CODE" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_COMPANYSEGMENTTYPE" incrementBy="50"/>
+        <addUniqueConstraint tableName="COMPANY_SEGMENT_TYPE" columnNames="CODE" constraintName="UC_COMPANY_SEGMENT_TYPE"/>
+
+    </changeSet>
+    <changeSet id="20160909 10:05" author="kilimci">
+        <addColumn tableName="COMPANY">
+            <column name="COMPANY_SEGMENT_TYPE_ID" type="NUMBER(19,0)"></column>
+        </addColumn>
+    </changeSet>
+    <changeSet id="20160909 10:07" author="kilimci">
+        <addForeignKeyConstraint baseTableName="COMPANY" baseColumnNames="COMPANY_SEGMENT_TYPE_ID" constraintName="FK_COMPANY_COMPSEGMENTTYPE"
+                                 referencedTableName="COMPANY_SEGMENT_TYPE"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+    <changeSet id="20160909 10:10" author="kilimci">
+        <addColumn tableName="AUD_COMPANY">
+            <column name="COMPANY_SEGMENT_TYPE_ID" type="NUMBER(19,0)"/>
+        </addColumn>
+    </changeSet>
+
+
+    <changeSet id="20160909 18:05" author="kilimci">
+        <addColumn tableName="COMPANY">
+            <column name="SALES_PORTFOLIO_ID" type="NUMBER(19,0)"/>
+        </addColumn>
+        <addForeignKeyConstraint baseTableName="COMPANY" baseColumnNames="SALES_PORTFOLIO_ID" constraintName="FK_COMPANY_SALESPORTFOLIO"
+                                 referencedTableName="SALES_PORTFOLIO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+    <changeSet id="20160909 18:06" author="kilimci">
+        <addColumn tableName="AUD_COMPANY">
+            <column name="SALES_PORTFOLIO_ID" type="NUMBER(19,0)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="20160909 18:10" author="kilimci">
+        <sqlFile path="refactor_sales_portfolio.sql" encoding="utf8" relativeToChangelogFile="true" splitStatements="false"/>
+    </changeSet>
+
+    <changeSet id="20160909 18:15" author="kilimci">
+        <dropColumn tableName="COMPANY_ROLE" columnName="SALES_PORTFOLIO_ID"/>
+        <dropColumn tableName="AUD_COMPANY_ROLE" columnName="SALES_PORTFOLIO_ID"/>
+    </changeSet>
+
+    <changeSet id="20160909 18:35" author="kilimci">
+        <addColumn tableName="COMPANY">
+            <column name="PORTFOLIO_OWNER" type="VARCHAR2(100)"/>
+        </addColumn>
+        <addColumn tableName="AUD_COMPANY">
+            <column name="PORTFOLIO_OWNER" type="VARCHAR2(100)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="20160914 13:10" author="kilimci">
+        <sqlFile path="insert_portfolio_owner.sql" encoding="utf8" relativeToChangelogFile="true" splitStatements="false"/>
+    </changeSet>
+    <changeSet id="20160909 18:39" author="kilimci">
+        <sqlFile path="check_portfolio_owner.sql" encoding="utf8" relativeToChangelogFile="true" splitStatements="false"/>
+    </changeSet>
+    <changeSet id="20160909 18:40" author="kilimci">
+        <sqlFile path="refactor_portfolio_owner.sql" encoding="utf8" relativeToChangelogFile="true" splitStatements="false"/>
+    </changeSet>
+
+    <changeSet id="20160923 11:00" author="kilimci">
+        <addColumn tableName="COMPANY_EMPLOYEE_RELATION">
+            <column name="START_DATE" type="DATE"/>
+            <column name="END_DATE" type="DATE"/>
+        </addColumn>
+        <addColumn tableName="AUD_COMPANY_EMPLOYEE_RELATION">
+            <column name="START_DATE" type="DATE"/>
+            <column name="END_DATE" type="DATE"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="20160930 17:30" author="kilimci">
+        <modifyDataType tableName="COMPANY_LOCATION" columnName="STREET_NAME" newDataType="VARCHAR2(120)"/>
+    </changeSet>
+    <changeSet id="20161012 11:00" author="kilimci">
+        <addColumn tableName="COMPANY_LOCATION">
+            <column name="EORI_NUMBER" type="VARCHAR2(50)"/>
+            <column name="CUSTOMS_CODE" type="VARCHAR2(50)"/>
+        </addColumn>
+        <addColumn tableName="AUD_COMPANY_LOCATION">
+            <column name="EORI_NUMBER" type="VARCHAR2(50)"/>
+            <column name="CUSTOMS_CODE" type="VARCHAR2(50)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="20161101 17:00" author="kilimci">
+        <addColumn tableName="COMPANY">
+            <column name="OWNED_BY_EKOL" type="NUMBER(1)"/>
+        </addColumn>
+        <addColumn tableName="AUD_COMPANY">
+            <column name="OWNED_BY_EKOL" type="NUMBER(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="20161101 17:05" author="kilimci">
+        <sql>update company set OWNED_BY_EKOL = 0;</sql>
+    </changeSet>
+    <changeSet id="20161111 11:42" author="kilimci">
+        <addColumn tableName="COMPANY_LOCATION">
+            <column name="TIMEZONE" type="VARCHAR2(100)"/>
+        </addColumn>
+        <addColumn tableName="AUD_COMPANY_LOCATION">
+            <column name="TIMEZONE" type="VARCHAR2(100)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="20170130 13:42" author="kilimci">
+        <addColumn tableName="COMPANY">
+            <column name="EORI_NUMBER" type="VARCHAR2(50)"/>
+        </addColumn>
+        <addColumn tableName="AUD_COMPANY">
+            <column name="EORI_NUMBER" type="VARCHAR2(50)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="20170130 13:43" author="kilimci">
+        <sqlFile path="refactor_eori_number.sql" encoding="utf8" relativeToChangelogFile="true" splitStatements="false"/>
+    </changeSet>
+    <changeSet id="20170130 13:44" author="kilimci">
+        <dropColumn tableName="COMPANY_LOCATION" columnName="EORI_NUMBER"/>
+        <dropColumn tableName="AUD_COMPANY_LOCATION" columnName="EORI_NUMBER"/>
+    </changeSet>
+    <changeSet id="20170130 13:50" author="kilimci">
+        <addColumn tableName="COMPANY_LOCATION">
+            <column name="GOOGLE_PLACE_ID" type="VARCHAR2(255)"/>
+            <column name="GOOGLE_PLACE_URL" type="VARCHAR2(255)"/>
+        </addColumn>
+        <addColumn tableName="AUD_COMPANY_LOCATION">
+            <column name="GOOGLE_PLACE_ID" type="VARCHAR2(255)"/>
+            <column name="GOOGLE_PLACE_URL" type="VARCHAR2(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="20170130 14:07" author="kilimci">
+        <dropColumn tableName="COMPANY_LOCATION" columnName="LOOKUP_ID"/>
+        <dropColumn tableName="AUD_COMPANY_LOCATION" columnName="LOOKUP_ID"/>
+    </changeSet>
+
+    <changeSet id="20170209 11:45" author="kilimci">
+        <createTable tableName="COMPANY_CONTACT_ID_MAPPING">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_COMPANY_CONTACT_ID_MAPPING"/>
+            </column>
+            <column name="COMPANY_CONTACT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="APPLICATION" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="APPLICATION_CONTACT_ID" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_COMPANYCONTACTIDMAPPING" incrementBy="50"/>
+        <addForeignKeyConstraint baseTableName="COMPANY_CONTACT_ID_MAPPING" baseColumnNames="COMPANY_CONTACT_ID" constraintName="FK_COMPCONTIDMAPPING_COMPCONT"
+                                 referencedTableName="COMPANY_CONTACT" referencedColumnNames="ID"/>
+    </changeSet>
+    <changeSet id="20170209 13:25" author="kilimci">
+        <addColumn tableName="COMPANY_CONTACT">
+            <column name="COMPANY_LOCATION_ID" type="NUMBER(19,0)"/>
+        </addColumn>
+        <addColumn tableName="AUD_COMPANY_CONTACT">
+            <column name="COMPANY_LOCATION_ID" type="NUMBER(19,0)"/>
+        </addColumn>
+        <addForeignKeyConstraint baseTableName="COMPANY_CONTACT" baseColumnNames="COMPANY_LOCATION_ID" constraintName="FK_COMPCONTACT_COMPLOCATION"
+                                 referencedTableName="COMPANY_LOCATION" referencedColumnNames="ID"/>
+    </changeSet>
+    <changeSet id="20170223 16:05" author="kilimci">
+        <addColumn tableName="COMPANY_IMPORT_QUEUE">
+            <column name="COMPLETED_DATE" type="TIMESTAMP(6)"/>
+            <column name="COMPLETED_BY" type="VARCHAR2(100)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="20170223 16:15" author="kilimci">
+        <sql>
+            update company_import_queue set completed_by = last_updated_by, completed_date = last_updated where status = 'SUCCESS' and last_updated_by is not null;
+        </sql>
+    </changeSet>
+    <changeSet id="20170321 15:10" author="kilimci">
+        <renameColumn tableName="COMPANY" oldColumnName="taxoffice_id" newColumnName="tax_office_id"/>
+        <renameColumn tableName="AUD_COMPANY" oldColumnName="taxoffice_id" newColumnName="tax_office_id"/>
+    </changeSet>
+    <changeSet id="20170321 15:12" author="kilimci">
+        <renameColumn tableName="COMPANY" oldColumnName="taxid" newColumnName="tax_id"/>
+        <renameColumn tableName="AUD_COMPANY" oldColumnName="taxid" newColumnName="tax_id"/>
+    </changeSet>
+    <changeSet id="20170321 15:15" author="kilimci">
+        <addColumn tableName="COMPANY">
+            <column name="TAX_OFFICE_CODE" type="VARCHAR2(20)"/>
+        </addColumn>
+        <addColumn tableName="AUD_COMPANY">
+            <column name="TAX_OFFICE_CODE" type="VARCHAR2(20)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="20170321 15:20" author="kilimci">
+        <sql>
+            update company set tax_office_code = (select code from tax_office where id = company.tax_office_id)
+        </sql>
+    </changeSet>
+    <changeSet id="20170427 17:15" author="kilimci">
+        <addColumn tableName="COMPANY">
+            <column name="SHORT_NAME" type="VARCHAR2(255)"/>
+        </addColumn>
+        <addColumn tableName="AUD_COMPANY">
+            <column name="SHORT_NAME" type="VARCHAR2(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="20170623 12:20" author="kilimci">
+        <sqlFile path="refactor_contact_locations.sql" encoding="utf8" relativeToChangelogFile="true" splitStatements="false"/>
+    </changeSet>
+
+    <changeSet id="20171101 11:30" author="kilimci">
+        <sqlFile path="add-column-deleted-at.sql" encoding="utf8" relativeToChangelogFile="true" splitStatements="false"/>
+    </changeSet>
+
+    <changeSet id="20171109 12:11:01" author="Eray Oral">
+        <sql>UPDATE COUNTRY SET CURRENCY = 'TRY' WHERE CURRENCY = 'TRL'</sql>
+    </changeSet>
+
+    <changeSet id="20171208 17:15" author="kilimci">
+        <addColumn tableName="COMPANY">
+            <column name="LOGO_FILE_PATH" type="VARCHAR2(255)"/>
+        </addColumn>
+        <addColumn tableName="AUD_COMPANY">
+            <column name="LOGO_FILE_PATH" type="VARCHAR2(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20171220 09:25" author="kilimci">
+        <createTable tableName="IMPORT_QUEUE_COMPANY_TYPE">
+            <column name="IMPORT_QUEUE_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="COMPANY_ROLE_TYPES" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="IMPORT_QUEUE_COMPANY_TYPE" baseColumnNames="IMPORT_QUEUE_ID" constraintName="FK_IMPQUEUECOMPTYPE_IMPQUEUE"
+                                 referencedTableName="COMPANY_IMPORT_QUEUE" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20171220 10:25" author="kilimci">
+        <addColumn tableName="COMPANY_LOCATION">
+            <column name="SHORT_NAME" type="VARCHAR2(100)" />
+        </addColumn>
+        <addColumn tableName="AUD_COMPANY_LOCATION">
+            <column name="SHORT_NAME" type="VARCHAR2(100)" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20180126 10:25" author="kilimci">
+        <createIndex tableName="COMPANY_LOCATION" indexName="IX_COMPANY_LOCATION_COMPANY">
+            <column name="COMPANY_ID" />
+        </createIndex>
+        <createIndex tableName="COMPANY_CONTACT" indexName="IX_COMPANY_CONTACT_COMPANY">
+            <column name="COMPANY_ID" />
+        </createIndex>
+        <createIndex tableName="COMPANY_ID_MAPPING" indexName="IX_COMPANY_MAPPING_COMPANY">
+            <column name="COMPANY_ID" />
+        </createIndex>
+        <createIndex tableName="COMPANY_SECTOR" indexName="IX_COMPANY_SECTOR_COMPANY">
+            <column name="COMPANY_ID" />
+        </createIndex>
+        <createIndex tableName="COMPANY_ROLE" indexName="IX_COMPANY_ROLE_COMPANY">
+            <column name="COMPANY_ID" />
+        </createIndex>
+        <createIndex tableName="COMPANY_RELATION" indexName="IX_COMPANY_REL_ACTIVE_COMPANY">
+            <column name="ACTIVE_COMPANY_ID" />
+        </createIndex>
+        <createIndex tableName="COMPANY_RELATION" indexName="IX_COMPANY_REL_PASSIVE_COMPANY">
+            <column name="PASSIVE_COMPANY_ID" />
+        </createIndex>
+
+    </changeSet>
+
+    <changeSet id="20180129 13:45" author="kilimci">
+        <dropColumn tableName="COMPANY" columnName="sales_portfolio_id"/>
+    </changeSet>
+
+    <changeSet id="20180129 15:05" author="kilimci">
+        <createIndex tableName="company_contact_phone" indexName="IX_COMP_CONT_PHONE_CONTACT">
+            <column name="company_contact_id" />
+        </createIndex>
+        <createIndex tableName="company_contact_email" indexName="IX_COMP_CONT_EMAIL_CONTACT">
+            <column name="company_contact_id" />
+        </createIndex>
+    </changeSet>
+    <changeSet id="20180129 15:15" author="kilimci">
+        <createIndex tableName="company_contact_serv_type" indexName="IX_COMP_CONT_SERVICE_CONTACT">
+            <column name="company_contact_id" />
+        </createIndex>
+    </changeSet>
+    <changeSet id="20180228 10:55" author="kilimci">
+        <addColumn tableName="COMPANY">
+            <column name="short_name_checked" type="NUMBER(1)" />
+        </addColumn>
+        <addColumn tableName="AUD_COMPANY">
+            <column name="short_name_checked" type="NUMBER(1)" />
+        </addColumn>
+        <addColumn tableName="COMPANY_LOCATION">
+            <column name="short_name_checked" type="NUMBER(1)" />
+        </addColumn>
+        <addColumn tableName="AUD_COMPANY_LOCATION">
+            <column name="short_name_checked" type="NUMBER(1)" />
+        </addColumn>
+    </changeSet>
+    <changeSet id="20180228 10:58" author="kilimci">
+        <sql>update company set short_name_checked = 0</sql>
+        <sql>update company_location set short_name_checked = 0</sql>
+    </changeSet>
+
+    <changeSet id="20180228 16:00" author="kilimci">
+        <addColumn tableName="COMPANY">
+            <column name="stats_participant" type="NUMBER(10)" />
+            <column name="stats_customer" type="NUMBER(10)" />
+        </addColumn>
+        <addColumn tableName="AUD_COMPANY">
+            <column name="stats_participant" type="NUMBER(10)" />
+            <column name="stats_customer" type="NUMBER(10)" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20180228 16:05" author="kilimci">
+        <sql>update company set stats_customer = 0, stats_participant = 0</sql>
+    </changeSet>
+
+    <changeSet id="20180719 17:35" author="kilimci">
+        <addColumn tableName="COMPANY_LOCATION">
+            <column name="POINT_ON_MAP_CONFIRMED" type="NUMBER(1,0)" />
+        </addColumn>
+        <sql>update COMPANY_LOCATION set POINT_ON_MAP_CONFIRMED = 0</sql>
+        <addNotNullConstraint tableName="COMPANY_LOCATION" columnName="POINT_ON_MAP_CONFIRMED"/>
+    </changeSet>
+
+    <changeSet id="20180724 11:10" author="kilimci">
+        <addColumn tableName="COMPANY_IMPORT_QUEUE">
+            <column name="CUSTOMER_COMPANY_CODE" type="VARCHAR2(100)" />
+        </addColumn>
+        <addColumn tableName="COMPANY_IMPORT_QUEUE">
+            <column name="ORDER_CODE" type="VARCHAR2(100)" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20180725 11:35" author="kilimci">
+        <addColumn tableName="AUD_COMPANY_LOCATION">
+            <column name="POINT_ON_MAP_CONFIRMED" type="NUMBER(1,0)" />
+        </addColumn>
+        <sql>update AUD_COMPANY_LOCATION set POINT_ON_MAP_CONFIRMED = 0</sql>
+    </changeSet>
+
+    <changeSet id="20181219 12:12:01" author="Eray Oral">
+        <sql>UPDATE COMPANY_ROLE SET DELETED = 1, DELETED_AT = SYSTIMESTAMP, LAST_UPDATED = SYSTIMESTAMP, LAST_UPDATED_BY = 'eray.oral' WHERE DELETED = 0</sql>
+    </changeSet>
+
+    <changeSet id="20181220 09:10:01" author="Eray Oral">
+        <addColumn tableName="COMPANY">
+            <column name="CREATED_FROM_CRM" type="NUMBER(1,0)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20181220 09:10:02" author="Eray Oral">
+        <sql>UPDATE COMPANY SET CREATED_FROM_CRM = 0</sql>
+    </changeSet>
+
+    <changeSet id="20181220 09:10:03" author="Eray Oral">
+        <addColumn tableName="AUD_COMPANY">
+            <column name="CREATED_FROM_CRM" type="NUMBER(1,0)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20181220 09:10:04" author="Eray Oral">
+        <sql>UPDATE AUD_COMPANY SET CREATED_FROM_CRM = 0</sql>
+    </changeSet>
+
+    <changeSet id="20181220 22:12:01" author="Eray Oral">
+        <renameColumn tableName="COMPANY" oldColumnName="CREATED_FROM_CRM" newColumnName="TEMP"/>
+    </changeSet>
+
+    <changeSet id="20181220 22:12:02" author="Eray Oral">
+        <renameColumn tableName="AUD_COMPANY" oldColumnName="CREATED_FROM_CRM" newColumnName="TEMP"/>
+    </changeSet>
+
+    <changeSet id="20190118 20:37:01" author="Eray Oral">
+        <createIndex tableName="COMPANY_IMPORT_QUEUE" indexName="INDX_COMPANY_IMPORT_QUEUE_APPC">
+            <column name="APPLICATION"/>
+            <column name="COMPANY_ID"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="20190119 12:49:01" author="Eray Oral">
+        <dropColumn tableName="COMPANY" columnName="TEMP"/>
+    </changeSet>
+
+    <changeSet id="20190119 12:49:02" author="Eray Oral">
+        <dropColumn tableName="AUD_COMPANY" columnName="TEMP"/>
+    </changeSet>
+
+    <changeSet id="20190129 17:20:01" author="Eray Oral">
+        <dropColumn tableName="COMPANY" columnName="PORTFOLIO_OWNER"/>
+    </changeSet>
+
+    <changeSet id="20190129 17:20:02" author="Eray Oral">
+        <dropColumn tableName="AUD_COMPANY" columnName="PORTFOLIO_OWNER"/>
+    </changeSet>
+    
+    <changeSet id="20190702 13:00:02" author="AliRiza.Bostanci">
+    	<addColumn tableName="COMPANY_CONTACT_PHONE">
+            <column name="NUMBER_TYPE_TMP" type="NUMBER(19,0)"></column>
+        </addColumn>
+        <sql>update COMPANY_CONTACT_PHONE set NUMBER_TYPE_TMP = NUMBER_TYPE</sql>
+        <dropColumn tableName="COMPANY_CONTACT_PHONE" columnName="NUMBER_TYPE"/>
+        <renameColumn tableName="COMPANY_CONTACT_PHONE" oldColumnName="NUMBER_TYPE_TMP" newColumnName="NUMBER_TYPE"/>
+    </changeSet>
+    
+    <changeSet id="20190702 13:00:03" author="AliRiza.Bostanci">
+    	<addColumn tableName="AUD_COMPANY_CONTACT_PHONE">
+            <column name="NUMBER_TYPE_TMP" type="NUMBER(19,0)"></column>
+        </addColumn>
+        <sql>update AUD_COMPANY_CONTACT_PHONE set NUMBER_TYPE_TMP = NUMBER_TYPE</sql>
+        <dropColumn tableName="AUD_COMPANY_CONTACT_PHONE" columnName="NUMBER_TYPE"/>
+        <renameColumn tableName="AUD_COMPANY_CONTACT_PHONE" oldColumnName="NUMBER_TYPE_TMP" newColumnName="NUMBER_TYPE"/>
+    </changeSet>
+
+    <changeSet id="20190708 15:01" author="Dogukan Sahinturk">
+        <addColumn tableName="BUSINESS_SEGMENT_TYPE">
+            <column name="RANK" type="NUMBER(3,0)"/>
+        </addColumn>
+        <sql> UPDATE BUSINESS_SEGMENT_TYPE SET RANK = 999 </sql>
+        <sql> UPDATE BUSINESS_SEGMENT_TYPE SET RANK = 1 WHERE CODE = 'ROAD' </sql>
+        <sql> UPDATE BUSINESS_SEGMENT_TYPE SET RANK = 2 WHERE CODE = 'SEA' </sql>
+        <sql> UPDATE BUSINESS_SEGMENT_TYPE SET RANK = 3 WHERE CODE = 'AIR' </sql>
+        <sql> UPDATE BUSINESS_SEGMENT_TYPE SET RANK = 4 WHERE CODE = 'DTR' </sql>
+        <sql> UPDATE BUSINESS_SEGMENT_TYPE SET RANK = 5 WHERE CODE = 'CCL' </sql>
+    </changeSet>
+
+    <changeSet id="20190708 16:04" author="Dogukan Sahinturk">
+        <sql> UPDATE BUSINESS_SEGMENT_TYPE SET RANK = 6 WHERE CODE = 'WHM' </sql>
+        <sql> UPDATE BUSINESS_SEGMENT_TYPE SET RANK = 7 WHERE CODE = 'BWH' </sql>
+    </changeSet>
+    
+    <changeSet id="20190807 09:58" author="Fulya Koncu">
+        <sql> UPDATE COMPANY_CONTACT_PHONE SET PHONE = CONCAT(REGION_CODE,PHONE) WHERE COUNTRY_CODE='34' </sql>
+        <sql> UPDATE COMPANY_CONTACT_PHONE SET REGION_CODE='' WHERE COUNTRY_CODE='34' </sql>
+    </changeSet>
+    
+    <changeSet id="20190807 10:16" author="Fulya Koncu">
+        <sql> UPDATE COMPANY_LOCATION_PHONE SET PHONE = CONCAT(REGION_CODE,PHONE) WHERE COUNTRY_CODE='34' </sql>
+        <sql> UPDATE COMPANY_LOCATION_PHONE SET REGION_CODE='' WHERE COUNTRY_CODE='34' </sql>
+    </changeSet>
+    
+     <changeSet id="20190820 17:47" author="Fulya Koncu">
+        <addColumn tableName="COMPANY_CONTACT_EMAIL" >
+            <column name="EMAIL_ADDRESS" type="VARCHAR2(200)" ></column>
+        </addColumn>
+         <sql> UPDATE COMPANY_CONTACT_EMAIL SET EMAIL_ADDRESS = CONCAT(CONCAT(EMAIL_ACCOUNT,'@'),EMAIL_DOMAIN) </sql>
+         <dropColumn tableName="COMPANY_CONTACT_EMAIL" columnName="EMAIL_ACCOUNT" />
+         <dropColumn tableName="COMPANY_CONTACT_EMAIL" columnName="EMAIL_DOMAIN" />
+    </changeSet>
+    <changeSet id="20190822 16:11" author="Fulya Koncu">
+        <addColumn tableName="AUD_COMPANY_CONTACT_EMAIL" >
+            <column name="EMAIL_ADDRESS" type="VARCHAR2(200)" ></column>
+        </addColumn>
+         <sql> UPDATE AUD_COMPANY_CONTACT_EMAIL SET EMAIL_ADDRESS = CONCAT(CONCAT(EMAIL_ACCOUNT,'@'),EMAIL_DOMAIN) </sql>
+         <dropColumn tableName="AUD_COMPANY_CONTACT_EMAIL" columnName="EMAIL_ACCOUNT" />
+         <dropColumn tableName="AUD_COMPANY_CONTACT_EMAIL" columnName="EMAIL_DOMAIN" />
+    </changeSet>
+    
+    
+</databaseChangeLog>

@@ -1,0 +1,5 @@
+- Go to gadm.org.
+- Click "Download" tab.
+- Select a country and "Shapefile" as file format, click "OK".
+- Click "Download". (File name must be something like that: TUR_adm_shp.zip)
+- Process this file.

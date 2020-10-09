@@ -1,0 +1,19 @@
+{
+	"analysis": {
+		"filter": {
+			"turkish": {
+				"type": "icu_collation",
+				"language": "tr",
+				"country": "TR"
+			}
+		},
+		"analyzer": {
+			"turkish": {
+				"tokenizer": "keyword",
+				"filter": [
+					"turkish"
+				]
+			}
+		}
+	}
+}

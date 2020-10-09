@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+Base logback configuration provided for compatibility with Spring Boot 1.1
+-->
+
+<included>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+    <appender name="DEV-GELF" class="de.siegmar.logbackgelf.GelfUdpAppender">
+        <graylogHost>${graylogHostDev:-10.1.70.91}</graylogHost>
+        <maxChunkSize>8192</maxChunkSize>
+        <useCompression>true</useCompression>
+        <layout class="de.siegmar.logbackgelf.GelfLayout">
+            <includeRawMessage>false</includeRawMessage>
+            <includeMarker>true</includeMarker>
+            <includeMdcData>false</includeMdcData>
+            <includeCallerData>true</includeCallerData>
+            <includeRootCauseData>true</includeRootCauseData>
+            <includeLevelName>true</includeLevelName>
+            <shortPatternLayout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>%m%nopex</pattern>
+            </shortPatternLayout>
+            <fullPatternLayout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>%m</pattern>
+            </fullPatternLayout>
+            <staticField>facility:${facility}</staticField>
+        </layout>
+    </appender>
+    <appender name="TEST-GELF" class="de.siegmar.logbackgelf.GelfUdpAppender">
+        <graylogHost>${graylogHostTest:-10.1.69.156}</graylogHost>
+        <maxChunkSize>8192</maxChunkSize>
+        <useCompression>true</useCompression>
+        <layout class="de.siegmar.logbackgelf.GelfLayout">
+            <includeRawMessage>false</includeRawMessage>
+            <includeMarker>true</includeMarker>
+            <includeMdcData>false</includeMdcData>
+            <includeCallerData>true</includeCallerData>
+            <includeRootCauseData>true</includeRootCauseData>
+            <includeLevelName>true</includeLevelName>
+            <shortPatternLayout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>%m%nopex</pattern>
+            </shortPatternLayout>
+            <fullPatternLayout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>%m</pattern>
+            </fullPatternLayout>
+            <staticField>facility:${facility}</staticField>
+        </layout>
+    </appender>
+    <appender name="PROD-GELF" class="de.siegmar.logbackgelf.GelfUdpAppender">
+        <graylogHost>${graylogHostProd:-10.1.70.244}</graylogHost>
+        <maxChunkSize>8192</maxChunkSize>
+        <useCompression>true</useCompression>
+        <layout class="de.siegmar.logbackgelf.GelfLayout">
+            <includeRawMessage>false</includeRawMessage>
+            <includeMarker>true</includeMarker>
+            <includeMdcData>false</includeMdcData>
+            <includeCallerData>true</includeCallerData>
+            <includeRootCauseData>true</includeRootCauseData>
+            <includeLevelName>true</includeLevelName>
+            <shortPatternLayout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>%m%nopex</pattern>
+            </shortPatternLayout>
+            <fullPatternLayout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>%m</pattern>
+            </fullPatternLayout>
+            <staticField>facility:${facility}</staticField>
+        </layout>
+    </appender>
+
+</included>

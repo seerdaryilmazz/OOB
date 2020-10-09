@@ -1,0 +1,27 @@
+update vehicle_detail_type set deleted=1;
+
+insert into VEHICLE_DETAIL_TYPE (id, code, name, vehicle_type, deleted, last_updated, last_updated_by) values (seq_vehicle_detail_type.nextval, 'CURTAINSIDERTRAILER', 'Curtainsider Trailer', 'TRAILER', 0, systimestamp, 'admin');
+insert into VEHICLE_DETAIL_TYPE (id, code, name, vehicle_type, deleted, last_updated, last_updated_by) values (seq_vehicle_detail_type.nextval, 'BOXTRAILER', 'Box Trailer', 'TRAILER', 0, systimestamp, 'admin');
+insert into VEHICLE_DETAIL_TYPE (id, code, name, vehicle_type, deleted, last_updated, last_updated_by) values (seq_vehicle_detail_type.nextval, 'FRIGOTRAILER', 'Frigo Trailer', 'TRAILER', 0, systimestamp, 'admin');
+insert into VEHICLE_DETAIL_TYPE (id, code, name, vehicle_type, deleted, last_updated, last_updated_by) values (seq_vehicle_detail_type.nextval, 'MEGA', 'Mega', 'TRAILER', 0, systimestamp, 'admin');
+insert into VEHICLE_DETAIL_TYPE (id, code, name, vehicle_type, deleted, last_updated, last_updated_by) values (seq_vehicle_detail_type.nextval, 'XLCERTIFICATE', 'XL Certificate', 'TRAILER', 0, systimestamp, 'admin');
+insert into VEHICLE_DETAIL_TYPE (id, code, name, vehicle_type, deleted, last_updated, last_updated_by) values (seq_vehicle_detail_type.nextval, 'CONTAINER', 'Container', 'TRAILER', 0, systimestamp, 'admin');
+insert into VEHICLE_DETAIL_TYPE (id, code, name, vehicle_type, deleted, last_updated, last_updated_by) values (seq_vehicle_detail_type.nextval, 'CURTAINSIDERCONTAINE', 'Curtainsider Container', 'TRAILER', 0, systimestamp, 'admin');
+insert into VEHICLE_DETAIL_TYPE (id, code, name, vehicle_type, deleted, last_updated, last_updated_by) values (seq_vehicle_detail_type.nextval, 'FRIGOCONTAINER', 'Frigo Container', 'TRAILER', 0, systimestamp, 'admin');
+insert into VEHICLE_DETAIL_TYPE (id, code, name, vehicle_type, deleted, last_updated, last_updated_by) values (seq_vehicle_detail_type.nextval, 'DOUBLEDECK', 'Double Deck', 'TRAILER', 0, systimestamp, 'admin');
+insert into VEHICLE_DETAIL_TYPE (id, code, name, vehicle_type, deleted, last_updated, last_updated_by) values (seq_vehicle_detail_type.nextval, 'LIFTINGROOF', 'Lifting Roof', 'TRAILER', 0, systimestamp, 'admin');
+insert into VEHICLE_DETAIL_TYPE (id, code, name, vehicle_type, deleted, last_updated, last_updated_by) values (seq_vehicle_detail_type.nextval, 'SLIDINGROOF', 'Sliding Roof', 'TRAILER', 0, systimestamp, 'admin');
+insert into VEHICLE_DETAIL_TYPE (id, code, name, vehicle_type, deleted, last_updated, last_updated_by) values (seq_vehicle_detail_type.nextval, 'SECURITYSENSOR', 'Security Sensor', 'TRAILER', 0, systimestamp, 'admin');
+insert into VEHICLE_DETAIL_TYPE (id, code, name, vehicle_type, deleted, last_updated, last_updated_by) values (seq_vehicle_detail_type.nextval, 'SUITABLEFORTRAIN', 'Suitable for Train ', 'TRAILER', 0, systimestamp, 'admin');
+insert into VEHICLE_DETAIL_TYPE (id, code, name, vehicle_type, deleted, last_updated, last_updated_by) values (seq_vehicle_detail_type.nextval, 'SUITABLEFORROAD', 'Suitable for Road ', 'TRAILER', 0, systimestamp, 'admin');
+insert into VEHICLE_DETAIL_TYPE (id, code, name, vehicle_type, deleted, last_updated, last_updated_by) values (seq_vehicle_detail_type.nextval, 'TAILLIFT', 'Tail Lift ', 'TRAILER', 0, systimestamp, 'admin');
+insert into VEHICLE_DETAIL_TYPE (id, code, name, vehicle_type, deleted, last_updated, last_updated_by) values (seq_vehicle_detail_type.nextval, 'LORRY', 'Lorry', 'TRAILER', 0, systimestamp, 'admin');
+insert into VEHICLE_DETAIL_TYPE (id, code, name, vehicle_type, deleted, last_updated, last_updated_by) values (seq_vehicle_detail_type.nextval, 'SPEEDY', 'Speedy', 'TRAILER', 0, systimestamp, 'admin');
+insert into VEHICLE_DETAIL_TYPE (id, code, name, vehicle_type, deleted, last_updated, last_updated_by) values (seq_vehicle_detail_type.nextval, 'OWNEDBYEKOL', 'Owned by Ekol', 'TRAILER', 0, systimestamp, 'admin');
+insert into VEHICLE_DETAIL_TYPE (id, code, name, vehicle_type, deleted, last_updated, last_updated_by) values (seq_vehicle_detail_type.nextval, 'MERCEDES', 'Mercedes', 'TRUCK', 0, systimestamp, 'admin');
+insert into VEHICLE_DETAIL_TYPE (id, code, name, vehicle_type, deleted, last_updated, last_updated_by) values (seq_vehicle_detail_type.nextval, 'VOLVO', 'Volvo', 'TRUCK', 0, systimestamp, 'admin');
+insert into VEHICLE_DETAIL_TYPE (id, code, name, vehicle_type, deleted, last_updated, last_updated_by) values (seq_vehicle_detail_type.nextval, 'FORD', 'Ford', 'TRUCK', 0, systimestamp, 'admin');
+insert into VEHICLE_DETAIL_TYPE (id, code, name, vehicle_type, deleted, last_updated, last_updated_by) values (seq_vehicle_detail_type.nextval, 'MAN', 'MAN', 'TRUCK', 0, systimestamp, 'admin');
+insert into VEHICLE_DETAIL_TYPE (id, code, name, vehicle_type, deleted, last_updated, last_updated_by) values (seq_vehicle_detail_type.nextval, 'OWNEDBYEKOL', 'Owned by Ekol', 'TRUCK', 0, systimestamp, 'admin');
+insert into VEHICLE_DETAIL_TYPE (id, code, name, vehicle_type, deleted, last_updated, last_updated_by) values (seq_vehicle_detail_type.nextval, 'WITHTURKISHPLATE', 'With Turkish Plate', 'TRUCK', 0, systimestamp, 'admin');
+insert into VEHICLE_DETAIL_TYPE (id, code, name, vehicle_type, deleted, last_updated, last_updated_by) values (seq_vehicle_detail_type.nextval, 'WITHEUPLATE', 'With EU Plate', 'TRUCK', 0, systimestamp, 'admin');

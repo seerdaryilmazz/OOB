@@ -1,0 +1,17 @@
+ekol/mongodb/serializer/DurationDeserializer.class
+ekol/mongodb/domain/datetime/UtcDateTime.class
+ekol/mongodb/domain/datetime/Duration.class
+ekol/mongodb/domain/datetime/FixedZoneDateTimeWindow.class
+ekol/mongodb/domain/datetime/FixedZoneDateTime.class
+ekol/mongodb/domain/entity/BaseEntity.class
+ekol/mongodb/config/OneOrderMongoApplication.class
+ekol/mongodb/serializer/UtcDateTimeDeserializer.class
+ekol/mongodb/serializer/UtcDateTimeSerializer.class
+ekol/mongodb/serializer/FixedZoneDateTimeWindowDeserializer.class
+ekol/mongodb/serializer/FixedZoneDateTimeDeserializer.class
+ekol/mongodb/serializer/FixedZoneDateTimeSerializer.class
+ekol/mongodb/serializer/FixedZoneDateTimeWindowSerializer.class
+ekol/mongodb/serializer/DurationSerializer.class
+ekol/mongodb/config/AuditConfig.class
+ekol/mongodb/domain/repository/ApplicationMongoRepository.class
+ekol/mongodb/domain/controller/BaseController.class

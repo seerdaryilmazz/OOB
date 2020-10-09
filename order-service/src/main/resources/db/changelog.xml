@@ -1,0 +1,3899 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <property name="DB_OWNER" value="ORDERMGR" context="dev,local"/>
+    <property name="DB_OWNER" value="ONEORDER" context="test,prod"/>
+    <property name="DB_OWNER" value="SYSTEM" context="integration"/>
+
+    <changeSet id="20160719 15:49:01" author="Eray Oral">
+
+        <createTable tableName="CUSTOMER_REFERENCE">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CUSTOMER_REFERENCE" />
+            </column>
+
+            <column name="LOAD_ID" type="NUMBER(19,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_CUSTOMER_REFERENCE" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20160719 15:49:02" author="Eray Oral">
+
+        <createTable tableName="LOAD">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_LOAD" />
+            </column>
+
+            <column name="TRANSPORT_ORDER_ID" type="NUMBER(19,0)"/>
+
+            <!-- Not a FK, comes from an external system -->
+            <column name="PICKUP_POINT_ID" type="NUMBER(19,0)"/>
+
+            <!-- Not a FK, comes from an external system -->
+            <column name="DELIVERY_POINT_ID" type="NUMBER(19,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_LOAD" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20160719 15:49:03" author="Eray Oral">
+
+        <!--
+        Here, 'customs' is not the plural form of 'custom', it is the actual word.
+        customs: the official department that administers and collects the duties levied by a government on imported goods
+        -->
+        <createTable tableName="LOAD_CUSTOMS">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_LOAD_CUSTOMS" />
+            </column>
+
+            <column name="LOAD_ID" type="NUMBER(19,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_LOAD_CUSTOMS" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20160719 15:49:04" author="Eray Oral">
+
+        <createTable tableName="LOAD_DECLARATION">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_LOAD_DECLARATION" />
+            </column>
+
+            <!-- Not a FK, comes from an external system -->
+            <column name="SENDER_ID" type="NUMBER(19,0)"/>
+
+            <!-- Not a FK, comes from an external system -->
+            <column name="CONSIGNEE_ID" type="NUMBER(19,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_LOAD_DECLARATION" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20160719 15:49:05" author="Eray Oral">
+
+        <createTable tableName="LOAD_DECLARATION_MAPPING">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_LOAD_DECLARATION_MAPPING" />
+            </column>
+
+            <column name="LOAD_ID" type="NUMBER(19,0)"/>
+
+            <column name="LOAD_DECLARATION_ID" type="NUMBER(19,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_LOAD_DECLARATION_MAPPING" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20160719 15:49:06" author="Eray Oral">
+
+        <createTable tableName="LOAD_DETAIL">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_LOAD_DETAIL" />
+            </column>
+
+            <column name="LOAD_ID" type="NUMBER(19,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_LOAD_DETAIL" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20160719 15:49:07" author="Eray Oral">
+
+        <!--
+        TODO: DELETED alanından dolayı unique index sorun çıkaracaktır. Function-based index çözümünü düşüneceğiz.
+        -->
+        <!-- <addUniqueConstraint tableName="LOAD_CUSTOMS" columnNames="LOAD_ID"/> -->
+
+        <createTable tableName="LOAD_DIMENSION">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_LOAD_DIMENSION" />
+            </column>
+
+            <column name="LOAD_ID" type="NUMBER(19,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_LOAD_DIMENSION" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20160719 15:49:08" author="Eray Oral">
+
+        <!-- We don't use 'ORDER' as the table name since it is a reserved word. -->
+        <createTable tableName="ORDERS">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ORDERS" />
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_ORDERS" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20160719 15:49:09" author="Eray Oral">
+
+        <createTable tableName="TRANSPORT_ORDER">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TRANSPORT_ORDER" />
+            </column>
+
+            <column name="ORDER_ID" type="NUMBER(19,0)"/>
+
+            <!-- Not a FK, comes from an external system -->
+            <column name="CUSTOMER_ID" type="NUMBER(19,0)"/>
+
+            <column name="STATUS" type="VARCHAR2(20)"/>
+
+            <column name="SERVICE_TYPE" type="VARCHAR2(20)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_TRANSPORT_ORDER" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20160719 15:49:10" author="Eray Oral">
+
+        <addForeignKeyConstraint baseTableName="CUSTOMER_REFERENCE" baseColumnNames="LOAD_ID" constraintName="FK_CUSTOMERREFERENCE_LOAD"
+                                 referencedTableName="LOAD" referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="LOAD" baseColumnNames="TRANSPORT_ORDER_ID" constraintName="FK_LOAD_TRANSPORTORDER"
+                                 referencedTableName="TRANSPORT_ORDER" referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="LOAD_CUSTOMS" baseColumnNames="LOAD_ID" constraintName="FK_LOADCUSTOMS_LOAD"
+                                 referencedTableName="LOAD" referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="LOAD_DECLARATION_MAPPING" baseColumnNames="LOAD_ID" constraintName="FK_LOADDECLMAPPING_LOAD"
+                                 referencedTableName="LOAD" referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="LOAD_DECLARATION_MAPPING" baseColumnNames="LOAD_DECLARATION_ID" constraintName="FK_LOADDECLMAPPING_LOADDECL"
+                                 referencedTableName="LOAD_DECLARATION" referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="LOAD_DETAIL" baseColumnNames="LOAD_ID" constraintName="FK_LOADDETAIL_LOAD"
+                                 referencedTableName="LOAD" referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="LOAD_DIMENSION" baseColumnNames="LOAD_ID" constraintName="FK_LOADDIMENSION_LOAD"
+                                 referencedTableName="LOAD" referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="TRANSPORT_ORDER" baseColumnNames="ORDER_ID" constraintName="FK_TRANSPORTORDER_ORDER"
+                                 referencedTableName="ORDERS" referencedColumnNames="ID"/>
+
+    </changeSet>
+
+    <changeSet id="20160721 15:30:01" author="Eray Oral">
+
+        <createTable tableName="PRE_ORDER">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_PRE_ORDER" />
+            </column>
+
+            <!-- Not a FK, comes from an external system -->
+            <column name="CUSTOMER_ID" type="NUMBER(19,0)"/>
+
+            <!-- Not a FK, comes from an external system -->
+            <column name="AC_CUSTOMER_ID" type="NUMBER(19,0)"/>
+
+            <column name="ORDER_TYPE" type="VARCHAR2(20)"/>
+
+            <column name="PROJECT_NO" type="VARCHAR2(100)"/>
+
+            <column name="OFFER_NO" type="VARCHAR2(100)"/>
+
+            <column name="SAMPLE_ORDER_NO" type="VARCHAR2(100)"/>
+
+            <column name="READY_AT_DATE" type="TIMESTAMP(0) WITH TIME ZONE"/>
+
+            <column name="CONFIRMATION_REQUIRED" type="NUMBER(1,0)"/>
+
+            <column name="NUMBER_OF_ORDERS" type="NUMBER(10,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_PRE_ORDER" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20160721 15:30:02" author="Eray Oral">
+
+        <createTable tableName="PRE_ORDER_DOCUMENT">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_PRE_ORDER_DOCUMENT" />
+            </column>
+
+            <column name="PRE_ORDER_ID" type="NUMBER(19,0)"/>
+
+            <column name="TYPE" type="VARCHAR2(100)"/>
+
+            <column name="PATH" type="VARCHAR2(255)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_PRE_ORDER_DOCUMENT" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20160721 15:30:03" author="Eray Oral">
+
+        <addForeignKeyConstraint baseTableName="PRE_ORDER_DOCUMENT" baseColumnNames="PRE_ORDER_ID" constraintName="FK_PREORDERDOC_PREORDER"
+                                 referencedTableName="PRE_ORDER" referencedColumnNames="ID"/>
+
+    </changeSet>
+
+    <changeSet id="20160722 16:00:01" author="Eray Oral">
+
+        <dropForeignKeyConstraint baseTableName="PRE_ORDER_DOCUMENT" constraintName="FK_PREORDERDOC_PREORDER"/>
+
+        <dropSequence sequenceName="SEQ_PRE_ORDER_DOCUMENT"/>
+
+        <dropTable tableName="PRE_ORDER_DOCUMENT" cascadeConstraints="true"/>
+
+        <dropSequence sequenceName="SEQ_PRE_ORDER"/>
+
+        <dropTable tableName="PRE_ORDER" cascadeConstraints="true"/>
+
+    </changeSet>
+
+    <changeSet id="20160722 16:00:02" author="Eray Oral">
+
+        <createTable tableName="PRE_ORDER">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_PRE_ORDER" />
+            </column>
+
+            <!-- Not a FK, comes from an external system -->
+            <column name="CUSTOMER_ID" type="NUMBER(19,0)"/>
+
+            <!-- Not a FK, comes from an external system -->
+            <column name="AC_CUSTOMER_ID" type="NUMBER(19,0)"/>
+
+            <column name="ORDER_TYPE" type="VARCHAR2(20)"/>
+
+            <column name="PROJECT_NO" type="VARCHAR2(100)"/>
+
+            <column name="OFFER_NO" type="VARCHAR2(100)"/>
+
+            <column name="READY_AT_DATE" type="TIMESTAMP(6)"/>
+
+            <column name="CONFIRMATION_REQUIRED" type="NUMBER(1,0)"/>
+
+            <column name="NUMBER_OF_ORDERS" type="NUMBER(10,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_PRE_ORDER" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20160722 16:00:03" author="Eray Oral">
+
+        <createTable tableName="PRE_ORDER_DOCUMENT">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_PRE_ORDER_DOCUMENT" />
+            </column>
+
+            <column name="PRE_ORDER_ID" type="NUMBER(19,0)"/>
+
+            <column name="NAME" type="VARCHAR2(255)"/>
+
+            <column name="DIRECTORY_PATH" type="VARCHAR2(500)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_PRE_ORDER_DOCUMENT" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20160722 16:00:04" author="Eray Oral">
+
+        <addForeignKeyConstraint baseTableName="PRE_ORDER_DOCUMENT" baseColumnNames="PRE_ORDER_ID" constraintName="FK_PREORDERDOC_PREORDER"
+                                 referencedTableName="PRE_ORDER" referencedColumnNames="ID"/>
+
+    </changeSet>
+
+    <changeSet id="20160728 09:00:01" author="Eray Oral">
+
+        <createTable tableName="PAYMENT_METHOD">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_PAYMENT_METHOD" />
+            </column>
+
+            <column name="CODE" type="VARCHAR2(20)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="NAME" type="VARCHAR2(255)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_PAYMENT_METHOD" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20160728 09:00:02" author="Eray Oral">
+
+        <createTable tableName="INCOTERM">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_INCOTERM" />
+            </column>
+
+            <column name="CODE" type="VARCHAR2(20)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="NAME" type="VARCHAR2(255)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_INCOTERM" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20160728 09:00:03" author="Eray Oral">
+
+        <createTable tableName="CURRENCY">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CURRENCY" />
+            </column>
+
+            <column name="CODE" type="VARCHAR2(20)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="NAME" type="VARCHAR2(255)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_CURRENCY" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20160801 15:30:01" author="Eray Oral">
+
+        <dropForeignKeyConstraint baseTableName="PRE_ORDER_DOCUMENT" constraintName="FK_PREORDERDOC_PREORDER"/>
+
+        <dropSequence sequenceName="SEQ_PRE_ORDER_DOCUMENT"/>
+
+        <dropTable tableName="PRE_ORDER_DOCUMENT" cascadeConstraints="true"/>
+
+        <dropSequence sequenceName="SEQ_PRE_ORDER"/>
+
+        <dropTable tableName="PRE_ORDER" cascadeConstraints="true"/>
+
+    </changeSet>
+
+    <changeSet id="20160801 15:30:02" author="Eray Oral">
+
+        <createTable tableName="TRANSPORT_ORDER_REQ">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TRANSPORT_ORDER_REQ" />
+            </column>
+
+            <!-- Not a FK, comes from an external system -->
+            <column name="CUSTOMER_ID" type="NUMBER(19,0)"/>
+
+            <!-- Not a FK, comes from an external system -->
+            <column name="AC_CUSTOMER_ID" type="NUMBER(19,0)"/>
+
+            <column name="ORDER_TYPE" type="VARCHAR2(20)"/>
+
+            <column name="PROJECT_NO" type="VARCHAR2(100)"/>
+
+            <column name="OFFER_NO" type="VARCHAR2(100)"/>
+
+            <column name="READY_AT_DATE" type="TIMESTAMP(6)"/>
+
+            <column name="CONFIRMATION_REQUIRED" type="NUMBER(1,0)"/>
+
+            <column name="NUMBER_OF_ORDERS" type="NUMBER(10,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_TRANSPORT_ORDER_REQ" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20160801 15:30:03" author="Eray Oral">
+
+        <createTable tableName="TRANSPORT_ORDER_REQ_DOC">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TRANSPORT_ORDER_REQ_DOC" />
+            </column>
+
+            <column name="REQUEST_ID" type="NUMBER(19,0)"/>
+
+            <column name="NAME" type="VARCHAR2(255)"/>
+
+            <column name="DIRECTORY_PATH" type="VARCHAR2(500)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_TRANSPORT_ORDER_REQ_DOC" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20160801 15:30:04" author="Eray Oral">
+
+        <addForeignKeyConstraint baseTableName="TRANSPORT_ORDER_REQ_DOC" baseColumnNames="REQUEST_ID" constraintName="FK_TPORDERREQDOC_TPORDERREQ"
+                                 referencedTableName="TRANSPORT_ORDER_REQ" referencedColumnNames="ID"/>
+
+    </changeSet>
+
+    <changeSet id="20160802 11:45:01" author="Eray Oral">
+
+        <addColumn tableName="TRANSPORT_ORDER">
+
+            <column name="REQUEST_NO" type="VARCHAR2(100)" />
+
+            <!-- Not a FK, comes from an external system -->
+            <column name="AC_CUSTOMER_ID" type="NUMBER(19,0)" />
+
+            <column name="ORDER_TYPE" type="VARCHAR2(20)"/>
+
+            <column name="PROJECT_NO" type="VARCHAR2(100)"/>
+
+            <column name="OFFER_NO" type="VARCHAR2(100)"/>
+
+            <column name="TRUCK_LOAD_TYPE" type="VARCHAR2(20)"/>
+
+            <column name="PAYMENT_METHOD_ID" type="NUMBER(19,0)"/>
+
+            <column name="INCOTERM_ID" type="NUMBER(19,0)"/>
+
+            <column name="LOAD_WORTH" type="NUMBER(10,0)"/>
+
+            <column name="LOAD_WORTH_CURRENCY_ID" type="NUMBER(19,0)"/>
+
+            <column name="INSURANCE_INCLUDED" type="NUMBER(1,0)"/>
+
+        </addColumn>
+
+        <addForeignKeyConstraint baseTableName="TRANSPORT_ORDER" baseColumnNames="PAYMENT_METHOD_ID" constraintName="FK_TPORDER_PAYMENTMETHOD"
+                                 referencedTableName="PAYMENT_METHOD" referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="TRANSPORT_ORDER" baseColumnNames="INCOTERM_ID" constraintName="FK_TPORDER_INCOTERM"
+                                 referencedTableName="INCOTERM" referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="TRANSPORT_ORDER" baseColumnNames="LOAD_WORTH_CURRENCY_ID" constraintName="FK_TPORDER_CURRENCY"
+                                 referencedTableName="CURRENCY" referencedColumnNames="ID"/>
+
+    </changeSet>
+
+    <changeSet id="20160803 14:10:01" author="Eray Oral">
+
+        <addColumn tableName="TRANSPORT_ORDER_REQ">
+
+            <column name="CUSTOMER_NOTE" type="VARCHAR2(1000)"/>
+
+        </addColumn>
+
+    </changeSet>
+
+    <changeSet id="20160805 09:20:00" author="kilimci">
+
+        <createTable tableName="ADR_CLASS">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ADRCLASS" />
+            </column>
+
+            <column name="CODE" type="VARCHAR2(20)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="NAME" type="VARCHAR2(255)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_ADRCLASS" incrementBy="50"/>
+
+    </changeSet>
+
+
+    <changeSet id="20160808 17:29:00" author="bverid">
+        <sqlFile dbms="h2, oracle"
+                 encoding="utf8"
+                 endDelimiter="\n"
+                 path="./insert_adrclass.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="true"
+                 stripComments="false"/>
+    </changeSet>
+
+    <changeSet id="20160808 17:50:00" author="bverid">
+
+        <createTable tableName="HSCODE">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_HSCODE" />
+            </column>
+
+            <column name="TIER" type="NUMBER(2,0)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="CODE" type="VARCHAR2(20)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="NAME" type="VARCHAR2(383)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_HSCODE" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20160808 17:55:00" author="bverid">
+        <sqlFile dbms="h2, oracle"
+                 encoding="utf8"
+                 endDelimiter="\n"
+                 path="./insert_hscodes.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="true"
+                 stripComments="false"/>
+    </changeSet>
+    
+<!--     <changeSet id="20160809 17:35:00" author="ozyildirim"> -->
+<!--         <createTable tableName="CUSTOMS_PROCESS_TYPE"> -->
+<!--             <column name="ID" type="NUMBER(19,0)"> -->
+<!--                 <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CUSTOMSPROCTYPE" /> -->
+<!--             </column> -->
+
+<!--             <column name="CODE" type="VARCHAR2(20)"> -->
+<!--                 <constraints nullable="false" /> -->
+<!--             </column> -->
+
+<!--             <column name="NAME" type="VARCHAR2(255)"> -->
+<!--                 <constraints nullable="false" /> -->
+<!--             </column> -->
+
+<!--             <column name="DELETED" type="NUMBER(1,0)"/> -->
+
+<!--             <column name="LAST_UPDATED" type="TIMESTAMP(6)"/> -->
+
+<!--             <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/> -->
+<!--         </createTable> -->
+<!--         <createSequence sequenceName="SEQ_CUSTOMS_PROCESS_TYPE" incrementBy="50"/> -->
+
+<!--         <createTable tableName="CUSTOMS_TYPE"> -->
+<!--             <column name="ID" type="NUMBER(19,0)"> -->
+<!--                 <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CUSTOMSTYPE" /> -->
+<!--             </column> -->
+
+<!--             <column name="CODE" type="VARCHAR2(20)"> -->
+<!--                 <constraints nullable="false" /> -->
+<!--             </column> -->
+
+<!--             <column name="NAME" type="VARCHAR2(255)"> -->
+<!--                 <constraints nullable="false" /> -->
+<!--             </column> -->
+
+<!--             <column name="DELETED" type="NUMBER(1,0)"/> -->
+
+<!--             <column name="LAST_UPDATED" type="TIMESTAMP(6)"/> -->
+
+<!--             <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/> -->
+<!--         </createTable> -->
+<!--         <createSequence sequenceName="SEQ_CUSTOMS_TYPE" incrementBy="50"/> -->
+
+<!--         <createTable tableName=" CUSTOMS_SERVICE_TYPE"> -->
+<!--             <column name="ID" type="NUMBER(19,0)"> -->
+<!--                 <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CUSTOMSSERVICETYPE" /> -->
+<!--             </column> -->
+
+<!--             <column name="CODE" type="VARCHAR2(20)"> -->
+<!--                 <constraints nullable="false" /> -->
+<!--             </column> -->
+
+<!--             <column name="NAME" type="VARCHAR2(255)"> -->
+<!--                 <constraints nullable="false" /> -->
+<!--             </column> -->
+
+<!--             <column name="DELETED" type="NUMBER(1,0)"/> -->
+
+<!--             <column name="LAST_UPDATED" type="TIMESTAMP(6)"/> -->
+
+<!--             <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/> -->
+<!--         </createTable> -->
+<!--         <createSequence sequenceName="SEQ_CUSTOMS_SERVICE_TYPE" incrementBy="50"/> -->
+        
+<!--     </changeSet> -->
+
+<!--     <changeSet id="20160809 14:02" author="ozyildirim"> -->
+<!--         <createTable tableName="CUSTOMS"> -->
+<!--             <column name="ID" type="NUMBER(19,0)"> -->
+<!--                 <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CUSTOMS" /> -->
+<!--             </column> -->
+<!--             <column name="CODE" type="VARCHAR2(20)"> -->
+<!--                 <constraints nullable="false" /> -->
+<!--             </column> -->
+
+<!--             <column name="NAME" type="VARCHAR2(255)"> -->
+<!--                 <constraints nullable="false" /> -->
+<!--             </column> -->
+<!--             <column name="COUNTRY" type ="VARCHAR2(10)"> -->
+
+<!--             </column> -->
+<!--             <column name="BORDER" type ="NUMBER(1,0)"> -->
+
+<!--             </column> -->
+<!--             <column name="FREEZONE" type ="NUMBER(1,0)"> -->
+<!--             </column> -->
+<!--             <column name="DELETED" type="NUMBER(1,0)"/> -->
+
+<!--             <column name="LAST_UPDATED" type="TIMESTAMP(6)"/> -->
+
+<!--             <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/> -->
+
+<!--         </createTable> -->
+<!--         <createSequence sequenceName="SEQ_CUSTOMS" incrementBy="50"/> -->
+
+<!--     </changeSet> -->
+
+<!--     <changeSet id="20160809 14:15" author="ozyildirim"> -->
+<!--         <sqlFile path="insert_customs.sql" encoding="utf8" relativeToChangelogFile="true"/> -->
+<!--     </changeSet> -->
+
+   <changeSet id="20160811 14:01:00" author="bverid">
+       <sqlFile dbms="h2, oracle"
+                encoding="utf8"
+                endDelimiter="\n"
+                path="./insert_payment_method.sql"
+                relativeToChangelogFile="true"
+                splitStatements="true"
+                stripComments="false"/>
+  </changeSet>
+
+ <changeSet id="20160811 14:02:00" author="bverid">
+     <sqlFile dbms="h2, oracle"
+              encoding="utf8"
+              endDelimiter="\n"
+              path="./insert_incoterm.sql"
+              relativeToChangelogFile="true"
+              splitStatements="true"
+              stripComments="false"/>
+
+ </changeSet>
+
+    <changeSet id="20160812 16:49:00" author="bverid">
+        <dropForeignKeyConstraint baseTableName="TRANSPORT_ORDER" constraintName="FK_TPORDER_CURRENCY"/>
+    </changeSet>
+
+
+    <changeSet id="20160812 16:48:00" author="bverid">
+        <dropTable tableName="CURRENCY"/>
+    </changeSet>
+
+    <changeSet id="20160812 16:52:00" author="bverid">
+        <renameColumn
+                      columnDataType="VARCHAR2(10)"
+                      newColumnName="LOAD_WORTH_CURRENCY"
+                      oldColumnName="LOAD_WORTH_CURRENCY_ID"
+                      tableName="TRANSPORT_ORDER"/>
+    </changeSet>
+
+    <changeSet id="20160812 16:59:00" author="bverid">
+        <modifyDataType columnName="LOAD_WORTH_CURRENCY"
+                        newDataType="VARCHAR2(10)"
+                        tableName="TRANSPORT_ORDER"/>
+    </changeSet>
+
+    <changeSet id="20160818 09:50:00" author="kilimci">
+        <createTable tableName="PACKAGE_TYPE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_PACKAGETYPE" />
+            </column>
+            <column name="CODE" type="VARCHAR2(20)">
+                <constraints nullable="false" />
+            </column>
+            <column name="NAME" type="VARCHAR2(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_PACKAGETYPE" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20160818 09:55:00" author="kilimci">
+        <sqlFile path="insert_packagetypes.sql" encoding="utf8" relativeToChangelogFile="true"/>
+    </changeSet>
+
+<!--     <changeSet id="20160818 14:25:00" author="kilimci"> -->
+<!--         <sqlFile path="insert_customs_types.sql" encoding="utf8" relativeToChangelogFile="true"/> -->
+<!--     </changeSet> -->
+
+    <changeSet id="20160811 17:10:01" author="Eray Oral">
+
+        <createTable tableName="DOCUMENT_TYPE">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_DOCUMENT_TYPE" />
+            </column>
+
+            <column name="CODE" type="VARCHAR2(20)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="NAME" type="VARCHAR2(255)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_DOCUMENT_TYPE" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20160811 17:10:02" author="Eray Oral">
+
+        <createTable tableName="TRANSPORT_ORDER_DOC">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TRANSPORT_ORDER_DOC" />
+            </column>
+
+            <column name="TRANSPORT_ORDER_ID" type="NUMBER(19,0)"/>
+
+            <column name="ORIGINAL_NAME" type="VARCHAR2(255)"/>
+
+            <column name="NAME" type="VARCHAR2(255)"/>
+
+            <column name="DIRECTORY_PATH" type="VARCHAR2(500)"/>
+
+            <column name="TYPE_ID" type="NUMBER(19,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_TRANSPORT_ORDER_DOC" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20160811 17:10:03" author="Eray Oral">
+
+        <addForeignKeyConstraint baseTableName="TRANSPORT_ORDER_DOC" baseColumnNames="TRANSPORT_ORDER_ID" constraintName="FK_TPORDERDOC_TPORDER"
+                                 referencedTableName="TRANSPORT_ORDER" referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="TRANSPORT_ORDER_DOC" baseColumnNames="TYPE_ID" constraintName="FK_TPORDERDOC_DOCTYPE"
+                                 referencedTableName="DOCUMENT_TYPE" referencedColumnNames="ID"/>
+
+    </changeSet>
+
+    <changeSet id="20160811 17:10:04" author="Eray Oral">
+
+        <sqlFile dbms="h2, oracle"
+                 encoding="utf8"
+                 endDelimiter="\n"
+                 path="./document_type_values.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="true"
+                 stripComments="false"/>
+
+    </changeSet>
+
+    <changeSet id="20160818 20:30:01" author="Eray Oral">
+
+        <addColumn tableName="TRANSPORT_ORDER_REQ_DOC">
+            <column name="ORIGINAL_NAME" type="VARCHAR2(255)"/>
+        </addColumn>
+
+    </changeSet>
+
+    <changeSet id="20160909 14:58:00" author="bverid">
+        <createTable tableName="ORDER_TEMPLATE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ORDERTEMPLATE" />
+            </column>
+            <column name="CODE" type="VARCHAR2(36)">
+                <constraints nullable="false" />
+            </column>
+            <column name="NAME" type="VARCHAR2(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_ORDERTEMPLATE" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20160909 16:49:00" author="bverid">
+        <createTable tableName="ORDER_TEMPLATE_CURRENCY_TYPES">
+            <column name="ORDER_TEMPLATE_ID" type="NUMBER(19)">
+                <constraints nullable="false" />
+            </column>
+            <column name="CURRENCY_TYPES" type="VARCHAR2(19)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20160909 16:58:00" author="bverid">
+        <createTable tableName="ORDER_TEMPLATE_SERVICE_TYPES">
+            <column name="ORDER_TEMPLATE_ID" type="NUMBER(19)">
+                <constraints nullable="false" />
+            </column>
+            <column name="SERVICE_TYPES" type="VARCHAR2(19)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20160909 16:59:00" author="bverid">
+        <createTable tableName="ORDER_TEMPLATE_INCOTERMS">
+            <column name="ORDER_TEMPLATE_ID" type="NUMBER(19)">
+                <constraints nullable="false" />
+            </column>
+            <column name="INCOTERMS" type="VARCHAR2(19)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20160909 16:59:10" author="bverid">
+        <createTable tableName="ORDER_TEMPLATE_PAYMENT_METHODS">
+            <column name="ORDER_TEMPLATE_ID" type="NUMBER(19)">
+                <constraints nullable="false" />
+            </column>
+            <column name="PAYMENT_METHODS" type="NUMBER(19)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20160909 16:59:20" author="bverid">
+        <createTable tableName="ORDER_TEMPLATE_TL_TYPES">
+            <column name="ORDER_TEMPLATE_ID" type="NUMBER(19)">
+                <constraints nullable="false" />
+            </column>
+            <column name="TRUCK_LOAD_TYPES" type="NUMBER(19)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20160908 18:45:01" author="Eray Oral">
+
+        <createTable tableName="PACKAGE_TYPE_RESTRICTION">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_PACKAGE_TYPE_RESTRICTION" />
+            </column>
+
+            <column name="PACKAGE_TYPE_ID" type="NUMBER(19,0)"/>
+
+            <!-- gross weight -->
+            <column name="MIN_GROSS_WEIGHT_KG" type="NUMBER(19,9)"/>
+
+            <column name="MAX_GROSS_WEIGHT_KG" type="NUMBER(19,9)"/>
+
+            <!-- net weight -->
+            <column name="MIN_NET_WEIGHT_KG" type="NUMBER(19,9)"/>
+
+            <column name="MAX_NET_WEIGHT_KG" type="NUMBER(19,9)"/>
+
+            <!-- volume -->
+            <column name="MIN_VOLUME_MTR3" type="NUMBER(19,9)"/>
+
+            <column name="MAX_VOLUME_MTR3" type="NUMBER(19,9)"/>
+
+            <!-- width -->
+            <column name="MIN_WIDTH_MTR" type="NUMBER(19,9)"/>
+
+            <column name="MAX_WIDTH_MTR" type="NUMBER(19,9)"/>
+
+            <!-- length -->
+            <column name="MIN_LENGTH_MTR" type="NUMBER(19,9)"/>
+
+            <column name="MAX_LENGTH_MTR" type="NUMBER(19,9)"/>
+
+            <!-- height -->
+            <column name="MIN_HEIGHT_MTR" type="NUMBER(19,9)"/>
+
+            <column name="MAX_HEIGHT_MTR" type="NUMBER(19,9)"/>
+
+            <!-- stack -->
+            <column name="STACKABLE" type="NUMBER(1,0)" defaultValue="0"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_PACKAGE_TYPE_RESTRICTION" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20160908 18:45:02" author="Eray Oral">
+
+        <addForeignKeyConstraint baseTableName="PACKAGE_TYPE_RESTRICTION" baseColumnNames="PACKAGE_TYPE_ID" constraintName="FK_PACTYPERESTRICT_PACTYPE"
+                                 referencedTableName="PACKAGE_TYPE" referencedColumnNames="ID"/>
+
+    </changeSet>
+
+    <changeSet id="20160929 18:30:01" author="Eray Oral">
+
+        <createTable tableName="VEHICLE_DETAIL_TYPE">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_VEHICLE_DETAIL_TYPE" />
+            </column>
+
+            <column name="CODE" type="VARCHAR2(20)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="NAME" type="VARCHAR2(255)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_VEHICLE_DETAIL_TYPE" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20160929 18:30:02" author="Eray Oral">
+
+        <createTable tableName="EQUIPMENT_TYPE">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_EQUIPMENT_TYPE" />
+            </column>
+
+            <column name="CODE" type="VARCHAR2(20)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="NAME" type="VARCHAR2(255)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_EQUIPMENT_TYPE" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20160929 18:30:03" author="Eray Oral">
+
+        <createTable tableName="TRANSPORT_TYPE">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TRANSPORT_TYPE" />
+            </column>
+
+            <column name="CODE" type="VARCHAR2(20)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="NAME" type="VARCHAR2(255)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_TRANSPORT_TYPE" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20160929 18:30:04" author="Eray Oral">
+
+        <createTable tableName="ROUTE_REQUIREMENT_ROUTE">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ROUTE_REQUIREMENT_ROUTE" />
+            </column>
+
+            <column name="REQUIREMENT_ID" type="NUMBER(19,0)"/>
+
+            <!-- Not a FK, comes from an external system -->
+            <column name="ROUTE_ID" type="NUMBER(19,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_ROUTE_REQUIREMENT_ROUTE" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20160929 18:30:05" author="Eray Oral">
+
+        <createTable tableName="ROUTE_REQUIREMENT">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ROUTE_REQUIREMENT" />
+            </column>
+
+            <column name="TRANSPORT_ORDER_ID" type="NUMBER(19,0)"/>
+
+            <column name="PERMISSION_TYPE" type="VARCHAR2(20)"/>
+
+            <column name="TRANSPORT_TYPE_ID" type="NUMBER(19,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_ROUTE_REQUIREMENT" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20160929 18:30:06" author="Eray Oral">
+
+        <createTable tableName="VEHICLE_DETAIL">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_VEHICLE_DETAIL" />
+            </column>
+
+            <column name="REQUIREMENT_ID" type="NUMBER(19,0)"/>
+
+            <column name="TYPE_ID" type="NUMBER(19,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_VEHICLE_DETAIL" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20160929 18:30:07" author="Eray Oral">
+
+        <createTable tableName="VEHICLE_REQUIREMENT">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_VEHICLE_REQUIREMENT" />
+            </column>
+
+            <column name="TRANSPORT_ORDER_ID" type="NUMBER(19,0)"/>
+
+            <column name="PERMISSION_TYPE" type="VARCHAR2(20)"/>
+
+            <column name="VEHICLE_TYPE" type="VARCHAR2(20)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_VEHICLE_REQUIREMENT" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20160929 18:30:08" author="Eray Oral">
+
+        <createTable tableName="EQUIPMENT_REQUIREMENT">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_EQUIPMENT_REQUIREMENT" />
+            </column>
+
+            <column name="TRANSPORT_ORDER_ID" type="NUMBER(19,0)"/>
+
+            <column name="COUNT" type="NUMBER(10,0)"/>
+
+            <column name="EQUIPMENT_TYPE_ID" type="NUMBER(19,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_EQUIPMENT_REQUIREMENT" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20160929 18:30:09" author="Eray Oral">
+
+        <createTable tableName="SHIPMENT_UNIT_PACKAGE">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_SHIPMENT_UNIT_PACKAGE" />
+            </column>
+
+            <column name="SHIPMENT_UNIT_ID" type="NUMBER(19,0)"/>
+
+            <column name="COUNT" type="NUMBER(10,0)"/>
+
+            <column name="TYPE_ID" type="NUMBER(19,0)"/>
+
+            <column name="LENGTH_CM" type="NUMBER(19,9)"/>
+
+            <column name="WIDTH_CM" type="NUMBER(19,9)"/>
+
+            <column name="HEIGHT_CM" type="NUMBER(19,9)"/>
+
+            <column name="STACK_SIZE" type="NUMBER(10,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_SHIPMENT_UNIT_PACKAGE" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20160929 18:30:10" author="Eray Oral">
+
+        <createTable tableName="SHIPMENT_UNIT">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_SHIPMENT_UNIT" />
+            </column>
+
+            <column name="SHIPMENT_ID" type="NUMBER(19,0)"/>
+
+            <column name="TOTAL_GROSS_WEIGHT_KG" type="NUMBER(19,9)"/>
+
+            <column name="TOTAL_NET_WEIGHT_KG" type="NUMBER(19,9)"/>
+
+            <column name="TOTAL_VOLUME_MTR3" type="NUMBER(19,9)"/>
+
+            <column name="TOTAL_LDM" type="NUMBER(19,9)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_SHIPMENT_UNIT" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20160929 18:30:11" author="Eray Oral">
+
+        <createTable tableName="SHIPMENT">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_SHIPMENT" />
+            </column>
+
+            <column name="TRANSPORT_ORDER_ID" type="NUMBER(19,0)"/>
+
+            <column name="CODE" type="VARCHAR2(20)"/>
+
+            <column name="ADR_CLASS_ID" type="NUMBER(19,0)"/>
+
+            <!-- Not a FK, comes from an external system -->
+            <column name="SENDER_COMPANY_ID" type="NUMBER(19,0)"/>
+
+            <!-- Not a FK, comes from an external system -->
+            <column name="SENDER_COMPANY_CONTACT_ID" type="NUMBER(19,0)"/>
+
+            <!-- Not a FK, comes from an external system -->
+            <column name="PICKUP_LOC_OWNER_COMPANY_ID" type="NUMBER(19,0)"/>
+
+            <!-- Not a FK, comes from an external system -->
+            <column name="PICKUP_LOC_ID" type="NUMBER(19,0)"/>
+
+            <!-- Not a FK, comes from an external system -->
+            <column name="PICKUP_LOC_CONTACT_ID" type="NUMBER(19,0)"/>
+
+            <!-- Not a FK, comes from an external system -->
+            <column name="RECEIVER_COMPANY_ID" type="NUMBER(19,0)"/>
+
+            <!-- Not a FK, comes from an external system -->
+            <column name="RECEIVER_COMPANY_CONTACT_ID" type="NUMBER(19,0)"/>
+
+            <!-- Not a FK, comes from an external system -->
+            <column name="DELIVERY_LOC_OWNER_COMPANY_ID" type="NUMBER(19,0)"/>
+
+            <!-- Not a FK, comes from an external system -->
+            <column name="DELIVERY_LOC_ID" type="NUMBER(19,0)"/>
+
+            <!-- Not a FK, comes from an external system -->
+            <column name="DELIVERY_LOC_CONTACT_ID" type="NUMBER(19,0)"/>
+
+            <column name="READY_AT_DATE" type="TIMESTAMP(6)"/>
+
+            <column name="APPOINTMENT_START" type="TIMESTAMP(6)"/>
+
+            <column name="APPOINTMENT_END" type="TIMESTAMP(6)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_SHIPMENT" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20160929 18:45:12" author="Eray Oral">
+
+        <addForeignKeyConstraint baseTableName="ROUTE_REQUIREMENT_ROUTE" baseColumnNames="REQUIREMENT_ID" constraintName="FK_ROUTEREQROUTE_ROUTEREQ"
+                                 referencedTableName="ROUTE_REQUIREMENT" referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="ROUTE_REQUIREMENT" baseColumnNames="TRANSPORT_ORDER_ID" constraintName="FK_ROUTEREQ_TPORDER"
+                                 referencedTableName="TRANSPORT_ORDER" referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="ROUTE_REQUIREMENT" baseColumnNames="TRANSPORT_TYPE_ID" constraintName="FK_ROUTEREQ_TPTYPE"
+                                 referencedTableName="TRANSPORT_TYPE" referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="VEHICLE_DETAIL" baseColumnNames="REQUIREMENT_ID" constraintName="FK_VEHICLEDET_VEHICLEREQ"
+                                 referencedTableName="VEHICLE_REQUIREMENT" referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="VEHICLE_DETAIL" baseColumnNames="TYPE_ID" constraintName="FK_VEHICLEDET_VEHICLEDETTYPE"
+                                 referencedTableName="VEHICLE_DETAIL_TYPE" referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="VEHICLE_REQUIREMENT" baseColumnNames="TRANSPORT_ORDER_ID" constraintName="FK_VEHICLEREQ_TPORDER"
+                                 referencedTableName="TRANSPORT_ORDER" referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="EQUIPMENT_REQUIREMENT" baseColumnNames="TRANSPORT_ORDER_ID" constraintName="FK_EQUIPREQ_TPORDER"
+                                 referencedTableName="TRANSPORT_ORDER" referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="EQUIPMENT_REQUIREMENT" baseColumnNames="EQUIPMENT_TYPE_ID" constraintName="FK_EQUIPREQ_EQUIPTYPE"
+                                 referencedTableName="EQUIPMENT_TYPE" referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="SHIPMENT_UNIT_PACKAGE" baseColumnNames="SHIPMENT_UNIT_ID" constraintName="FK_SHIPUNITPAC_SHIPUNIT"
+                                 referencedTableName="SHIPMENT_UNIT" referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="SHIPMENT_UNIT_PACKAGE" baseColumnNames="TYPE_ID" constraintName="FK_SHIPUNITPAC_PACTYPE"
+                                 referencedTableName="PACKAGE_TYPE" referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="SHIPMENT_UNIT" baseColumnNames="SHIPMENT_ID" constraintName="FK_SHIPUNIT_SHIP"
+                                 referencedTableName="SHIPMENT" referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="SHIPMENT" baseColumnNames="TRANSPORT_ORDER_ID" constraintName="FK_SHIP_TPORDER"
+                                 referencedTableName="TRANSPORT_ORDER" referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="SHIPMENT" baseColumnNames="ADR_CLASS_ID" constraintName="FK_SHIP_ADRCLASS"
+                                 referencedTableName="ADR_CLASS" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20160929 18:45:13" author="Eray Oral">
+        <sqlFile path="insert_vehicle_detail_types.sql" encoding="utf8" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="20160929 18:45:14" author="Eray Oral">
+        <sqlFile path="insert_equipment_types.sql" encoding="utf8" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="20160929 18:45:15" author="Eray Oral">
+        <sqlFile path="insert_transport_types.sql" encoding="utf8" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="20160929 18:45:16" author="Eray Oral">
+
+        <renameColumn tableName="SHIPMENT" oldColumnName="APPOINTMENT_START" newColumnName="PICKUP_APPOINTMENT_START"/>
+
+        <renameColumn tableName="SHIPMENT" oldColumnName="APPOINTMENT_END" newColumnName="PICKUP_APPOINTMENT_END"/>
+
+        <addColumn tableName="SHIPMENT">
+
+            <column name="DELIVERY_APPOINTMENT_START" type="TIMESTAMP(6)"/>
+
+            <column name="DELIVERY_APPOINTMENT_END" type="TIMESTAMP(6)"/>
+        </addColumn>
+    </changeSet>
+
+
+    <changeSet id="20160929 18:45:17" author="Eray Oral">
+
+        <renameColumn tableName="TRANSPORT_ORDER" oldColumnName="INSURANCE_INCLUDED" newColumnName="INSURED_BY_EKOL"/>
+
+    </changeSet>
+
+    <changeSet id="20160929 18:45:18" author="Eray Oral">
+
+        <dropColumn tableName="TRANSPORT_ORDER" columnName="ORDER_ID"/>
+
+        <dropColumn tableName="TRANSPORT_ORDER" columnName="REQUEST_NO"/>
+
+        <dropColumn tableName="TRANSPORT_ORDER" columnName="CUSTOMER_ID"/>
+
+        <dropColumn tableName="TRANSPORT_ORDER" columnName="AC_CUSTOMER_ID"/>
+
+        <dropColumn tableName="TRANSPORT_ORDER" columnName="ORDER_TYPE"/>
+
+        <dropColumn tableName="TRANSPORT_ORDER" columnName="PROJECT_NO"/>
+
+        <dropColumn tableName="TRANSPORT_ORDER" columnName="OFFER_NO"/>
+
+        <dropColumn tableName="TRANSPORT_ORDER" columnName="PAYMENT_METHOD_ID"/>
+
+        <dropColumn tableName="TRANSPORT_ORDER" columnName="LOAD_WORTH"/>
+
+        <dropColumn tableName="TRANSPORT_ORDER" columnName="LOAD_WORTH_CURRENCY"/>
+
+    </changeSet>
+
+    <changeSet id="20160929 18:45:19" author="Eray Oral">
+
+        <addColumn tableName="TRANSPORT_ORDER">
+
+            <!-- Not a FK, comes from an external system -->
+            <column name="CUSTOMER_ID" type="NUMBER(19,0)"/>
+
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20161004 14:25:01" author="Eray Oral">
+
+        <addColumn tableName="TRANSPORT_ORDER">
+
+            <column name="REQUEST_ID" type="NUMBER(19,0)"/>
+
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20161004 14:25:02" author="Eray Oral">
+
+        <addForeignKeyConstraint baseTableName="TRANSPORT_ORDER" baseColumnNames="REQUEST_ID" constraintName="FK_TPORDER_TPORDERREQ"
+                                 referencedTableName="TRANSPORT_ORDER_REQ" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20161007 12:15:00" author="kilimci">
+        <addColumn tableName="TRANSPORT_ORDER_REQ">
+            <!-- Not a FK, comes from an external system -->
+            <column name="TASK_ID" type="VARCHAR2(100)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20161007 16:50:00" author="kilimci">
+        <addColumn tableName="TRANSPORT_ORDER_REQ">
+            <column name="ORDER_ID" type="NUMBER(19,0)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20161010 13:35:00" author="Eray Oral">
+
+        <renameColumn tableName="PACKAGE_TYPE_RESTRICTION" oldColumnName="MIN_WIDTH_MTR" newColumnName="MIN_WIDTH_CM"/>
+
+        <renameColumn tableName="PACKAGE_TYPE_RESTRICTION" oldColumnName="MAX_WIDTH_MTR" newColumnName="MAX_WIDTH_CM"/>
+
+        <renameColumn tableName="PACKAGE_TYPE_RESTRICTION" oldColumnName="MIN_LENGTH_MTR" newColumnName="MIN_LENGTH_CM"/>
+
+        <renameColumn tableName="PACKAGE_TYPE_RESTRICTION" oldColumnName="MAX_LENGTH_MTR" newColumnName="MAX_LENGTH_CM"/>
+
+        <renameColumn tableName="PACKAGE_TYPE_RESTRICTION" oldColumnName="MIN_HEIGHT_MTR" newColumnName="MIN_HEIGHT_CM"/>
+
+        <renameColumn tableName="PACKAGE_TYPE_RESTRICTION" oldColumnName="MAX_HEIGHT_MTR" newColumnName="MAX_HEIGHT_CM"/>
+
+        <addColumn tableName="PACKAGE_TYPE_RESTRICTION">
+
+            <column name="MIN_LDM" type="NUMBER(19,9)"/>
+
+            <column name="MAX_LDM" type="NUMBER(19,9)"/>
+
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20161010 13:35:01" author="Eray Oral">
+        <sqlFile path="convert_values_in_package_type_restriction.sql" encoding="utf8" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="20161024 17:23:01" author="Ozer Senturk">
+
+        <createTable tableName="SAVED_SEARCH">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_SAVED_SEARCH" />
+            </column>
+
+            <column name="USER_ID" type="NUMBER(19,0)"/>
+
+            <column name="NAME" type="VARCHAR2(255)"/>
+
+            <column name="FILTER" type="VARCHAR2(2000)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createSequence sequenceName="SEQ_SAVED_SEARCH" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20161103 10:45:13" author="Ozer Senturk">
+        <sqlFile path="update_transport_types.sql" encoding="utf8" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="20161103 13:45:13" author="Ozer Senturk">
+        <addColumn tableName="VEHICLE_DETAIL_TYPE">
+            <column name="VEHICLE_TYPE" type="VARCHAR2(100)" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20161103 13:46:13" author="Ozer Senturk">
+        <sqlFile path="update_vehicle_detail_types.sql" encoding="utf8" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="20161103 10:30:00" author="Eray Oral">
+
+        <addColumn tableName="TRANSPORT_ORDER_REQ">
+
+            <!-- Not a FK, comes from an external system -->
+            <column name="CREATED_BY_ID" type="NUMBER(19,0)"/>
+
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20161111 11:32:13" author="Ozer Senturk">
+        <sqlFile path="update_equipment_types.sql" encoding="utf8" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="20161111 16:30:00" author="Eray Oral">
+
+        <renameColumn tableName="TRANSPORT_ORDER_REQ" oldColumnName="READY_AT_DATE" newColumnName="READY_AT_DATE_TEMP"/>
+
+        <addColumn tableName="TRANSPORT_ORDER_REQ">
+            <column name="READY_AT_DATE" type="TIMESTAMP(6) WITH TIME ZONE"/>
+        </addColumn>
+
+        <sqlFile path="transfer_ready_at_date_of_transport_order_req.sql" encoding="utf8" relativeToChangelogFile="true"/>
+
+        <dropColumn tableName="TRANSPORT_ORDER_REQ" columnName="READY_AT_DATE_TEMP"/>
+        
+    </changeSet>
+
+    <changeSet id="20161121 16:28:00" author="Ozer Senturk">
+
+        <addColumn tableName="SHIPMENT">
+            <column name="PLANNING_STATUS" type="varchar(100)"/>
+        </addColumn>
+
+    </changeSet>
+
+    <changeSet id="20161121 16:30:00" author="Ozer Senturk">
+
+        <addNotNullConstraint
+                tableName="SHIPMENT"
+                columnName="PLANNING_STATUS"
+                defaultNullValue="NOT_PLANNED"/>
+
+    </changeSet>
+
+    <changeSet id="20161123 14:24:01" author="Ozer Senturk">
+
+        <createTable tableName="TRANSPORT">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TRANSPORT" />
+            </column>
+
+            <column name="SHIPMENT_ID" type="NUMBER(19,0)"/>
+
+            <column name="FROM_LOCATION_ID" type="NUMBER(19,0)"/>
+
+            <column name="TO_LOCATION_ID" type="NUMBER(19,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+    </changeSet>
+
+    <changeSet id="20161123 14:24:02" author="Ozer Senturk">
+
+        <createSequence sequenceName="SEQ_TRANSPORT" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20161123 14:24:03" author="Ozer Senturk">
+
+        <addForeignKeyConstraint
+                baseTableName="TRANSPORT"
+                baseColumnNames="SHIPMENT_ID"
+                constraintName="FK_TRANSPORT_SHIPMENT"
+                referencedTableName="SHIPMENT"
+                referencedColumnNames="ID"/>
+
+    </changeSet>
+
+    <changeSet id="20161123 14:34:01" author="Ozer Senturk">
+
+        <createTable tableName="TRIP_STOP">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TRIP_STOP" />
+            </column>
+
+            <column name="LOCATION_ID" type="NUMBER(19,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+    </changeSet>
+
+    <changeSet id="20161123 14:34:02" author="Ozer Senturk">
+
+        <createSequence sequenceName="SEQ_TRIP_STOP" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20161123 14:37:01" author="Ozer Senturk">
+
+        <createTable tableName="TRIP_OPERATION">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TRIP_OPERATION" />
+            </column>
+
+            <column name="TRIP_OPERATION_TYPE" type="VARCHAR2(255)"/>
+
+            <column name="TRANSPORT_ID" type="NUMBER(19,0)"/>
+
+            <column name="TRIP_STOP_ID" type="NUMBER(19,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+    </changeSet>
+
+    <changeSet id="20161123 14:37:02" author="Ozer Senturk">
+
+        <createSequence sequenceName="SEQ_TRIP_OPERATION" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20161123 14:37:03" author="Ozer Senturk">
+
+        <addForeignKeyConstraint
+                baseTableName="TRIP_OPERATION"
+                baseColumnNames="TRANSPORT_ID"
+                constraintName="FK_TRIPOPERATION_TRANSPORT"
+                referencedTableName="TRANSPORT"
+                referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint
+                baseTableName="TRIP_OPERATION"
+                baseColumnNames="TRIP_STOP_ID"
+                constraintName="FK_TRIPOPERATION_TRIPSTOP"
+                referencedTableName="TRIP_STOP"
+                referencedColumnNames="ID"/>
+
+    </changeSet>
+
+    <changeSet id="20161123 14:42:01" author="Ozer Senturk">
+
+        <createTable tableName="TRIP">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TRIP" />
+            </column>
+
+            <column name="FROM_TRIP_STOP_ID" type="NUMBER(19,0)"/>
+
+            <column name="TO_TRIP_STOP_ID" type="NUMBER(19,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+    </changeSet>
+
+    <changeSet id="20161123 14:42:02" author="Ozer Senturk">
+
+        <createSequence sequenceName="SEQ_TRIP" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20161123 14:42:03" author="Ozer Senturk">
+
+        <addForeignKeyConstraint
+                baseTableName="TRIP"
+                baseColumnNames="FROM_TRIP_STOP_ID"
+                constraintName="FK_TRIP_TRIPSTOP"
+                referencedTableName="TRIP_STOP"
+                referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint
+                baseTableName="TRIP"
+                baseColumnNames="TO_TRIP_STOP_ID"
+                constraintName="FK_TRIP_TRIPSTOP2"
+                referencedTableName="TRIP_STOP"
+                referencedColumnNames="ID"/>
+
+    </changeSet>
+
+    <changeSet id="20161123 17:51:03" author="Ozer Senturk">
+
+        <dropForeignKeyConstraint baseTableName="TRANSPORT" constraintName="FK_TRANSPORT_SHIPMENT"/>
+        <dropForeignKeyConstraint baseTableName="TRIP_OPERATION" constraintName="FK_TRIPOPERATION_TRANSPORT"/>
+        <dropForeignKeyConstraint baseTableName="TRIP_OPERATION" constraintName="FK_TRIPOPERATION_TRIPSTOP"/>
+        <dropForeignKeyConstraint baseTableName="TRIP" constraintName="FK_TRIP_TRIPSTOP"/>
+        <dropForeignKeyConstraint baseTableName="TRIP" constraintName="FK_TRIP_TRIPSTOP2"/>
+        <dropTable tableName="TRANSPORT"/>
+        <dropTable tableName="TRIP_STOP"/>
+        <dropTable tableName="TRIP_OPERATION"/>
+        <dropTable tableName="TRIP"/>
+
+    </changeSet>
+
+    <changeSet id="20161129 14:30:00" author="Eray Oral">
+
+        <renameColumn tableName="TRANSPORT_ORDER_REQ" oldColumnName="READY_AT_DATE" newColumnName="READY_AT_DATE_TEMP"/>
+
+        <addColumn tableName="TRANSPORT_ORDER_REQ">
+            <column name="READY_AT_DATE" type="TIMESTAMP(6)"/>
+        </addColumn>
+
+        <sqlFile path="transfer_ready_at_date_of_transport_order_req.sql" encoding="utf8" relativeToChangelogFile="true"/>
+
+        <dropColumn tableName="TRANSPORT_ORDER_REQ" columnName="READY_AT_DATE_TEMP"/>
+
+    </changeSet>
+
+    <changeSet id="20161129 14:30:01" author="Eray Oral">
+
+        <addColumn tableName="SHIPMENT">
+
+            <column name="PICKUP_APPOINTMENT_TZ" type="VARCHAR2(50)"/>
+
+            <column name="DELIVERY_APPOINTMENT_TZ" type="VARCHAR2(50)"/>
+
+        </addColumn>
+
+    </changeSet>
+
+    <changeSet id="20161207 16:14:00" author="Ozer Senturk">
+
+        <addColumn tableName="SHIPMENT">
+            <column name="SHIPMENT_STATUS" type="varchar(100)"/>
+        </addColumn>
+
+    </changeSet>
+
+    <changeSet id="20161229 11:11:00" author="kilimci">
+        <addColumn tableName="TRANSPORT_ORDER">
+            <column name="ready_at_date" type="TIMESTAMP"/>
+            <column name="ready_at_date_timezone" type="VARCHAR2(100)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170112 12:30:01" author="Eray Oral">
+        <addColumn tableName="SHIPMENT_UNIT">
+            <column name="TYPE_ID" type="NUMBER(19,0)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170112 12:30:02" author="Eray Oral">
+        <sql>UPDATE SHIPMENT_UNIT SU SET TYPE_ID = (SELECT MAX(SUP.TYPE_ID) FROM SHIPMENT_UNIT_PACKAGE SUP WHERE SUP.SHIPMENT_UNIT_ID = SU.ID)</sql>
+    </changeSet>
+
+    <changeSet id="20170112 12:30:03" author="Eray Oral">
+        <dropColumn tableName="SHIPMENT_UNIT_PACKAGE" columnName="TYPE_ID"/>
+    </changeSet>
+
+    <changeSet id="20170118 16:00:01" author="Eray Oral">
+        <addColumn tableName="TRANSPORT_ORDER_REQ_DOC">
+            <column name="DISPLAY_NAME" type="VARCHAR2(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170118 16:00:02" author="Eray Oral">
+        <sql>UPDATE TRANSPORT_ORDER_REQ_DOC SET DISPLAY_NAME = ORIGINAL_NAME</sql>
+    </changeSet>
+
+    <changeSet id="20170118 16:00:03" author="Eray Oral">
+        <renameColumn tableName="TRANSPORT_ORDER_REQ_DOC" oldColumnName="NAME" newColumnName="FILE_NAME"/>
+    </changeSet>
+
+    <changeSet id="20170118 16:00:04" author="Eray Oral">
+        <addColumn tableName="TRANSPORT_ORDER_REQ_DOC">
+            <column name="TYPE_ID" type="NUMBER(19,0)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170118 16:00:05" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="TRANSPORT_ORDER_REQ_DOC" baseColumnNames="TYPE_ID" constraintName="FK_TPORDERREQDOC_DOCTYPE"
+                                 referencedTableName="DOCUMENT_TYPE" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170118 16:00:06" author="Eray Oral">
+        <sql>UPDATE TRANSPORT_ORDER_REQ_DOC SET TYPE_ID = (SELECT MIN(ID) FROM DOCUMENT_TYPE)</sql>
+    </changeSet>
+
+    <changeSet id="20170119 10:45:01" author="Eray Oral">
+        <addColumn tableName="TRANSPORT_ORDER_DOC">
+            <column name="DISPLAY_NAME" type="VARCHAR2(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170119 10:45:02" author="Eray Oral">
+        <sql>UPDATE TRANSPORT_ORDER_DOC SET DISPLAY_NAME = ORIGINAL_NAME</sql>
+    </changeSet>
+
+    <changeSet id="20170119 10:45:03" author="Eray Oral">
+        <renameColumn tableName="TRANSPORT_ORDER_DOC" oldColumnName="NAME" newColumnName="FILE_NAME"/>
+    </changeSet>
+
+
+    <changeSet id="20170125 09:50:00" author="bverid">
+        <createTable tableName="PACKAGE_GROUP">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_PACKAGEGROUP" />
+            </column>
+            <column name="CODE" type="VARCHAR2(20)">
+                <constraints nullable="false" />
+            </column>
+            <column name="NAME" type="VARCHAR2(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_PACKAGEGROUP" incrementBy="50"/>
+
+        <addColumn tableName="PACKAGE_TYPE">
+            <column name="PACKAGE_GROUP_ID" type="NUMBER(19,0)"></column>
+        </addColumn>
+
+        <addForeignKeyConstraint baseTableName="PACKAGE_TYPE" baseColumnNames="PACKAGE_GROUP_ID" constraintName="FK_PACKAGETYPE_PACKAGEGROUP"
+                                 referencedTableName="PACKAGE_GROUP" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170209 16:30:01" author="Eray Oral">
+        <addColumn tableName="TRANSPORT_ORDER">
+            <column name="RULE_SET_ID" type="NUMBER(19,0)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170209 16:30:02" author="Eray Oral">
+        <createTable tableName="TRANSPORT_ORDER_RULE_SET">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TRANSPORT_ORDER_RULE_SET"/>
+            </column>
+
+            <column name="TRANSPORT_ORDER_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170209 16:30:03" author="Eray Oral">
+        <createSequence sequenceName="SEQ_TRANSPORT_ORDER_RULE_SET" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20170209 16:30:04" author="Eray Oral">
+
+        <createTable tableName="PACKG_GRP_VEHICLE_REQR_SET">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_PACKG_GRP_VEHICLE_REQR_SET"/>
+            </column>
+
+            <column name="PARENT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="PACKAGE_GROUP_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170209 16:30:05" author="Eray Oral">
+        <createSequence sequenceName="SEQ_PACKG_GRP_VEHICLE_REQR_SET" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20170209 16:30:06" author="Eray Oral">
+
+        <createTable tableName="PACKG_GRP_VEHICLE_REQR">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_PACKG_GRP_VEHICLE_REQR"/>
+            </column>
+
+            <column name="PARENT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="VEHICLE_TYPE" type="VARCHAR2(50)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="PERMISSION_TYPE" type="VARCHAR2(50)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170209 16:30:07" author="Eray Oral">
+        <createSequence sequenceName="SEQ_PACKG_GRP_VEHICLE_REQR" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20170209 16:30:08" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="TRANSPORT_ORDER" baseColumnNames="RULE_SET_ID" constraintName="FK_TPORDER_TPORDERRULESET"
+                                 referencedTableName="TRANSPORT_ORDER_RULE_SET" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170209 16:30:09" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="TRANSPORT_ORDER_RULE_SET" baseColumnNames="TRANSPORT_ORDER_ID" constraintName="FK_TPORDERRULESET_TPORDER"
+                                 referencedTableName="TRANSPORT_ORDER" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170209 16:30:10" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="PACKG_GRP_VEHICLE_REQR_SET" baseColumnNames="PARENT_ID" constraintName="FK_PGRPVREQRSET_TPORDERRULESET"
+                                 referencedTableName="TRANSPORT_ORDER_RULE_SET" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170209 16:30:11" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="PACKG_GRP_VEHICLE_REQR_SET" baseColumnNames="PACKAGE_GROUP_ID" constraintName="FK_PGRPVREQRSET_PGRP"
+                                 referencedTableName="PACKAGE_GROUP" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170209 16:30:12" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="PACKG_GRP_VEHICLE_REQR" baseColumnNames="PARENT_ID" constraintName="FK_PGRPVREQR_PGRPVREQRSET"
+                                 referencedTableName="PACKG_GRP_VEHICLE_REQR_SET" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170221 16:25:01" author="Eray Oral">
+        <dropForeignKeyConstraint baseTableName="TRANSPORT_ORDER_RULE_SET" constraintName="FK_TPORDERRULESET_TPORDER"/>
+    </changeSet>
+
+    <changeSet id="20170221 16:25:02" author="Eray Oral">
+        <dropForeignKeyConstraint baseTableName="PACKG_GRP_VEHICLE_REQR_SET" constraintName="FK_PGRPVREQRSET_TPORDERRULESET"/>
+    </changeSet>
+
+    <changeSet id="20170221 16:25:03" author="Eray Oral">
+        <dropForeignKeyConstraint baseTableName="PACKG_GRP_VEHICLE_REQR_SET" constraintName="FK_PGRPVREQRSET_PGRP"/>
+    </changeSet>
+
+    <changeSet id="20170221 16:25:04" author="Eray Oral">
+        <dropForeignKeyConstraint baseTableName="PACKG_GRP_VEHICLE_REQR" constraintName="FK_PGRPVREQR_PGRPVREQRSET"/>
+    </changeSet>
+
+    <changeSet id="20170221 16:25:05" author="Eray Oral">
+        <dropSequence sequenceName="SEQ_PACKG_GRP_VEHICLE_REQR"/>
+    </changeSet>
+
+    <changeSet id="20170221 16:25:06" author="Eray Oral">
+        <dropTable tableName="PACKG_GRP_VEHICLE_REQR"/>
+    </changeSet>
+
+    <changeSet id="20170221 16:25:07" author="Eray Oral">
+        <dropSequence sequenceName="SEQ_PACKG_GRP_VEHICLE_REQR_SET"/>
+    </changeSet>
+
+    <changeSet id="20170221 16:25:08" author="Eray Oral">
+        <dropTable tableName="PACKG_GRP_VEHICLE_REQR_SET"/>
+    </changeSet>
+
+    <changeSet id="20170222 16:50:01" author="Eray Oral">
+
+        <!-- TORS: Transport Order Rule Set -->
+        <createTable tableName="TORS_VEH_REQRMNT">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TORS_VEH_REQRMNT"/>
+            </column>
+
+            <column name="PARENT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="SHIPMENT_UNIT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170222 16:50:02" author="Eray Oral">
+        <createSequence sequenceName="SEQ_TORS_VEH_REQRMNT" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20170222 16:50:03" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="TORS_VEH_REQRMNT" baseColumnNames="PARENT_ID" constraintName="FK_TORSVEHREQRMNT_TORS"
+                                 referencedTableName="TRANSPORT_ORDER_RULE_SET" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170222 16:50:04" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="TORS_VEH_REQRMNT" baseColumnNames="SHIPMENT_UNIT_ID" constraintName="FK_TORSVEHREQRMNT_SU"
+                                 referencedTableName="SHIPMENT_UNIT" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170222 16:50:05" author="Eray Oral">
+
+        <!-- TORS: Transport Order Rule Set -->
+        <createTable tableName="TORS_VEH_REQRMNT_REQRD">
+
+            <column name="PARENT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="VEHICLE" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170222 16:50:06" author="Eray Oral">
+
+        <!-- TORS: Transport Order Rule Set -->
+        <createTable tableName="TORS_VEH_REQRMNT_NOT_ALLWD">
+
+            <column name="PARENT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="VEHICLE" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170223 10:05:01" author="Eray Oral">
+
+        <!-- TORS: Transport Order Rule Set -->
+        <createTable tableName="TORS_HNDLNG_TIME_REQRMNT">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TORS_HNDLNG_TIME_REQRMNT"/>
+            </column>
+
+            <column name="PARENT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="SHIPMENT_UNIT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DURATION" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170223 10:05:02" author="Eray Oral">
+        <createSequence sequenceName="SEQ_TORS_HNDLNG_TIME_REQRMNT" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20170223 10:05:03" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="TORS_HNDLNG_TIME_REQRMNT" baseColumnNames="PARENT_ID" constraintName="FK_TORSHNDLNGTIMEREQRMNT_TORS"
+                                 referencedTableName="TRANSPORT_ORDER_RULE_SET" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170223 10:05:04" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="TORS_HNDLNG_TIME_REQRMNT" baseColumnNames="SHIPMENT_UNIT_ID" constraintName="FK_TORSHNDLNGTIMEREQRMNT_SU"
+                                 referencedTableName="SHIPMENT_UNIT" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170223 11:00:01" author="Eray Oral">
+
+        <!-- TORS: Transport Order Rule Set -->
+        <createTable tableName="TORS_RF_USAGE_REQRMNT">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TORS_RF_USAGE_REQRMNT"/>
+            </column>
+
+            <column name="PARENT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <!-- Not a FK, comes from an external system -->
+            <column name="WAREHOUSE_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="REQUIRED_WHEN_LOADING" type="NUMBER(1,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="REQUIRED_WHEN_UNLOADING" type="NUMBER(1,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170223 11:00:02" author="Eray Oral">
+        <createSequence sequenceName="SEQ_TORS_RF_USAGE_REQRMNT" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20170223 11:00:03" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="TORS_RF_USAGE_REQRMNT" baseColumnNames="PARENT_ID" constraintName="FK_TORSRFUSAGEREQRMNT_TORS"
+                                 referencedTableName="TRANSPORT_ORDER_RULE_SET" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170223 12:15:01" author="Eray Oral">
+
+        <!-- TORS: Transport Order Rule Set -->
+        <createTable tableName="TORS_WH_HNDLNG_REQRMNT">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TORS_WH_HNDLNG_REQRMNT"/>
+            </column>
+
+            <column name="PARENT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <!-- Not a FK, comes from an external system -->
+            <column name="WAREHOUSE_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="HANDLING_ALLOWED" type="NUMBER(1,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170223 12:15:02" author="Eray Oral">
+        <createSequence sequenceName="SEQ_TORS_WH_HNDLNG_REQRMNT" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20170223 12:15:03" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="TORS_WH_HNDLNG_REQRMNT" baseColumnNames="PARENT_ID" constraintName="FK_TORSWHHNDLNGREQRMNT_TORS"
+                                 referencedTableName="TRANSPORT_ORDER_RULE_SET" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170223 12:15:04" author="Eray Oral">
+
+        <!-- TORS: Transport Order Rule Set -->
+        <createTable tableName="TORS_WH_HNDLNG_REQRMNT_STAFF">
+
+            <column name="PARENT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="STAFF" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170223 12:15:05" author="Eray Oral">
+
+        <!-- TORS: Transport Order Rule Set -->
+        <createTable tableName="TORS_WH_HNDLNG_REQRMNT_EQUIP">
+
+            <column name="PARENT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="EQUIPMENT" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170223 15:00:01" author="Eray Oral">
+        <renameTable oldTableName="TORS_VEH_REQRMNT" newTableName="TORS_VEH_RULE"/>
+    </changeSet>
+
+    <changeSet id="20170223 15:00:02" author="Eray Oral">
+        <sql>ALTER TABLE TORS_VEH_RULE RENAME CONSTRAINT PK_TORS_VEH_REQRMNT TO PK_TORS_VEH_RULE</sql>
+    </changeSet>
+
+    <changeSet id="20170223 15:00:03" author="Eray Oral">
+        <sql>ALTER INDEX PK_TORS_VEH_REQRMNT RENAME TO PK_TORS_VEH_RULE</sql>
+    </changeSet>
+
+    <changeSet id="20170223 15:00:04" author="Eray Oral">
+        <sql>RENAME SEQ_TORS_VEH_REQRMNT TO SEQ_TORS_VEH_RULE</sql>
+    </changeSet>
+
+    <changeSet id="20170223 15:00:05" author="Eray Oral">
+        <sql>ALTER TABLE TORS_VEH_RULE RENAME CONSTRAINT FK_TORSVEHREQRMNT_TORS TO FK_TORSVEHRULE_TORS</sql>
+    </changeSet>
+
+    <changeSet id="20170223 15:00:06" author="Eray Oral">
+        <sql>ALTER TABLE TORS_VEH_RULE RENAME CONSTRAINT FK_TORSVEHREQRMNT_SU TO FK_TORSVEHRULE_SU</sql>
+    </changeSet>
+
+    <changeSet id="20170223 15:00:07" author="Eray Oral">
+        <renameTable oldTableName="TORS_VEH_REQRMNT_REQRD" newTableName="TORS_VEH_RULE_REQRD"/>
+    </changeSet>
+
+    <changeSet id="20170223 15:00:08" author="Eray Oral">
+        <renameTable oldTableName="TORS_VEH_REQRMNT_NOT_ALLWD" newTableName="TORS_VEH_RULE_NOT_ALLWD"/>
+    </changeSet>
+
+    <changeSet id="20170223 15:10:01" author="Eray Oral">
+        <renameTable oldTableName="TORS_HNDLNG_TIME_REQRMNT" newTableName="TORS_HNDLNG_TIME_RULE"/>
+    </changeSet>
+
+    <changeSet id="20170223 15:10:02" author="Eray Oral">
+        <sql>ALTER TABLE TORS_HNDLNG_TIME_RULE RENAME CONSTRAINT PK_TORS_HNDLNG_TIME_REQRMNT TO PK_TORS_HNDLNG_TIME_RULE</sql>
+    </changeSet>
+
+    <changeSet id="20170223 15:10:03" author="Eray Oral">
+        <sql>ALTER INDEX PK_TORS_HNDLNG_TIME_REQRMNT RENAME TO PK_TORS_HNDLNG_TIME_RULE</sql>
+    </changeSet>
+
+    <changeSet id="20170223 15:10:04" author="Eray Oral">
+        <sql>RENAME SEQ_TORS_HNDLNG_TIME_REQRMNT TO SEQ_TORS_HNDLNG_TIME_RULE</sql>
+    </changeSet>
+
+    <changeSet id="20170223 15:10:05" author="Eray Oral">
+        <sql>ALTER TABLE TORS_HNDLNG_TIME_RULE RENAME CONSTRAINT FK_TORSHNDLNGTIMEREQRMNT_TORS TO FK_TORSHNDLNGTIMERULE_TORS</sql>
+    </changeSet>
+
+    <changeSet id="20170223 15:10:06" author="Eray Oral">
+        <sql>ALTER TABLE TORS_HNDLNG_TIME_RULE RENAME CONSTRAINT FK_TORSHNDLNGTIMEREQRMNT_SU TO FK_TORSHNDLNGTIMERULE_SU</sql>
+    </changeSet>
+
+    <changeSet id="20170223 15:15:01" author="Eray Oral">
+        <renameTable oldTableName="TORS_RF_USAGE_REQRMNT" newTableName="TORS_RF_USAGE_RULE"/>
+    </changeSet>
+
+    <changeSet id="20170223 15:15:02" author="Eray Oral">
+        <sql>ALTER TABLE TORS_RF_USAGE_RULE RENAME CONSTRAINT PK_TORS_RF_USAGE_REQRMNT TO PK_TORS_RF_USAGE_RULE</sql>
+    </changeSet>
+
+    <changeSet id="20170223 15:15:03" author="Eray Oral">
+        <sql>ALTER INDEX PK_TORS_RF_USAGE_REQRMNT RENAME TO PK_TORS_RF_USAGE_RULE</sql>
+    </changeSet>
+
+    <changeSet id="20170223 15:15:04" author="Eray Oral">
+        <sql>RENAME SEQ_TORS_RF_USAGE_REQRMNT TO SEQ_TORS_RF_USAGE_RULE</sql>
+    </changeSet>
+
+    <changeSet id="20170223 15:15:05" author="Eray Oral">
+        <sql>ALTER TABLE TORS_RF_USAGE_RULE RENAME CONSTRAINT FK_TORSRFUSAGEREQRMNT_TORS TO FK_TORSRFUSAGERULE_TORS</sql>
+    </changeSet>
+
+    <changeSet id="20170223 15:20:01" author="Eray Oral">
+        <renameTable oldTableName="TORS_WH_HNDLNG_REQRMNT" newTableName="TORS_WH_HNDLNG_RULE"/>
+    </changeSet>
+
+    <changeSet id="20170223 15:20:02" author="Eray Oral">
+        <sql>ALTER TABLE TORS_WH_HNDLNG_RULE RENAME CONSTRAINT PK_TORS_WH_HNDLNG_REQRMNT TO PK_TORS_WH_HNDLNG_RULE</sql>
+    </changeSet>
+
+    <changeSet id="20170223 15:20:03" author="Eray Oral">
+        <sql>ALTER INDEX PK_TORS_WH_HNDLNG_REQRMNT RENAME TO PK_TORS_WH_HNDLNG_RULE</sql>
+    </changeSet>
+
+    <changeSet id="20170223 15:20:04" author="Eray Oral">
+        <sql>RENAME SEQ_TORS_WH_HNDLNG_REQRMNT TO SEQ_TORS_WH_HNDLNG_RULE</sql>
+    </changeSet>
+
+    <changeSet id="20170223 15:20:05" author="Eray Oral">
+        <sql>ALTER TABLE TORS_WH_HNDLNG_RULE RENAME CONSTRAINT FK_TORSWHHNDLNGREQRMNT_TORS TO FK_TORSWHHNDLNGRULE_TORS</sql>
+    </changeSet>
+
+    <changeSet id="20170223 15:20:06" author="Eray Oral">
+        <renameTable oldTableName="TORS_WH_HNDLNG_REQRMNT_STAFF" newTableName="TORS_WH_HNDLNG_RULE_STAFF"/>
+    </changeSet>
+
+    <changeSet id="20170223 15:20:07" author="Eray Oral">
+        <renameTable oldTableName="TORS_WH_HNDLNG_REQRMNT_EQUIP" newTableName="TORS_WH_HNDLNG_RULE_EQUIP"/>
+    </changeSet>
+
+    <changeSet id="20170223 16:30:01" author="Eray Oral">
+
+        <!-- TORS: Transport Order Rule Set -->
+        <createTable tableName="TORS_LOAD_SPEC_RULE">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TORS_LOAD_SPEC_RULE"/>
+            </column>
+
+            <column name="PARENT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="SHIPMENT_UNIT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="IS_LONG_GOODS" type="NUMBER(1,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="IS_OUT_OF_GAUGE_GOODS" type="NUMBER(1,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="IS_HEAVY_GOODS" type="NUMBER(1,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="IS_VALUABLE_GOODS" type="NUMBER(1,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170223 16:30:02" author="Eray Oral">
+        <createSequence sequenceName="SEQ_TORS_LOAD_SPEC_RULE" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20170223 16:30:03" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="TORS_LOAD_SPEC_RULE" baseColumnNames="PARENT_ID" constraintName="FK_TORSLOADSPECRULE_TORS"
+                                 referencedTableName="TRANSPORT_ORDER_RULE_SET" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170223 16:30:04" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="TORS_LOAD_SPEC_RULE" baseColumnNames="SHIPMENT_UNIT_ID" constraintName="FK_TORSLOADSPECRULE_SU"
+                                 referencedTableName="SHIPMENT_UNIT" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170223 17:50:01" author="Eray Oral">
+
+        <!-- TORS: Transport Order Rule Set -->
+        <createTable tableName="TORS_APPROVAL_RULE">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TORS_APPROVAL_RULE"/>
+            </column>
+
+            <column name="PARENT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="NAME" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="WORKFLOW" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170223 17:50:02" author="Eray Oral">
+        <createSequence sequenceName="SEQ_TORS_APPROVAL_RULE" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20170223 17:50:03" author="Eray Oral">
+        <addForeignKeyConstraint baseTableName="TORS_APPROVAL_RULE" baseColumnNames="PARENT_ID" constraintName="FK_TORSAPPROVALRULE_TORS"
+                                 referencedTableName="TRANSPORT_ORDER_RULE_SET" referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20170412 16:16" author="kilimci">
+        <addColumn tableName="INCOTERM">
+            <column name="description" type="VARCHAR2(255)" />
+            <column name="active" type="NUMBER(1,0)" />
+        </addColumn>
+    </changeSet>
+    <changeSet id="20170412 16:18" author="kilimci">
+        <sql>
+            <![CDATA[
+                update INCOTERM set active = 1
+            ]]>
+        </sql>
+    </changeSet>
+
+    <changeSet  id="20170706 15:30" author="bverid">
+        <createTable tableName="TRANSPORT_ORDER_COUNTRIES">
+
+            <column name="TRANSPORT_ORDER_ID" type="NUMBER(19,0)"/>
+            <column name="TRANSPORT_ORDER_REQUEST_ID" type="NUMBER(19,0)"/>
+
+            <column name="COUNTRY_ID" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="COUNTRY_NAME" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="COUNTRY_ISO" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet  id="20170706 15:31" author="bverid">
+        <dropColumn tableName="TRANSPORT_ORDER_COUNTRIES" columnName="TRANSPORT_ORDER_ID"/>
+        <dropColumn tableName="TRANSPORT_ORDER_COUNTRIES" columnName="DELETED"/>
+        <dropColumn tableName="TRANSPORT_ORDER_COUNTRIES" columnName="LAST_UPDATED"/>
+        <dropColumn tableName="TRANSPORT_ORDER_COUNTRIES" columnName="LAST_UPDATED_BY"/>
+    </changeSet>
+    
+    <!--Order Assignment Plan STARTS-->
+    <changeSet  id="20170711 15:07" author="bverid">
+        <addColumn tableName="SHIPMENT">
+            <column name="COLLECTION_WAREHOUSE_ID" type="NUMBER(19,0)"></column>
+            <column name="COLLECTION_WAREHOUSE_NAME" type="VARCHAR2(255)"></column>
+            <column name="DISTRIBUTION_WAREHOUSE_ID" type="NUMBER(19,0)"></column>
+            <column name="DISTRIBUTION_WAREHOUSE_NAME" type="VARCHAR2(255)"></column>
+
+        </addColumn>
+    </changeSet>
+
+    <changeSet  id="20170712 14:00" author="bverid">
+        <dropTable tableName="TRANSPORT_ORDER_COUNTRIES"/>
+    </changeSet>
+
+    <changeSet  id="20170712 14:03" author="bverid">
+        <addColumn tableName="TRANSPORT_ORDER_REQ">
+            <column name="SUBSIDIARY_ID" type="NUMBER(19,0)"/>
+            <column name="SUBSIDIARY_NAME" type="VARCHAR2(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet  id="20170712 14:04" author="bverid">
+        <addColumn tableName="TRANSPORT_ORDER">
+            <column name="SUBSIDIARY_ID" type="NUMBER(19,0)"/>
+            <column name="SUBSIDIARY_NAME" type="VARCHAR2(255)"/>
+        </addColumn>
+    </changeSet>
+    <!--Order Assignment Plan ENDS-->
+
+
+    <changeSet  id="20170727 14:04" author="bverid">
+        <addColumn tableName="SHIPMENT">
+            <column name="PAY_WEIGHT" type="NUMBER(19,9)"/>
+        </addColumn>
+    </changeSet>
+
+
+    <changeSet  id="20170906 11:40" author="bverid">
+        <dropColumn tableName="SHIPMENT" columnName="PLANNING_STATUS"/>
+    </changeSet>
+
+    <changeSet  id="20170906 11:41" author="bverid">
+        <dropColumn tableName="SHIPMENT" columnName="SHIPMENT_STATUS"/>
+    </changeSet>
+
+
+    <changeSet  id="20170911 15:00" author="bverid">
+        <dropColumn tableName="TRANSPORT_ORDER_REQ" columnName="READY_AT_DATE"/>
+    </changeSet>
+
+    <changeSet  id="20170911 15:01" author="bverid">
+        <addColumn tableName="TRANSPORT_ORDER_REQ">
+            <column name="READY_AT_DATE" type="TIMESTAMP"/>
+            <column name="READY_AT_DATE_TZ" type="VARCHAR(48)"/>
+        </addColumn>
+    </changeSet>
+
+
+    <changeSet  id="20170912 11:00" author="bverid">
+        <dropColumn tableName="SHIPMENT" columnName="READY_AT_DATE"/>
+    </changeSet>
+
+    <changeSet  id="20170912 11:01" author="bverid">
+        <addColumn tableName="SHIPMENT">
+            <column name="READY_AT_DATE" type="TIMESTAMP(0)"/>
+            <column name="READY_AT_DATE_TZ" type="VARCHAR(48)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet  id="20170912 13:48" author="bverid">
+        <dropColumn tableName="TRANSPORT_ORDER_REQ" columnName="READY_AT_DATE_TZ"/>
+    </changeSet>
+
+    <changeSet  id="20170913 16:05" author="kilimci">
+        <createTable tableName="SHIPMENT_BARCODE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_SHIPMENT_BARCODE" />
+            </column>
+            <column name="SHIPMENT_ID" type="NUMBER(19,0)"/>
+            <column name="INDEX" type="NUMBER(6,0)"/>
+            <column name="BARCODE" type="VARCHAR2(50)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <createSequence sequenceName="SEQ_SHIPMENT_BARCODE" incrementBy="50"/>
+
+        <addForeignKeyConstraint baseTableName="SHIPMENT_BARCODE" baseColumnNames="SHIPMENT_ID" constraintName="FK_SHIPMENT_BARCODE_SHIPMENT"
+                                 referencedTableName="SHIPMENT" referencedColumnNames="ID"/>
+
+    </changeSet>
+    <changeSet  id="20170913 16:50" author="kilimci">
+        <renameColumn tableName="SHIPMENT_BARCODE" oldColumnName="INDEX" newColumnName="INDEX_NO" />
+    </changeSet>
+
+    <changeSet id="20170925 15:55:01" author="Eray Oral">
+        <addColumn tableName="TRANSPORT_ORDER_REQ">
+            <!-- Not a FK, comes from an external system -->
+            <column name="CONTRACT_ID" type="NUMBER(19,0)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170925 15:55:02" author="Eray Oral">
+        <addColumn tableName="TRANSPORT_ORDER_REQ">
+            <column name="CONTRACT_NAME" type="VARCHAR2(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170928 12:50:00" author="bverid">
+        <addColumn tableName="SHIPMENT">
+            <column name="PICKUP_LOC_REGION_ID" type="NUMBER(19, 0)"/>
+            <column name="PICKUP_LOC_OP_REGION_ID" type="NUMBER(19, 0)"/>
+            <column name="DELIVERY_LOC_REGION_ID" type="NUMBER(19, 0)"/>
+            <column name="DELIVERY_LOC_OP_REGION_ID" type="NUMBER(19, 0)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20171003 09:39:00" author="bverid">
+        <addColumn tableName="SHIPMENT">
+            <column name="PICKUP_LOC_REGION_CAT_ID" type="VARCHAR2(20)"/>
+            <column name="DELIVERY_LOC_REGION_CAT_ID" type="VARCHAR2(20)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20171006 12:50:00" author="bverid">
+        <addColumn tableName="SHIPMENT">
+            <column name="REQUESTED_DELIVERY_DATE" type="TIMESTAMP(0)"/>
+            <column name="REQUESTED_DELIVERY_DATE_TZ" type="VARCHAR(48)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20171018 16:25:00" author="bverid">
+        <addColumn tableName="SHIPMENT">
+            <column name="COLLECTION_ARRIVAL_DATE" type="TIMESTAMP(0)"/>
+            <column name="COLLECTION_ARRIVAL_DATE_TZ" type="VARCHAR(48)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20171018 16:25:01" author="bverid">
+        <addColumn tableName="SHIPMENT">
+            <column name="LINEHAUL_ARRIVAL_DATE" type="TIMESTAMP(0)"/>
+            <column name="LINEHAUL_ARRIVAL_DATE_TZ" type="VARCHAR(48)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20171102 17:00" author="kilimci">
+        <sqlFile path="add-column-deleted-at.sql" encoding="utf8" relativeToChangelogFile="true" splitStatements="false"/>
+    </changeSet>
+
+    <changeSet id="20171114 10:22" author="bverid">
+        <addColumn tableName="SHIPMENT">
+            <column name="EXECUTED_RULE_RESULT" type="CLOB"></column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20171117 10:22" author="bverid">
+        <dropTable tableName="VEHICLE_DETAIL"/>
+    </changeSet>
+    <changeSet id="20171117 10:23" author="bverid">
+        <dropSequence sequenceName="SEQ_VEHICLE_DETAIL"/>
+    </changeSet>
+    <changeSet id="20171117 10:24" author="bverid">
+        <dropTable tableName="VEHICLE_DETAIL_TYPE"/>
+    </changeSet>
+    <changeSet id="20171117 10:25" author="bverid">
+        <dropSequence sequenceName="SEQ_VEHICLE_DETAIL_TYPE"/>
+    </changeSet>
+
+    <changeSet id="20171117 10:26" author="bverid">
+        <addColumn tableName="VEHICLE_REQUIREMENT">
+            <column name="VEHICLE_FEATURES" type="CLOB" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20171129 14:00" author="kilimci">
+        <addColumn tableName="SHIPMENT">
+            <column name="STATUS" type="VARCHAR2(50)" />
+        </addColumn>
+    </changeSet>
+    <changeSet id="20171129 14:05" author="kilimci">
+        <sql>update SHIPMENT set STATUS = 'RESERVED' where STATUS is null</sql>
+    </changeSet>
+    <changeSet id="20171129 14:10" author="kilimci">
+        <addNotNullConstraint tableName="SHIPMENT" columnName="STATUS" />
+    </changeSet>
+    <changeSet id="20171130 13:50" author="kilimci">
+        <sql>update SHIPMENT set STATUS = 'CREATED' where STATUS = 'RESERVED'</sql>
+    </changeSet>
+    <changeSet id="20171201 09:30" author="kilimci">
+        <sql>update TRANSPORT_ORDER set status = 'CREATED' where status = 'RESERVED'</sql>
+    </changeSet>
+
+    <changeSet id="20180128 01:20:01" author="Eray Oral">
+        <addColumn tableName="SHIPMENT">
+            <column name="PICKUP_LOC_IS_A_WAREHOUSE" type="NUMBER(1,0)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20180128 01:20:02" author="Eray Oral">
+        <addColumn tableName="SHIPMENT">
+            <column name="PICKUP_LOC_WAREHOUSE_ID" type="NUMBER(19,0)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20180128 01:20:03" author="Eray Oral">
+        <addColumn tableName="SHIPMENT">
+            <column name="PICKUP_LOC_WAREHOUSE_NAME" type="VARCHAR2(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20180128 01:20:04" author="Eray Oral">
+        <addColumn tableName="SHIPMENT">
+            <column name="DELIVERY_LOC_IS_A_WAREHOUSE" type="NUMBER(1,0)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20180128 01:20:05" author="Eray Oral">
+        <addColumn tableName="SHIPMENT">
+            <column name="DELIVERY_LOC_WAREHOUSE_ID" type="NUMBER(19,0)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20180128 01:20:06" author="Eray Oral">
+        <addColumn tableName="SHIPMENT">
+            <column name="DELIVERY_LOC_WAREHOUSE_NAME" type="VARCHAR2(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet  id="20180329 17:45" author="kilimci">
+        <createTable tableName="ADR_CLASS_DETAILS">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ADR_CLASS_DETAILS" />
+            </column>
+            <column name="UN_NUMBER" type="VARCHAR2(20)"/>
+            <column name="packing_group" type="VARCHAR2(20)"/>
+            <column name="classification_code" type="VARCHAR2(20)"/>
+            <column name="transport_category_code" type="VARCHAR2(20)"/>
+            <column name="tunnel_code" type="VARCHAR2(20)"/>
+            <column name="labels" type="VARCHAR2(20)"/>
+            <column name="material_name" type="VARCHAR2(1000)"/>
+            <column name="limited_quantity" type="VARCHAR2(20)"/>
+            <column name="limited_quantity_unit" type="VARCHAR2(20)"/>
+            <column name="adr_class" type="VARCHAR2(20)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <createSequence sequenceName="SEQ_ADR_CLASS_DETAILS" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20180329 17:50" author="kilimci">
+        <sqlFile path="insert_adr_code_details.sql" encoding="utf8" relativeToChangelogFile="true"/>
+    </changeSet>
+
+<!--     <changeSet id="20180330 16:20" author="kilimci"> -->
+<!--         <dropTable tableName="CUSTOMS" cascadeConstraints="true" /> -->
+<!--         <dropSequence sequenceName="SEQ_CUSTOMS" /> -->
+<!--         <dropTable tableName="customs_process_type" cascadeConstraints="true" /> -->
+<!--         <dropSequence sequenceName="seq_customs_process_type" /> -->
+<!--         <dropTable tableName="customs_service_type" cascadeConstraints="true" /> -->
+<!--         <dropSequence sequenceName="seq_customs_service_type" /> -->
+<!--         <dropTable tableName="customs_type" cascadeConstraints="true" /> -->
+<!--         <dropSequence sequenceName="seq_customs_type" /> -->
+<!--     </changeSet> -->
+
+    <changeSet id="20180402 12:20" author="kilimci">
+        <sql>delete from document_type</sql>
+    </changeSet>
+
+    <changeSet id="20180402 12:21" author="kilimci">
+        <addColumn tableName="DOCUMENT_TYPE">
+            <column name="DOCUMENT_GROUP" type="VARCHAR2(20)" />
+        </addColumn>
+    </changeSet>
+    <changeSet id="20180402 12:22" author="kilimci">
+        <sqlFile path="insert_document_types.sql" encoding="utf8" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <!-- updated order tables -->
+    <changeSet id="20180531 10:30" author="kilimci">
+        <dropTable tableName="ORDERS"/>
+        <dropSequence sequenceName="SEQ_ORDERS"/>
+    </changeSet>
+
+    <changeSet id="20180531 10:35" author="kilimci">
+
+        <createTable tableName="ORDERS">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ORDERS" />
+            </column>
+            <column name="CODE" type="VARCHAR2(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SUBSIDIARY_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SUBSIDIARY_NAME" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CUSTOMER_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CUSTOMER_NAME" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ORIGINAL_CUSTOMER_ID" type="NUMBER(19,0)"/>
+            <column name="ORIGINAL_CUSTOMER_NAME" type="VARCHAR2(255)"/>
+            <column name="PARTNER_CUSTOMER" type="NUMBER(1,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SERVICE_TYPE" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TRUCK_LOAD_TYPE" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="STATUS" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+        <createIndex tableName="ORDERS" indexName="IX_ORDER_CUSTOMER">
+            <column name="CUSTOMER_ID" />
+        </createIndex>
+        <createIndex tableName="ORDERS" indexName="IX_ORDER_SUBSIDIARY">
+            <column name="SUBSIDIARY_ID" />
+        </createIndex>
+        <createIndex tableName="ORDERS" indexName="IX_ORDER_CODE" unique="true">
+            <column name="CODE" />
+        </createIndex>
+
+
+        <createTable tableName="ORDER_SHIPMENT">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ORDER_SHIPMENT" />
+            </column>
+            <column name="ORDER_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CODE" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="INCOTERM_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="READY_AT_DATE" type="TIMESTAMP(6)" />
+            <column name="READY_AT_DATE_TIMEZONE" type="VARCHAR2(100)"/>
+
+            <column name="DELIVERY_DATE" type="TIMESTAMP(6)" />
+            <column name="DELIVERY_DATE_TIMEZONE" type="VARCHAR2(100)" />
+
+            <column name="SEN_COMPANY_ID" type="NUMBER(19,0)" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="SEN_COMPANY_NAME" type="VARCHAR2(255)" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="SEN_HANDLING_COMPANY_ID" type="NUMBER(19,0)" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="SEN_HANDLING_COMPANY_NAME" type="VARCHAR2(255)" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="SEN_HANDLING_LOCATION_ID" type="NUMBER(19,0)" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="SEN_HANDLING_LOCATION_NAME" type="VARCHAR2(255)" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="SEN_COMPANY_CONTACT_ID" type="NUMBER(19,0)" />
+            <column name="SEN_COMPANY_CONTACT_NAME" type="VARCHAR2(255)" />
+
+            <column name="SEN_HANDLING_CONTACT_ID" type="NUMBER(19,0)" />
+            <column name="SEN_HANDLING_CONTACT_NAME" type="VARCHAR2(255)" />
+
+            <column name="SEN_REGION_ID" type="NUMBER(19,0)" />
+            <column name="SEN_REGION_NAME" type="VARCHAR2(255)" />
+
+            <column name="SEN_OPERATION_REGION_ID" type="NUMBER(19,0)" />
+            <column name="SEN_OPERATION_REGION_NAME" type="VARCHAR2(255)" />
+
+            <column name="SEN_REGION_CATEGORY_CODE" type="VARCHAR2(100)" />
+            <column name="SEN_REGION_CATEGORY_NAME" type="VARCHAR2(255)" />
+
+            <column name="SEN_HANDLING_AT_CROSS_DOCK" type="NUMBER(1,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SEN_HANDLING_COUNTRY_CODE" type="VARCHAR2(2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SEN_HANDLING_POSTAL_CODE" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="CON_COMPANY_ID" type="NUMBER(19,0)" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="CON_COMPANY_NAME" type="VARCHAR2(255)" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="CON_HANDLING_COMPANY_ID" type="NUMBER(19,0)" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="CON_HANDLING_COMPANY_NAME" type="VARCHAR2(255)" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="CON_HANDLING_LOCATION_ID" type="NUMBER(19,0)" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="CON_HANDLING_LOCATION_NAME" type="VARCHAR2(255)" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="CON_COMPANY_CONTACT_ID" type="NUMBER(19,0)" />
+            <column name="CON_COMPANY_CONTACT_NAME" type="VARCHAR2(255)" />
+
+            <column name="CON_HANDLING_CONTACT_ID" type="NUMBER(19,0)" />
+            <column name="CON_HANDLING_CONTACT_NAME" type="VARCHAR2(255)" />
+
+            <column name="CON_REGION_ID" type="NUMBER(19,0)" />
+            <column name="CON_REGION_NAME" type="VARCHAR2(255)" />
+
+            <column name="CON_OPERATION_REGION_ID" type="NUMBER(19,0)" />
+            <column name="CON_OPERATION_REGION_NAME" type="VARCHAR2(255)" />
+
+            <column name="CON_REGION_CATEGORY_CODE" type="VARCHAR2(100)" />
+            <column name="CON_REGION_CATEGORY_NAME" type="VARCHAR2(255)" />
+
+            <column name="CON_HANDLING_AT_CROSS_DOCK" type="NUMBER(1,0)" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="CON_HANDLING_COUNTRY_CODE" type="VARCHAR2(2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CON_HANDLING_POSTAL_CODE" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="LOADING_APP_START_DATE_TIME" type="TIMESTAMP(6)" />
+            <column name="LOADING_APP_START_TIME_ZONE" type="VARCHAR2(100)" />
+            <column name="LOADING_APP_END_DATE_TIME" type="TIMESTAMP(6)" />
+            <column name="LOADING_APP_END_TIME_ZONE" type="VARCHAR2(100)" />
+
+            <column name="UNLOADING_APP_START_DATE_TIME" type="TIMESTAMP(6)" />
+            <column name="UNLOADING_APP_START_TIME_ZONE" type="VARCHAR2(100)" />
+            <column name="UNLOADING_APP_END_DATE_TIME" type="TIMESTAMP(6)" />
+            <column name="UNLOADING_APP_END_TIME_ZONE" type="VARCHAR2(100)" />
+
+            <column name="PAYMENT_METHOD_ID" type="NUMBER(19,0)" />
+            <column name="VALUE_OF_GOODS_AMOUNT" type="NUMBER(10,2)" />
+            <column name="VALUE_OF_GOODS_CURRENCY" type="VARCHAR2(3)" />
+
+            <column name="HANGING_LOAD" type="NUMBER(1,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LONG_LOAD" type="NUMBER(1,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="OVERSIZE_LOAD" type="NUMBER(1,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="HEAVY_LOAD" type="NUMBER(1,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="VALUABLE_LOAD" type="NUMBER(1,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="TOTAL_QUANTITY" type="NUMBER(10,0)"/>
+            <column name="GROSS_WEIGHT" type="NUMBER(10,2)"/>
+            <column name="NET_WEIGHT" type="NUMBER(10,2)"/>
+            <column name="TOTAL_VOLUME" type="NUMBER(10,2)"/>
+            <column name="TOTAL_LDM" type="NUMBER(10,2)"/>
+            <column name="PAY_WEIGHT" type="NUMBER(10,2)"/>
+
+            <column name="TEMPERATURE_MIN_VALUE" type="NUMBER(3,0)"/>
+            <column name="TEMPERATURE_MAX_VALUE" type="NUMBER(3,0)"/>
+
+            <column name="BORDER_CUSTOMS_ID" type="NUMBER(19,0)"/>
+            <column name="BORDER_CUSTOMS_NAME" type="VARCHAR2(255)"/>
+            <column name="BORDER_CROSSING_HEALTH_CHECK" type="NUMBER(1,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="ORDER_SHIPMENT" baseColumnNames="ORDER_ID" constraintName="FK_SHIPMENT_ORDER"
+                                 referencedTableName="ORDERS" referencedColumnNames="ID"/>
+        <addForeignKeyConstraint baseTableName="ORDER_SHIPMENT" baseColumnNames="INCOTERM_ID" constraintName="FK_SHIPMENT_INCOTERM"
+                                 referencedTableName="INCOTERM" referencedColumnNames="ID"/>
+        <addForeignKeyConstraint baseTableName="ORDER_SHIPMENT" baseColumnNames="PAYMENT_METHOD_ID" constraintName="FK_SHIPMENT_PAYMENT_METHOD"
+                                 referencedTableName="PAYMENT_METHOD" referencedColumnNames="ID"/>
+
+        <createIndex tableName="ORDER_SHIPMENT" indexName="IX_ORDER_SHIPMENT_ORDER">
+            <column name="ORDER_ID" />
+        </createIndex>
+
+        <createTable tableName="ORDER_SHIPMENT_UNIT">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ORDER_SHIPMENT_UNIT" />
+            </column>
+            <column name="SHIPMENT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PACKAGE_TYPE_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="QUANTITY" type="NUMBER(10,0)" >
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="WIDTH" type="NUMBER(10,2)" />
+            <column name="LENGTH" type="NUMBER(10,2)" />
+            <column name="HEIGHT" type="NUMBER(10,2)" />
+            <column name="STACK_SIZE" type="NUMBER(10,0)" />
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="ORDER_SHIPMENT_UNIT" baseColumnNames="SHIPMENT_ID" constraintName="FK_SHIPMENT_UNIT_SHIPMENT"
+                                 referencedTableName="ORDER_SHIPMENT" referencedColumnNames="ID"/>
+        <addForeignKeyConstraint baseTableName="ORDER_SHIPMENT_UNIT" baseColumnNames="PACKAGE_TYPE_ID" constraintName="FK_SHIPMENT_UNIT_PACKAGE"
+                                 referencedTableName="PACKAGE_TYPE" referencedColumnNames="ID"/>
+
+        <createIndex tableName="ORDER_SHIPMENT_UNIT" indexName="IX_SHIPMENT_UNIT_SHIPMENT">
+            <column name="SHIPMENT_ID" />
+        </createIndex>
+
+        <createTable tableName="ORDER_SHIPMENT_UNIT_PACK_GR">
+            <column name = "SHIPMENT_ID" type = "NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name = "PACKAGE_GROUPS" type = "NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="ORDER_SHIPMENT_UNIT_PACK_GR" baseColumnNames="SHIPMENT_ID" constraintName="FK_SHIPMENT_PACK_GR_SHIPMENT"
+                                 referencedTableName="ORDER_SHIPMENT" referencedColumnNames="ID"/>
+
+        <createIndex tableName="ORDER_SHIPMENT_UNIT_PACK_GR" indexName="IX_SHIPMENT_PACK_GR_SHIPMENT">
+            <column name="SHIPMENT_ID" />
+        </createIndex>
+
+        <createTable tableName="ORDER_SHIPMENT_ADR">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ORDER_SHIPMENT_ADR" />
+            </column>
+            <column name="SHIPMENT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ADR_CLASS_DETAILS_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="QUANTITY" type="NUMBER(10,0)"/>
+            <column name="INNER_QUANTITY" type="NUMBER(10,0)"/>
+            <column name="PACKAGE_TYPE" type="VARCHAR2(100)" />
+            <column name="INNER_PACKAGE_TYPE" type="VARCHAR2(100)" />
+            <column name="AMOUNT" type="NUMBER(10,2)" />
+            <column name="UNIT" type="VARCHAR2(20)" />
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="ORDER_SHIPMENT_ADR" baseColumnNames="SHIPMENT_ID" constraintName="FK_SHIPMENT_ADR_SHIPMENT"
+                                 referencedTableName="ORDER_SHIPMENT" referencedColumnNames="ID"/>
+        <addForeignKeyConstraint baseTableName="ORDER_SHIPMENT_ADR" baseColumnNames="ADR_CLASS_DETAILS_ID" constraintName="FK_SHIPMENT_ADR_ADR_CLASS"
+                                 referencedTableName="ADR_CLASS_DETAILS" referencedColumnNames="ID"/>
+
+        <createIndex tableName="ORDER_SHIPMENT_ADR" indexName="IX_SHIPMENT_ADR_SHIPMENT">
+            <column name="SHIPMENT_ID" />
+        </createIndex>
+
+
+        <createTable tableName="ORDER_SHIPMENT_HEALTH_CERT">
+            <column name = "SHIPMENT_ID" type = "NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name = "HEALTH_CERTIFICATE_TYPES" type = "NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="ORDER_SHIPMENT_HEALTH_CERT" baseColumnNames="SHIPMENT_ID" constraintName="FK_SHIP_HEALTH_CERT_SHIPMENT"
+                                 referencedTableName="ORDER_SHIPMENT" referencedColumnNames="ID"/>
+
+        <createIndex tableName="ORDER_SHIPMENT_HEALTH_CERT" indexName="IX_SHIP_HEALTH_CERT_SHIPMENT">
+            <column name="SHIPMENT_ID" />
+        </createIndex>
+
+        <createTable tableName="ORDER_SHIPMENT_VEHICLE_REQ">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ORDER_SHIPMENT_VEHICLE_REQ" />
+            </column>
+            <column name="SHIPMENT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REQUIREMENT" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="OPERATION_TYPE" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <createIndex tableName="ORDER_SHIPMENT_VEHICLE_REQ" indexName="IX_SHIP_VEHICLE_REQ_SHIPMENT">
+            <column name="SHIPMENT_ID" />
+        </createIndex>
+
+        <createTable tableName="ORDER_SHIPMENT_EQUIPMENT_REQ">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ORDER_SHIPMENT_EQUIP_REQ" />
+            </column>
+            <column name="SHIPMENT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EQUIPMENT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="COUNT" type="NUMBER(10)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="ORDER_SHIPMENT_EQUIPMENT_REQ" baseColumnNames="EQUIPMENT_ID" constraintName="FK_SHIP_EQUIP_REQ_EQUIPMENT"
+                                 referencedTableName="EQUIPMENT_TYPE" referencedColumnNames="ID"/>
+
+        <createIndex tableName="ORDER_SHIPMENT_EQUIPMENT_REQ" indexName="IX_SHIP_EQUIPMENT_REQ_SHIPMENT">
+            <column name="SHIPMENT_ID" />
+        </createIndex>
+
+
+        <createTable tableName="ORDER_SHIPMENT_CUS_ORDER_NO">
+            <column name = "SHIPMENT_ID" type = "NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name = "CUSTOMER_ORDER_NUMBERS" type = "VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="ORDER_SHIPMENT_CUS_ORDER_NO" baseColumnNames="SHIPMENT_ID" constraintName="FK_SHIPMENT_CUS_ORDER_SHIPMENT"
+                                 referencedTableName="ORDER_SHIPMENT" referencedColumnNames="ID"/>
+
+        <createIndex tableName="ORDER_SHIPMENT_CUS_ORDER_NO" indexName="IX_SHIPMENT_CUS_ORDER_SHIPMENT">
+            <column name="SHIPMENT_ID" />
+        </createIndex>
+
+
+        <createTable tableName="ORDER_SHIPMENT_SEN_ORDER_NO">
+            <column name = "SHIPMENT_ID" type = "NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name = "SENDER_ORDER_NUMBERS" type = "VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="ORDER_SHIPMENT_SEN_ORDER_NO" baseColumnNames="SHIPMENT_ID" constraintName="FK_SHIPMENT_SEN_ORDER_SHIPMENT"
+                                 referencedTableName="ORDER_SHIPMENT" referencedColumnNames="ID"/>
+
+        <createIndex tableName="ORDER_SHIPMENT_SEN_ORDER_NO" indexName="IX_SHIPMENT_SEN_ORDER_SHIPMENT">
+            <column name="SHIPMENT_ID" />
+        </createIndex>
+
+
+        <createTable tableName="ORDER_SHIPMENT_CON_ORDER_NO">
+            <column name = "SHIPMENT_ID" type = "NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name = "CONSIGNEE_ORDER_NUMBERS" type = "VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="ORDER_SHIPMENT_CON_ORDER_NO" baseColumnNames="SHIPMENT_ID" constraintName="FK_SHIPMENT_CON_ORDER_SHIPMENT"
+                                 referencedTableName="ORDER_SHIPMENT" referencedColumnNames="ID"/>
+
+        <createIndex tableName="ORDER_SHIPMENT_CON_ORDER_NO" indexName="IX_SHIPMENT_CON_ORDER_SHIPMENT">
+            <column name="SHIPMENT_ID" />
+        </createIndex>
+
+
+        <createTable tableName="ORDER_DOCUMENT">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ORDER_DOCUMENT" />
+            </column>
+            <column name="ORDER_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TYPE_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PATH" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FILE_NAME" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="ORDER_DOCUMENT" baseColumnNames="ORDER_ID" constraintName="FK_ORDER_DOCUMENT_ORDER"
+                                 referencedTableName="ORDERS" referencedColumnNames="ID"/>
+
+        <createIndex tableName="ORDER_DOCUMENT" indexName="IX_ORDER_DOCUMENT">
+            <column name="ORDER_ID" />
+        </createIndex>
+
+
+        <createTable tableName="ORDER_SHIPMENT_DOCUMENT">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ORDER_SHIPMENT_DOCUMENT" />
+            </column>
+            <column name="SHIPMENT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TYPE_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PATH" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FILE_NAME" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="ORDER_SHIPMENT_DOCUMENT" baseColumnNames="SHIPMENT_ID" constraintName="FK_SHIPMENT_DOCUMENT_SHIPMENT"
+                                 referencedTableName="ORDER_SHIPMENT" referencedColumnNames="ID"/>
+
+        <createIndex tableName="ORDER_SHIPMENT_DOCUMENT" indexName="IX_ORDER_SHIPMENT_DOCUMENT">
+            <column name="SHIPMENT_ID" />
+        </createIndex>
+
+        <createTable tableName="ORDER_SHIPMENT_ARR_CUSTOMS">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ORDER_SHIPMENT_ARR_CUSTOMS" />
+            </column>
+            <column name="SHIPMENT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CUSTOMS_AGENT_ID" type="NUMBER(19,0)" />
+            <column name="CUSTOMS_AGENT_NAME" type="VARCHAR2(255)" />
+            <column name="CUSTOMS_AGENT_LOCATION_ID" type="NUMBER(19,0)" />
+            <column name="CUSTOMS_AGENT_LOCATION_NAME" type="VARCHAR2(255)" />
+            <column name="CUSTOMS_OFFICE_ID" type="NUMBER(19,0)" />
+            <column name="CUSTOMS_OFFICE_NAME" type="VARCHAR2(255)" />
+            <column name="CUSTOMS_LOCATION_ID" type="NUMBER(19,0)" />
+            <column name="CUSTOMS_LOCATION_NAME" type="VARCHAR2(255)" />
+            <column name="CUSTOMS_TYPE_CODE" type="VARCHAR2(50)" />
+            <column name="CUSTOMS_TYPE_NAME" type="VARCHAR2(255)" />
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="ORDER_SHIPMENT_ARR_CUSTOMS" baseColumnNames="SHIPMENT_ID" constraintName="FK_ARR_CUSTOMS_SHIPMENT"
+                                 referencedTableName="ORDER_SHIPMENT" referencedColumnNames="ID"/>
+
+        <createIndex tableName="ORDER_SHIPMENT_ARR_CUSTOMS" indexName="IX_ORDER_SHIPMENT_ARR_CUSTOMS">
+            <column name="SHIPMENT_ID" />
+        </createIndex>
+
+
+        <createTable tableName="ORDER_SHIPMENT_DEP_CUSTOMS">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ORDER_SHIPMENT_DEP_CUSTOMS" />
+            </column>
+            <column name="SHIPMENT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CUSTOMS_AGENT_ID" type="NUMBER(19,0)" />
+            <column name="CUSTOMS_AGENT_NAME" type="VARCHAR2(255)" />
+            <column name="CUSTOMS_AGENT_LOCATION_ID" type="NUMBER(19,0)" />
+            <column name="CUSTOMS_AGENT_LOCATION_NAME" type="VARCHAR2(255)" />
+            <column name="CUSTOMS_OFFICE_ID" type="NUMBER(19,0)" />
+            <column name="CUSTOMS_OFFICE_NAME" type="VARCHAR2(255)" />
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="ORDER_SHIPMENT_DEP_CUSTOMS" baseColumnNames="SHIPMENT_ID" constraintName="FK_DEP_CUSTOMS_SHIPMENT"
+                                 referencedTableName="ORDER_SHIPMENT" referencedColumnNames="ID"/>
+
+        <createIndex tableName="ORDER_SHIPMENT_DEP_CUSTOMS" indexName="IX_ORDER_SHIPMENT_DEP_CUSTOMS">
+            <column name="SHIPMENT_ID" />
+        </createIndex>
+
+
+        <createSequence sequenceName="SEQ_ORDERS" incrementBy="50"/>
+        <createSequence sequenceName="SEQ_ORDER_SHIPMENT" incrementBy="50"/>
+        <createSequence sequenceName="SEQ_ORDER_SHIPMENT_UNIT" incrementBy="50"/>
+        <createSequence sequenceName="SEQ_ORDER_SHIPMENT_ADR" incrementBy="50"/>
+        <createSequence sequenceName="SEQ_ORDER_SHIPMENT_VEHICLE_REQ" incrementBy="50"/>
+        <createSequence sequenceName="SEQ_ORDER_SHIPMENT_EQUIP_REQ" incrementBy="50"/>
+        <createSequence sequenceName="SEQ_ORDER_DOCUMENT" incrementBy="50"/>
+        <createSequence sequenceName="SEQ_ORDER_SHIPMENT_DOCUMENT" incrementBy="50"/>
+        <createSequence sequenceName="SEQ_ORDER_SHIPMENT_ARR_CUSTOMS" incrementBy="50"/>
+        <createSequence sequenceName="SEQ_ORDER_SHIPMENT_DEP_CUSTOMS" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20180712 13:30" author="kilimci">
+        <addColumn tableName="ORDERS">
+            <column name="COUNTRY_CODE" type="VARCHAR2(2)" />
+        </addColumn>
+    </changeSet>
+    <changeSet id="20180712 13:45" author="kilimci">
+        <sql>update ORDERS set COUNTRY_CODE = 'TR'</sql>
+        <addNotNullConstraint tableName="ORDERS" columnName="COUNTRY_CODE"/>
+    </changeSet>
+
+    <changeSet id="20180713 16:00" author="kilimci">
+        <addColumn tableName="ORDER_SHIPMENT_DOCUMENT">
+            <column name="SAVED_FILE_NAME" type="VARCHAR2(255)" />
+            <column name="ORIGINAL_FILE_NAME" type="VARCHAR2(255)"/>
+        </addColumn>
+        <sql>update ORDER_SHIPMENT_DOCUMENT set saved_file_name = file_name, original_file_name = file_name</sql>
+        <dropColumn tableName="ORDER_SHIPMENT_DOCUMENT" columnName="FILE_NAME"/>
+        <addNotNullConstraint tableName="ORDER_SHIPMENT_DOCUMENT" columnName="SAVED_FILE_NAME"/>
+        <addNotNullConstraint tableName="ORDER_SHIPMENT_DOCUMENT" columnName="ORIGINAL_FILE_NAME"/>
+    </changeSet>
+
+    <changeSet id="20180713 16:05" author="kilimci">
+        <addColumn tableName="ORDER_DOCUMENT">
+            <column name="SAVED_FILE_NAME" type="VARCHAR2(255)" />
+            <column name="ORIGINAL_FILE_NAME" type="VARCHAR2(255)"/>
+        </addColumn>
+        <sql>update ORDER_DOCUMENT set saved_file_name = file_name, original_file_name = file_name</sql>
+        <dropColumn tableName="ORDER_DOCUMENT" columnName="FILE_NAME"/>
+        <addNotNullConstraint tableName="ORDER_DOCUMENT" columnName="SAVED_FILE_NAME"/>
+        <addNotNullConstraint tableName="ORDER_DOCUMENT" columnName="ORIGINAL_FILE_NAME"/>
+    </changeSet>
+
+    <changeSet id="20180716 17:05" author="kilimci">
+        <addColumn tableName="ORDERS">
+            <column name="TEMPLATE_ID" type="VARCHAR2(255)" />
+            <column name="TEMPLATE_NAME" type="VARCHAR2(255)" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20180719 16:15" author="kilimci">
+        <addColumn tableName="ORDER_SHIPMENT">
+            <column name="INSURED" type="NUMBER(1,0)" />
+        </addColumn>
+        <sql>update order_shipment set insured = 0;</sql>
+        <addNotNullConstraint tableName="ORDER_SHIPMENT" columnName="INSURED"/>
+    </changeSet>
+
+    <changeSet id="20180723 09:35" author="kilimci">
+        <addColumn tableName="ORDER_DOCUMENT">
+            <column name="DESCRIPTION" type="VARCHAR2(255)" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20180723 09:40" author="kilimci">
+        <addColumn tableName="ORDER_SHIPMENT_DOCUMENT">
+            <column name="DESCRIPTION" type="VARCHAR2(255)" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20180724 14:40" author="kilimci">
+        <addColumn tableName="ORDER_SHIPMENT">
+            <column name="SEN_HANDLING_TIMEZONE" type="VARCHAR2(100)" />
+            <column name="CON_HANDLING_TIMEZONE" type="VARCHAR2(100)" />
+        </addColumn>
+        <sqlFile path="set_handling_location_timezones.sql" encoding="utf8" relativeToChangelogFile="true"/>
+        <addNotNullConstraint tableName="ORDER_SHIPMENT" columnName="SEN_HANDLING_TIMEZONE"/>
+        <addNotNullConstraint tableName="ORDER_SHIPMENT" columnName="CON_HANDLING_TIMEZONE"/>
+    </changeSet>
+
+    <changeSet id="20180827 14:50" author="kilimci">
+        <addColumn tableName="ORDER_SHIPMENT_VEHICLE_REQ">
+            <column name="REQUIREMENT_REASON" type="VARCHAR2(100)" />
+        </addColumn>
+        <sql>update ORDER_SHIPMENT_VEHICLE_REQ set REQUIREMENT_REASON = 'BY_ORDER'</sql>
+        <addNotNullConstraint tableName="ORDER_SHIPMENT_VEHICLE_REQ" columnName="REQUIREMENT_REASON"/>
+    </changeSet>
+
+    <changeSet id="20180828 16:25" author="kilimci">
+        <addColumn tableName="ORDER_SHIPMENT_UNIT">
+            <column name="TEMPLATE_ID" type="VARCHAR2(100)" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20180904 13:25" author="kilimci">
+        <dropTable tableName="ADR_CLASS_DETAILS" cascadeConstraints="true" />
+    </changeSet>
+
+    <changeSet id="20180904 13:45" author="kilimci">
+        <createTable tableName="ADR_CLASS_DETAILS">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ADR_CLASS_DETAILS" />
+            </column>
+            <column name="un_number" type="VARCHAR2(20)"/>
+            <column name="description" type="VARCHAR2(1000)"/>
+            <column name="adr_class" type="VARCHAR2(100)"/>
+            <column name="classification_code" type="VARCHAR2(100)"/>
+            <column name="packing_group" type="VARCHAR2(100)"/>
+            <column name="labels" type="VARCHAR2(100)"/>
+            <column name="special_provision" type="VARCHAR2(100)"/>
+            <column name="limited_quantity" type="VARCHAR2(100)"/>
+            <column name="expected_quantity" type="VARCHAR2(100)"/>
+            <column name="packing_instructions" type="VARCHAR2(100)"/>
+            <column name="special_packing_provisions" type="VARCHAR2(100)"/>
+            <column name="mixed_packing_provisions" type="VARCHAR2(100)"/>
+            <column name="container_instructions" type="VARCHAR2(100)"/>
+            <column name="container_special_provisions" type="VARCHAR2(100)"/>
+            <column name="adr_tank_code" type="VARCHAR2(100)"/>
+            <column name="adr_tank_special_provisions" type="VARCHAR2(100)"/>
+            <column name="vehicle_tank_carriage" type="VARCHAR2(100)"/>
+            <column name="transport_tunnel_category" type="VARCHAR2(100)"/>
+            <column name="special_provisions_packages" type="VARCHAR2(100)"/>
+            <column name="special_provisions_bulk" type="VARCHAR2(100)"/>
+            <column name="special_provisions_handling" type="VARCHAR2(100)"/>
+            <column name="special_provisions_operation" type="VARCHAR2(100)"/>
+            <column name="hazard_identification" type="VARCHAR2(100)"/>
+            <column name="adr_version" type="VARCHAR2(5)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="20180905 10:00" author="kilimci">
+        <sqlFile path="insert_adr_class_details_2017.sql" encoding="utf8" relativeToChangelogFile="true"/>
+    </changeSet>
+    <changeSet id="20180905 12:00" author="kilimci">
+        <createTable tableName="ADR_PACKAGE_TYPE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ADR_PACKAGE_TYPE" />
+            </column>
+            <column name="CODE" type="VARCHAR2(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR2(50)" >
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_ADRPACKAGETYPE" incrementBy="50"/>
+    </changeSet>
+    <changeSet id="20180905 12:10" author="kilimci">
+        <sqlFile path="insert_adr_package_types.sql" encoding="utf8" relativeToChangelogFile="true"/>
+    </changeSet>
+    <changeSet id="20180905 12:15" author="kilimci">
+        <addColumn tableName="order_shipment_adr">
+            <column name="package_type_id" type="NUMBER(19,0)" />
+            <column name="inner_package_type_id" type="NUMBER(19,0)" />
+        </addColumn>
+        <addForeignKeyConstraint baseTableName="order_shipment_adr" baseColumnNames="package_type_id"
+                                 constraintName="PK_SHIPMENT_ADR_PACK_TYPE"
+                                 referencedTableName="adr_package_type" referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="order_shipment_adr" baseColumnNames="inner_package_type_id"
+                                 constraintName="PK_SHIPMENT_ADR_IN_PACK_TYPE"
+                                 referencedTableName="adr_package_type" referencedColumnNames="id"/>
+        <dropColumn tableName="order_shipment_adr" columnName="package_type"/>
+        <dropColumn tableName="order_shipment_adr" columnName="inner_package_type"/>
+    </changeSet>
+
+    <changeSet id="20180905 12:20" author="kilimci">
+        <sql>update order_shipment_adr set package_type_id = (select id from adr_package_type where code = 'Pallet'), inner_package_type_id= (select id from adr_package_type where code = 'Box')</sql>
+    </changeSet>
+
+    <changeSet id="20180905 17:55" author="kilimci">
+        <sql>insert into adr_package_type values(seq_adrpackagetype.nextval, 'Can','Can',0,null,current_timestamp,'alper.kilimci');</sql>
+    </changeSet>
+    
+	<changeSet id="20180905 09:08" author="AliRiza.Bostanci">
+		<createTable tableName="ORDER_SHIPMENT_UNIT_PACK_TYPE">
+			<column name="SHIPMENT_ID" type="NUMBER(19,0)">
+				<constraints nullable="false" />
+			</column>
+			<column name="PACKAGE_TYPES" type="NUMBER(19,0)">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+
+		<createIndex tableName="ORDER_SHIPMENT_UNIT_PACK_TYPE"
+			indexName="IX_SHIPMENT_PACK_TYPE_SHIPMENT">
+			<column name="SHIPMENT_ID" />
+		</createIndex>
+	</changeSet>
+	
+	<changeSet id="2018090 13:46:00" author="AliRiza.Bostanci">
+        <createTable tableName="HSCODE_EXTENDED">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_HSCODE_EXTENDED" />
+            </column>
+            <column name="CODE" type="VARCHAR2(20)">
+                <constraints nullable="true" />
+            </column>
+            <column name="NAME" type="VARCHAR2(511)">
+                <constraints nullable="false" />
+            </column>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <createSequence sequenceName="SEQ_HSCODE_EXTENDED" incrementBy="50"/>
+    </changeSet>
+	
+	<changeSet id="20180919 17:45:04" author="AliRiza.Bostanci">
+        <createTable tableName="ORDER_SHIPMENT_DEF_OF_GOODS">
+			<column name="ID" type="NUMBER(19,0)">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="PK_ORDER_SHIPMENT_DEF_OF_GOODS" />
+			</column>
+			<column name="SHIPMENT_ID" type="NUMBER(19,0)">
+				<constraints nullable="false" />
+			</column>
+			<column name="CODE" type="VARCHAR2(20)">
+				<constraints nullable="true" />
+			</column>
+			<column name="NAME" type="VARCHAR2(511)">
+				<constraints nullable="false" />
+			</column>
+			<column name="HSCODE_ID" type="NUMBER(19,0)">
+				<constraints nullable="true" />
+			</column>
+			<column name="DELETED" type="NUMBER(1,0)" />
+			<column name="DELETED_AT" type="TIMESTAMP(6)" />
+			<column name="LAST_UPDATED" type="TIMESTAMP(6)" />
+			<column name="LAST_UPDATED_BY" type="VARCHAR2(100)" />
+		</createTable>
+	
+		<createSequence sequenceName="SEQ_ORDER_SHIPMENT_DEF_OF_GOOD" incrementBy="50" />
+	
+		<createIndex tableName="ORDER_SHIPMENT_DEF_OF_GOODS" indexName="IX_SHIPMENT_DEF_OF_GOODS">
+			<column name="SHIPMENT_ID" />
+		</createIndex>
+	</changeSet>
+	
+    <changeSet id="20181128 15:36:01" author="AliRiza.Bostanci">
+        <createTable tableName="ORDER_SHIPMENT_ID_MAPPING">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_ORDER_SHIPMENT_ID_MAPPING"/>
+            </column>
+            <column name="ORDER_SHIPMENT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="APPLICATION" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="APPLICATION_ORDER_SHIPMENT_ID" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DELETED" type="NUMBER(1,0)" />
+			<column name="DELETED_AT" type="TIMESTAMP(6)" />
+			<column name="LAST_UPDATED" type="TIMESTAMP(6)" />
+			<column name="LAST_UPDATED_BY" type="VARCHAR2(100)" />
+        </createTable>
+        <createSequence sequenceName="SEQ_ORDER_SHIPMENT_ID_MAPPING" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20181129 17:36:01" author="AliRiza.Bostanci">
+    	<addColumn tableName="ORDERS">
+    		<column name="CREATED_AT" type="TIMESTAMP(6)" />
+			<column name="CREATED_BY" type="VARCHAR2(100)" />
+    	</addColumn>
+
+    	<addColumn tableName="ORDER_SHIPMENT">
+    		<column name="CREATED_AT" type="TIMESTAMP(6)" />
+			<column name="CREATED_BY" type="VARCHAR2(100)" />
+    	</addColumn>
+    </changeSet>
+    
+    <changeSet id="20190102 14:09:01" author="AliRiza.Bostanci">
+		<createTable tableName="ORDER_SHIPMENT_LOAD_ORDER_NO">
+            <column name = "SHIPMENT_ID" type = "NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name = "LOADING_ORDER_NUMBERS" type = "VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="ORDER_SHIPMENT_LOAD_ORDER_NO" baseColumnNames="SHIPMENT_ID" constraintName="FK_SHIPMENT_LOAD_ORDER_NO"
+                                 referencedTableName="ORDER_SHIPMENT" referencedColumnNames="ID"/>
+
+        <createIndex tableName="ORDER_SHIPMENT_LOAD_ORDER_NO" indexName="IX_SHIPMENT_LOAD_ORDER_NO">
+            <column name="SHIPMENT_ID" />
+        </createIndex>
+
+        <createTable tableName="ORDER_SHIPMENT_UNLOAD_ORDER_NO">
+            <column name = "SHIPMENT_ID" type = "NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name = "UNLOADING_ORDER_NUMBERS" type = "VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="ORDER_SHIPMENT_UNLOAD_ORDER_NO" baseColumnNames="SHIPMENT_ID" constraintName="FK_SHIPMENT_UNLOAD_ORDER_NO"
+                                 referencedTableName="ORDER_SHIPMENT" referencedColumnNames="ID"/>
+
+        <createIndex tableName="ORDER_SHIPMENT_UNLOAD_ORDER_NO" indexName="IX_SHIPMENT_UNLOAD_ORDER_NO">
+            <column name="SHIPMENT_ID" />
+        </createIndex>
+    </changeSet>
+    
+    <changeSet id="20190115 14:30:01" author="AliRiza.Bostanci">
+    	<addColumn tableName="ORDER_SHIPMENT">
+    		<column name="SEN_COMPANY_LOCATION_ID" type="NUMBER(19,0)" />
+			<column name="SEN_COMPANY_LOCATION_NAME" type="VARCHAR2(255)" />
+			
+    		<column name="CON_COMPANY_LOCATION_ID" type="NUMBER(19,0)" />
+			<column name="CON_COMPANY_LOCATION_NAME" type="VARCHAR2(255)" />
+    	</addColumn>
+    </changeSet>
+
+    <changeSet id="20190118 10:30:01" author="AliRiza.Bostanci">
+    	<addColumn tableName="ORDER_SHIPMENT">
+    		<column name="MFR_COMPANY_ID" type="NUMBER(19,0)" />
+			<column name="MFR_COMPANY_NAME" type="VARCHAR2(255)" />
+    		<column name="MFR_COMPANY_LOCATION_ID" type="NUMBER(19,0)" />
+			<column name="MFR_COMPANY_LOCATION_NAME" type="VARCHAR2(255)" />
+    		<column name="MFR_COMPANY_CONTACT_ID" type="NUMBER(19,0)" />
+			<column name="MFR_COMPANY_CONTACT_NAME" type="VARCHAR2(255)" />
+    	</addColumn>
+    </changeSet>
+    
+    <changeSet id="20190122 13:30:01" author="AliRiza.Bostanci">
+    	<insert tableName="DOCUMENT_TYPE">
+    		<column name="ID" type="NUMBER(19,0)" valueComputed="SEQ_DOCUMENT_TYPE.NEXTVAL" />
+            <column name="CODE" type="VARCHAR2(20)">EXD</column>
+            <column name="NAME" type="VARCHAR2(255)"><![CDATA[Exporter's Declaration]]></column>
+            <column name="DELETED" type="NUMBER(1,0)">0</column>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)" valueComputed="SYSDATE" />
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)">admin</column>
+            <column name="DOCUMENT_GROUP" type="VARCHAR2(20)">TRANSPORTATION</column>
+    	</insert>
+    </changeSet>
+
+    <changeSet id="20190214 11:25:01" author="Dogukan Sahinturk">
+        <addColumn tableName="PACKAGE_TYPE">
+            <column name="RANK" type="NUMBER(3,0)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20190214 11:25:02" author="Dogukan Sahinturk">
+        <sql>UPDATE PACKAGE_TYPE SET RANK = 999</sql>
+    </changeSet>
+
+    <changeSet id="20190214 11:25:03" author="Dogukan Sahinturk">
+        <sql>UPDATE PACKAGE_TYPE SET RANK = 1 WHERE CODE = 'Pallet'</sql>
+    </changeSet>
+
+    <changeSet id="20190214 11:25:04" author="Dogukan Sahinturk">
+        <sql>UPDATE PACKAGE_TYPE SET RANK = 2 WHERE CODE = 'Box'</sql>
+    </changeSet>
+
+    <changeSet id="20190214 11:25:05" author="Dogukan Sahinturk">
+        <sql>UPDATE PACKAGE_TYPE SET RANK = 3 WHERE CODE = 'GitterBox'</sql>
+    </changeSet>
+
+    <changeSet id="20190214 11:25:06" author="Dogukan Sahinturk">
+        <sql>UPDATE PACKAGE_TYPE SET RANK = 4 WHERE CODE = 'Stange'</sql>
+    </changeSet>
+
+    <changeSet id="20190214 11:25:07" author="Dogukan Sahinturk">
+        <sql>UPDATE PACKAGE_TYPE SET RANK = 5 WHERE CODE = 'Roll'</sql>
+    </changeSet>
+
+    <changeSet id="20190214 11:25:08" author="Dogukan Sahinturk">
+        <sql>UPDATE PACKAGE_TYPE SET RANK = 6 WHERE CODE = 'Barrel'</sql>
+    </changeSet>
+
+    <changeSet id="20190214 11:25:09" author="Dogukan Sahinturk">
+        <sql>UPDATE PACKAGE_TYPE SET RANK = 7 WHERE CODE = 'Crate'</sql>
+    </changeSet>
+
+    <changeSet id="20190214 11:25:10" author="Dogukan Sahinturk">
+        <sql>UPDATE PACKAGE_TYPE SET RANK = 8 WHERE CODE = 'BAG'</sql>
+    </changeSet>
+
+    <changeSet id="20190214 11:25:11" author="Dogukan Sahinturk">
+        <sql>UPDATE PACKAGE_TYPE SET RANK = 9 WHERE CODE = 'IBCContainer'</sql>
+    </changeSet>
+
+    <changeSet id="20190214 11:25:12" author="Dogukan Sahinturk">
+        <sql>UPDATE PACKAGE_TYPE SET RANK = 10 WHERE CODE = 'Tank'</sql>
+    </changeSet>
+
+    <changeSet id="20190214 11:25:13" author="Dogukan Sahinturk">
+        <sql>UPDATE PACKAGE_TYPE SET RANK = 11 WHERE CODE = 'Bobbin'</sql>
+    </changeSet>
+
+    <changeSet id="20190214 11:25:14" author="Dogukan Sahinturk">
+        <sql>UPDATE PACKAGE_TYPE SET RANK = 12 WHERE CODE = 'Piece'</sql>
+    </changeSet>
+
+    <changeSet id="20190214 19:30:01" author="Eray Oral" context="test">
+        <sql>UPDATE PACKAGE_TYPE SET RANK = 3 WHERE CODE = 'Gitter Box'</sql>
+    </changeSet>
+
+    <changeSet id="20190214 19:30:02" author="Eray Oral" context="test">
+        <sql>UPDATE PACKAGE_TYPE SET RANK = 8 WHERE CODE = 'BAG'</sql>
+    </changeSet>
+
+    <changeSet id="20190214 19:30:03" author="Eray Oral" context="test">
+        <sql>UPDATE PACKAGE_TYPE SET RANK = 9 WHERE CODE = 'IBC-Container'</sql>
+    </changeSet>
+
+    <changeSet id="20190214 19:30:04" author="Eray Oral" context="test">
+        <sql>UPDATE PACKAGE_TYPE SET RANK = 11 WHERE CODE = 'Bobin'</sql>
+    </changeSet>
+
+    <changeSet id="20190214 19:31:01" author="Eray Oral" context="prod">
+        <sql>UPDATE PACKAGE_TYPE SET RANK = 8 WHERE CODE = 'Bag'</sql>
+    </changeSet>
+
+    <changeSet id="20190214 19:54:01" author="Eray Oral" context="test">
+        <sql>UPDATE PACKAGE_TYPE SET RANK = 8 WHERE CODE = 'Bag'</sql>
+    </changeSet>
+    
+    <changeSet id="20190304 09:15:01" author="AliRiza.Bostanci">
+    	<addColumn tableName="ORDER_SHIPMENT">
+			<column name="SEN_HANDLING_COMPANY_TYPE" type="VARCHAR2(32)" />
+			<column name="CON_HANDLING_COMPANY_TYPE" type="VARCHAR2(32)" />
+    	</addColumn>
+    </changeSet>
+    
+    <changeSet id="20190304 09:15:02" author="AliRiza.Bostanci">
+        <sql><![CDATA[UPDATE ORDER_SHIPMENT SET SEN_HANDLING_COMPANY_TYPE='COMPANY', CON_HANDLING_COMPANY_TYPE='COMPANY']]></sql>
+    </changeSet>
+    
+     <changeSet id="20190405 14:38:02" author="AliRiza.Bostanci">
+    	<addColumn tableName="ORDER_SHIPMENT_DEP_CUSTOMS">
+			<column name="CUSTOMS_AGENT_TYPE" type="VARCHAR2(32)" />
+    	</addColumn>
+    	<addColumn tableName="ORDER_SHIPMENT_ARR_CUSTOMS">
+			<column name="CUSTOMS_AGENT_TYPE" type="VARCHAR2(32)" />
+    	</addColumn>
+    	<sql><![CDATA[UPDATE ORDER_SHIPMENT_ARR_CUSTOMS SET CUSTOMS_AGENT_TYPE='COMPANY']]></sql>
+    	<sql><![CDATA[UPDATE ORDER_SHIPMENT_DEP_CUSTOMS SET CUSTOMS_AGENT_TYPE='COMPANY']]></sql>
+    </changeSet>
+</databaseChangeLog>
