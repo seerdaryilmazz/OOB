@@ -1,0 +1,77 @@
+server:
+  port: 8090
+
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+
+---
+spring:
+  cloud:
+    config:
+      server:
+        git:
+          uri: file:///opt/artifacts/config-repo
+  profiles: dev
+  rabbitmq:
+    host: 10.1.70.92
+    port: 5672
+
+---
+spring:
+  cloud:
+    config:
+      server:
+        git:
+          uri: file:///opt/artifacts/config-repo
+  profiles: test
+  rabbitmq:
+    host: localhost
+    port: 5672
+
+---
+spring:
+  profiles: prod
+  rabbitmq:
+    host: 10.1.70.244
+    port: 5672
+
+---
+spring:
+  profiles: native
+  cloud:
+    config:
+      server:
+        native:
+          searchLocations: file:/config-repo
+
+---
+spring:
+  profiles: docker
+
+server:
+  port: 8080
+
+---
+spring:
+  profiles: roro
+  cloud:
+    config:
+      server:
+        git:
+          #uri: git@bitbucket.org:altroro/config-repo.git
+          uri: file:/opt/artifacts/config-repo/config-repo
+  rabbitmq:
+    host: 10.1.69.118
+    port: 5672
+
+---
+spring:
+  profiles: tos-prod
+  rabbitmq:
+    host: 172.16.167.51
+    port: 5672
+    username: tos
+    password: 0a06910b-a7ef-4fbd-b63a-9f15ff31ee31
+

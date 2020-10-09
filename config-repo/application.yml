@@ -1,0 +1,187 @@
+spring:
+  cache:
+    cache-names:
+      - one-week-cache
+      - one-day-cache
+      - half-day-cache
+      - one-hour-cache
+      - half-hour-cache
+    ttl:
+      one-week-cache: 604800
+      one-day-cache: 86400
+      half-day-cache: 43200
+      one-hour-cache: 3600
+      half-hour-cache: 1800
+  http:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  cloud:
+    config:
+      allowOverride: true
+      overrideNone: true
+
+oneorder:
+  gateway: http://localhost:8765
+  gateway-basic-auth: http://localhost:8764
+  datasource:
+    maximumPoolSize: 2
+    connectionTimeout: 180000
+    idleTimeout: 120000
+
+  cache:
+    prefix: "oneorder:"
+
+  jwt-key: c0cad0d3-2327-4e5b-bc0d-bb652111f2ae
+
+  service-protocol: "http"
+  task-service: "${oneorder.service-protocol}://task-service"
+  user-service: "${oneorder.service-protocol}://user-service"
+  order-service: "${oneorder.service-protocol}://order-service"
+  kartoteks-service: "${oneorder.service-protocol}://kartoteks-service"
+  authentication: "${oneorder.service-protocol}://authentication"
+  location-service: "${oneorder.service-protocol}://location-service"
+  order-planning-service: "${oneorder.service-protocol}://order-planning-service"
+  order-template-service: "${oneorder.service-protocol}://order-template-service"
+  rules-engine-service: "${oneorder.service-protocol}://rules-engine-service"
+  groovy-rules-engine-service: "${oneorder.service-protocol}://groovy-rules-engine-service"
+  authorization-service: "${oneorder.service-protocol}://authorization-service"
+  rule-service: "${oneorder.service-protocol}://rule-service"
+  warehouse-service: "${oneorder.service-protocol}://warehouse-service"
+  vehicle-service: "${oneorder.service-protocol}://vehicle-service"
+  billing-service: "${oneorder.service-protocol}://billing-service"
+  billing-item-service: "${oneorder.service-protocol}://billing-item-service"
+  contract-service: "${oneorder.service-protocol}://contract-service"
+  file-service: "${oneorder.service-protocol}://file-service"
+  vehicle-location-service: "${oneorder.service-protocol}://vehicle-location-service"
+  trip-service: "${oneorder.service-protocol}://trip-service"
+  email-service: "${oneorder.service-protocol}://email-service"
+  currency-service: "${oneorder.service-protocol}://currency-service"
+  event-monitor-service: "${oneorder.service-protocol}://event-monitor-service"
+  crm-account-service: "${oneorder.service-protocol}://crm-account-service"
+  crm-quote-service: "${oneorder.service-protocol}://crm-quote-service"
+  crm-activity-service: "${oneorder.service-protocol}://crm-activity-service"
+  crm-search-service: "${oneorder.service-protocol}://crm-search-service"
+  crm-history-service: "${oneorder.service-protocol}://crm-history-service"
+  sales-price-service: "${oneorder.service-protocol}://sales-price-service"
+  translator-service: "${oneorder.service-protocol}://translator-service"
+  project-service: "${oneorder.service-protocol}://project-service"
+  salesbox-service: "${oneorder.service-protocol}://salesbox-service"
+  taxoffice-verify-service: "${oneorder.service-protocol}://taxoffice-verify-service"
+  eori-verify-service: "${oneorder.service-protocol}://eori-verify-service"
+  google-translate-service: "${oneorder.service-protocol}://google-translate-service"
+  note-service: "${oneorder.service-protocol}://note-service"
+  agreement-service: "${oneorder.service-protocol}://agreement-service"
+  notification-service: "${oneorder.service-protocol}://notification-service"
+  crm-opportunity-service: "${oneorder.service-protocol}://crm-opportunity-service"
+  configuration-management-service: "${oneorder.service-protocol}://configuration-management-service"
+  pricing-rule-service: "${oneorder.service-protocol}://pricing-rule-service"
+  pricing-service: "${oneorder.service-protocol}://pricing-service"
+
+gmailMailSender:
+  host: smtp.gmail.com
+  port: 587
+  username: ekol.oneorder@gmail.com
+  password: Ekol3565
+  properties:
+    mail:
+      transport:
+        protocol: smtp
+      smtp:
+        auth: true
+        starttls:
+          enable: true
+      debug: true
+
+ekolMailSender:
+  host: smtp.gmail.com
+  port: 587
+  username: oneorder@ekol.com
+  password: O12346o
+  properties:
+    mail:
+      transport:
+        protocol: smtp
+      smtp:
+        auth: true
+        starttls:
+          enable: true
+      debug: false
+
+google:
+  apikey: AIzaSyDfT5oZZeQbPZI9OeOWum2N9Ks4vLQEBgw
+  api-url: https://www.googleapis.com
+
+---
+spring:
+  profiles: dev
+
+app:
+  environment: ${spring.profiles}
+
+oneorder:
+  gateway: http://10.1.70.92:8765
+  gateway-basic-auth: http://10.1.70.92:8764
+  fileRepoPath: /root/oneorderPermDir
+
+---
+spring:
+  profiles: test
+
+app:
+  environment: ${spring.profiles}
+
+server:
+  undertow:
+    worker-threads: 40
+
+ekolMailSender:
+  host: s-exc.ekol.com
+  port: 25
+  properties:
+    mail:
+      smtp:
+        starttls:
+          enable: false
+
+oneorder:
+  gateway: https://oneorder-test.ekol.com
+  gateway-basic-auth: https://oneorder-test.ekol.com:8443
+  fileRepoPath: /home/admin/oneorderPermDir
+
+google:
+  api-url: http://10.1.70.92:31313
+  maps:
+    api-url: http://10.1.70.92:31313
+
+---
+spring:
+  profiles: prod
+
+app:
+  environment: ${spring.profiles}
+
+oneorder:
+  gateway: https://oneorder.ekol.com
+  gateway-basic-auth: https://oneorder.ekol.com:8443
+  datasource:
+    maximumPoolSize: 10
+    connectionTimeout: 20000
+    idleTimeout: 120000
+    minimumIdle: 2
+
+---
+spring:
+  profiles: integration
+  
+oneorder:
+  fileRepoPath: /tmp
+
+---
+spring:
+  profiles: docker
+
+oneorder:
+  fileRepoPath: /oneorderPermDir
+server:
+  port: 8080

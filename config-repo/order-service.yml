@@ -1,0 +1,182 @@
+server:
+  port: 0
+
+spring:
+  jpa:
+    properties:
+      hibernate:
+        physical_naming_strategy: ekol.hibernate5.config.HibernateNamingStrategy
+        implicit_naming_strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
+        dialect: org.hibernate.dialect.Oracle10gDialect
+        id:
+          new_generator_mappings: true
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+  datasource:
+      max-wait: 10000
+      max-active: 5
+      test-on-borrow: false
+        
+management:
+  security:
+    enabled: false
+  metrics:
+    export:
+      influx:
+        enabled: false
+        uri: http://localhost:8086
+        db: oneorder
+        step: PT30S
+
+liquibase:
+  changeLog: classpath:/db/changelog.xml
+  contexts: local
+
+swagger:
+  enabled: true
+
+oneorder:
+  barcode:
+    companyPrefix: 8680225
+    applicationIdentifier: "00"
+    extensionDigit: 2
+    width: 360
+    height: 120
+    imageFormat: png
+
+eureka:
+  client:
+    initialInstanceInfoReplicationIntervalSeconds: 5
+    registryFetchIntervalSeconds: 10
+
+cache:
+  prefix: "${oneorder.cache.prefix}${spring.application.name}"
+  
+security:
+  oauth2:
+    client:
+      checkTokenUri: ${security.host}/auth/oauth/check_token
+      accessTokenUri: ${security.host}/auth/oauth/token
+      userAuthorizationUri: ${security.host}/auth/oauth/authorize
+      clientId: oneorder
+      clientSecret: oneorder
+      scope: oneorder
+    resource:
+      userInfoUri: ${security.host}/auth/user
+
+---
+spring:
+  profiles: dev
+  data:
+    elasticsearch:
+      cluster-nodes: 10.1.70.92:9301
+  rabbitmq:
+    host: 10.1.70.92
+    port: 5672
+  redis:
+    host: 10.1.70.92
+    port: 6379
+
+oneorder:
+  barcode:
+    directory: /root/oneorderBarcodes
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    jdbcUrl: jdbc:oracle:thin:@//10.1.70.92:49161/xe
+    username: ordermgr
+    password: 1234
+
+security:
+  host: http://10.1.70.92:9999
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://10.1.70.92:8761/eureka/
+
+liquibase:
+  contexts: dev
+---
+spring:
+  profiles: test
+  data:
+    elasticsearch:
+      cluster-nodes: 10.1.69.156:9300
+  rabbitmq:
+    host: 10.1.69.156
+    port: 5672
+  redis:
+    host: 10.1.69.156
+    port: 6379
+    password: one+order
+
+oneorder:
+  barcode:
+    directory: /home/admin/oneorderBarcodes
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    jdbcUrl : jdbc:oracle:thin:@//10.1.69.156:49161/xe
+    username : oneorder
+    password : one+order
+
+security:
+  host: http://10.1.69.156:9999
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://10.1.69.156:8761/eureka/
+
+liquibase:
+  contexts: test
+
+---
+spring:
+  profiles: prod
+  data:
+    elasticsearch:
+      cluster-nodes: 10.1.70.244:19300
+  rabbitmq:
+    host: 10.1.70.244
+    port: 5672
+  redis:
+    host: 10.1.70.244
+    port: 6379
+    password: one+order
+
+oneorder:
+  barcode:
+    directory: /home/admin/oneorderBarcodes
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    jdbcUrl : jdbc:oracle:thin:@//10.1.70.6:1521/KD01.QUADRO
+    username : oneorder
+    password : dsRQT2aQY3EHqBb93sHQ
+
+security:
+  host: https://oneorder.ekol.com:9999
+
+eureka:
+  client:
+    registryFetchIntervalSeconds: 15
+    serviceUrl:
+      defaultZone: http://10.1.69.85:8761/eureka/
+
+management:
+  metrics:
+    export:
+      influx:
+        enabled: true
+        uri: http://10.1.70.244:8086
+
+liquibase:
+  contexts: prod
+
+---
+spring:
+  profiles: docker
+
+oneorder:
+  barcode:
+    directory: /oneorderBarcodes

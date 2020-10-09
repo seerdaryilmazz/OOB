@@ -1,0 +1,56 @@
+server:
+  port: 8762
+
+spring:
+  jpa:
+    show-sql: false
+  rabbitmq:
+    host: 10.1.70.92
+    port: 5672
+
+oneorder:
+  userImages:
+    directory: /opt/artifacts/ui/user-images
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    jdbcUrl: jdbc:oracle:thin:@//10.1.70.92:49161/xe
+    username: crmaccount
+    password: 1234
+
+security:
+  host: 10.1.70.92
+  oauth2:
+    client:
+      checkTokenUri: http://${security.host}:9999/auth/oauth/check_token
+      accessTokenUri: http://${security.host}:9999/auth/oauth/token
+      userAuthorizationUri: http://${security.host}:9999/auth/oauth/authorize
+      clientId: oneorder
+      clientSecret: oneorder
+      scope: oneorder
+    resource:
+      userInfoUri: http://${security.host}:9999/auth/user
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://10.1.70.92:8761/eureka/
+    register-with-eureka: false
+
+liquibase:
+  contexts: dev
+
+quadro:
+  username: sch_ws
+  password: acDX65T2DUWG4KQx3vva
+  company-blockage:
+    endpoint: http://hertz.ekol.com:3010/orawsv/QUADRO_INTERFACE/WSC_GET_COMPANY_BLOCKAGE
+  company-cr-info:
+    endpoint: http://hertz:3010/orawsv/QUADRO_INTERFACE/WSC_GET_COMPANY_CR_INFO_P
+
+logging:
+  level:
+    org.springframework.web: DEBUG
+    org.springframework.ws.client.MessageTracing.sent: TRACE
+    org.springframework.ws.server.MessageTracing.sent: TRACE
+    org.springframework.ws.client.MessageTracing.received: TRACE
+    org.springframework.ws.server.MessageTracing.received: TRACE

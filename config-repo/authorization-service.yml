@@ -1,0 +1,190 @@
+server:
+  port: 0
+
+spring:
+  jpa:
+    properties:
+      hibernate:
+        physical_naming_strategy: ekol.hibernate5.config.HibernateNamingStrategy
+        implicit_naming_strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
+        dialect: org.hibernate.dialect.Oracle10gDialect
+        id:
+          new_generator_mappings: true
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+  datasource:
+    max-wait: 10000
+    max-active: 5
+    test-on-borrow: false
+
+management:
+  security:
+    enabled: false
+  metrics:
+    export:
+      influx:
+        enabled: false
+        uri: http://localhost:8086
+        db: oneorder
+        step: PT30S
+
+liquibase:
+  changeLog: classpath:/db/changelog.xml
+  contexts: local
+
+eureka:
+  client:
+    initialInstanceInfoReplicationIntervalSeconds: 5
+    registryFetchIntervalSeconds: 10
+
+---
+spring:
+  profiles: dev
+  rabbitmq:
+    host: 10.1.70.92
+    port: 5672
+  redis:
+    host: 10.1.70.92
+    port: 6379
+
+neo4j:
+  url: http://neo4j:1234@10.1.70.92:7475
+  username: neo4j
+  password: 1234
+
+oneorder:
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    jdbcUrl: jdbc:oracle:thin:@//10.1.70.92:49161/xe
+    username: authorization
+    password: 1234
+
+security:
+  host: 10.1.70.92
+  oauth2:
+    client:
+      checkTokenUri: http://${security.host}:9999/auth/oauth/check_token
+      accessTokenUri: http://${security.host}:9999/auth/oauth/token
+      userAuthorizationUri: http://${security.host}:9999/auth/oauth/authorize
+      clientId: oneorder
+      clientSecret: oneorder
+      scope: oneorder
+    resource:
+      userInfoUri: http://${security.host}:9999/auth/user
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://10.1.70.92:8761/eureka/
+
+liquibase:
+  contexts: dev
+
+logging:
+  level:
+    org:
+      zalando:
+        logbook: TRACE
+
+swagger:
+  enabled: true
+
+---
+spring:
+  profiles: test
+  rabbitmq:
+    host: 10.1.69.156
+    port: 5672
+  redis:
+    host: 10.1.69.156
+    port: 6379
+    password: one+order
+
+neo4j:
+  url: http://neo4j:1234@10.1.69.156:7475
+  username: neo4j
+  password: 1234
+
+oneorder:
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    jdbcUrl : jdbc:oracle:thin:@//10.1.69.156:49161/xe
+    username : oneorder
+    password : one+order
+
+security:
+  host: oneorder-test.ekol.com
+  oauth2:
+    client:
+      checkTokenUri: https://${security.host}:9999/auth/oauth/check_token
+      accessTokenUri: https://${security.host}:9999/auth/oauth/token
+      userAuthorizationUri: https://${security.host}:9999/auth/oauth/authorize
+      clientId: oneorder
+      clientSecret: oneorder
+      scope: oneorder
+    resource:
+      userInfoUri: https://${security.host}:9999/auth/user
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://10.1.69.156:8761/eureka/
+
+liquibase:
+  contexts: test
+
+swagger:
+  enabled: true  
+
+---
+spring:
+  profiles: prod
+  rabbitmq:
+    host: 10.1.70.244
+    port: 5672
+  redis:
+    host: 10.1.70.244
+    port: 6379
+    password: one+order
+
+neo4j:
+  url: http://neo4j:1234@10.1.70.244:7474
+  username: neo4j
+  password: 1234
+
+oneorder:
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    jdbcUrl : jdbc:oracle:thin:@//10.1.70.6:1521/KD01.QUADRO
+    username : oneorder
+    password : dsRQT2aQY3EHqBb93sHQ
+
+security:
+  host: oneorder.ekol.com
+  oauth2:
+    client:
+      checkTokenUri: https://${security.host}:9999/auth/oauth/check_token
+      accessTokenUri: https://${security.host}:9999/auth/oauth/token
+      userAuthorizationUri: https://${security.host}:9999/auth/oauth/authorize
+      clientId: oneorder
+      clientSecret: oneorder
+      scope: oneorder
+    resource:
+      userInfoUri: https://${security.host}:9999/auth/user
+
+management:
+  metrics:
+    export:
+      influx:
+        enabled: true
+        uri: http://10.1.70.244:8086
+
+eureka:
+  client:
+    registryFetchIntervalSeconds: 15
+    serviceUrl:
+      defaultZone: http://10.1.69.85:8761/eureka/
+
+liquibase:
+  contexts: prod
+

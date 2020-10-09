@@ -1,0 +1,1067 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="20190516 15:05" author="Ertugrul Akbuga">
+
+        <createTable tableName="AGREEMENT">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_AGREEMENT" />
+            </column>
+            <column name="AGREEMENT_NUMBER" type="NUMBER(19,0)"/>
+            <column name="NAME" type="VARCHAR2(255)"/>
+            <column name="TYPE" type="VARCHAR2(19)"/>
+            <column name="ACCOUNT_ID" type="NUMBER(19,0)"/>
+            <column name="ACCOUNT_NAME" type="VARCHAR2(150)"/>
+            <column name="START_DATE" type="TIMESTAMP(6)"/>
+            <column name="END_DATE" type="TIMESTAMP(6)"/>
+            <column name="SERVICE_AREA" type="VARCHAR2(20)"/>
+            <column name="RENEWAL_LENGTH" type="NUMBER(19,0)"/>
+            <column name="RENEWAL_DATE_TYPE" type="VARCHAR2(19)"/>
+            <column name="AUTO_RENEWAL_LENGTH" type="NUMBER(19,0)"/>
+            <column name="AUTO_RENEWAL_DATE_TYPE" type="VARCHAR2(19)"/>
+            <column name="AUTO_RENEWAL_DATE" type="TIMESTAMP(6)"/>
+            <column name="CONTRACT_AMOUNT" type="FLOAT"/>
+            <column name="CONTRACT_AMOUNT_CURRENCY" type="VARCHAR2(3)"/>
+            <column name="PAYMENT_DUE_DAYS" type="NUMBER(3,0)"/>
+            <column name="STAMP_TAX_PAYER" type="VARCHAR2(19)"/>
+            <column name="STAMP_TAX_AMOUNT" type="FLOAT"/>
+            <column name="STAMP_TAX_CURRENCY" type="VARCHAR2(3)"/>
+            <column name="STAMP_TAX_DUE_DATE" type="TIMESTAMP(6)"/>
+            <column name="COURT" type="VARCHAR2(255)"/>
+            <column name="LAW_COUNTRY_ISO" type="VARCHAR2(2)"/>
+            <column name="LAW_COUNTRY_NAME" type="VARCHAR2(50)"/>
+            <column name="NUMBER_OF_APOGRAPHS" type="NUMBER(2,0)"/>
+            <column name="APOGRAPH_TYPE" type="VARCHAR2(19)"/>
+            <column name="NUMBER_OF_PAPERS" type="NUMBER(2,0)"/>
+            <column name="TERMINATION_DATE" type="TIMESTAMP(6)"/>
+            <column name="TERMINATION_REASON" type="VARCHAR2(150)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <addNotNullConstraint tableName="AGREEMENT" columnName="NAME" />
+        <addNotNullConstraint tableName="AGREEMENT" columnName="TYPE" />
+        <addNotNullConstraint tableName="AGREEMENT" columnName="ACCOUNT_ID" />
+        <addNotNullConstraint tableName="AGREEMENT" columnName="ACCOUNT_NAME" />
+        <addNotNullConstraint tableName="AGREEMENT" columnName="START_DATE" />
+        <addNotNullConstraint tableName="AGREEMENT" columnName="END_DATE" />
+        <addNotNullConstraint tableName="AGREEMENT" columnName="SERVICE_AREA" />
+
+        <createSequence sequenceName="SEQ_AGREEMENT" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20190516 15:57" author="Ertugrul Akbuga">
+
+        <createTable tableName="KPI_INFO">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_KPI_INFO" />
+            </column>
+            <column name="AGREEMENT_ID" type="NUMBER(19,0)"/>
+            <column name="NAME" type="VARCHAR2(255)"/>
+            <column name="TARGET" type="VARCHAR2(255)"/>
+            <column name="LAST_UPDATE_DATE" type="TIMESTAMP(6)"/>
+            <column name="UPDATE_PERIOD" type="NUMBER(2,0)"/>
+            <column name="RENEWAL_DATE_TYPE" type="VARCHAR2(19)"/>
+            <column name="NEXT_UPDATE_DATE" type="TIMESTAMP(6)"/>
+
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="KPI_INFO" baseColumnNames="AGREEMENT_ID"
+                                 constraintName="FK_KPI_INFO_AGREEMENT" referencedTableName="AGREEMENT"
+                                 referencedColumnNames="ID"/>
+
+        <addNotNullConstraint tableName="KPI_INFO" columnName="NAME" />
+        <addNotNullConstraint tableName="KPI_INFO" columnName="TARGET" />
+
+        <createSequence sequenceName="SEQ_KPIINFO" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20190516 16:07" author="Ertugrul Akbuga">
+
+        <createTable tableName="OWNER_INFO">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_OWNER_INFO" />
+            </column>
+            <column name="AGREEMENT_ID" type="NUMBER(19,0)"/>
+            <column name="CONTACT_ID" type="NUMBER(19,0)"/>
+            <column name="CONTACT_NAME" type="VARCHAR2(100)"/>
+            <column name="JOB_TITLE" type="VARCHAR2(60)"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="OWNER_INFO" baseColumnNames="AGREEMENT_ID"
+                                 constraintName="FK_OWNER_INFO_AGREEMENT" referencedTableName="AGREEMENT"
+                                 referencedColumnNames="ID"/>
+
+        <addNotNullConstraint tableName="OWNER_INFO" columnName="CONTACT_ID" />
+        <addNotNullConstraint tableName="OWNER_INFO" columnName="CONTACT_NAME" />
+        <addNotNullConstraint tableName="OWNER_INFO" columnName="JOB_TITLE" />
+
+        <createSequence sequenceName="SEQ_OWNERINFO" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20190516 16:14" author="Ertugrul Akbuga">
+
+        <createTable tableName="LETTER_OF_GUARENTEE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_LETTER_OF_GUARENTEE" />
+            </column>
+            <column name="AGREEMENT_ID" type="NUMBER(19,0)"/>
+            <column name="SCOPE" type="VARCHAR2(255)"/>
+            <column name="CONTRACT_AMOUNT" type="FLOAT"/>
+            <column name="CURRENCY" type="VARCHAR2(3)"/>
+            <column name="VALIDITY_DATE" type="TIMESTAMP(6)"/>
+            <column name="UPDATE_PERIOD" type="NUMBER(2,0)"/>
+            <column name="RENEWAL_DATE_TYPE" type="VARCHAR2(19)"/>
+            <column name="NEXT_UPDATE_DATE" type="TIMESTAMP(6)"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="LETTER_OF_GUARENTEE" baseColumnNames="AGREEMENT_ID"
+                                 constraintName="FK_LTTR_OF_GUARNTEE_AGREEMENT" referencedTableName="AGREEMENT"
+                                 referencedColumnNames="ID"/>
+
+        <createSequence sequenceName="SEQ_LETTEROFGUARENTEE" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20190616 10:00" author="Ertugrul Akbuga">
+        <dropColumn tableName="AGREEMENT" columnName="SERVICE_AREA"/>
+        <createTable tableName="AGREEMENT_SERVICE_AREA">
+            <column name="AGREEMENT_ID" type="NUMBER(19,0)"/>
+            <column name="SERVICE_AREA" type="VARCHAR2(50)"/>
+        </createTable>
+        <addNotNullConstraint tableName="AGREEMENT_SERVICE_AREA" columnName="SERVICE_AREA" />
+    </changeSet>
+
+    <changeSet id="20190616 11:39" author="Ertugrul Akbuga">
+        <createTable tableName="AGREEMENT_LOGISTIC">
+            <column name="AGREEMENT_ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_AGREEMENT_LOGISTIC" />
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="AGREEMENT_LOGISTIC" baseColumnNames="AGREEMENT_ID"
+                                 constraintName="FK_AGREEMENT_LOGISTIC" referencedTableName="AGREEMENT"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20190523 17:23" author="Ertugrul Akbuga">
+        <addColumn tableName="KPI_INFO">
+            <column name="ACTUAL" type="VARCHAR2(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20190514 14:24" author="Ertugrul Akbuga">
+        <dropColumn tableName="OWNER_INFO" columnName="JOB_TITLE"/>
+        <createTable tableName="OWNER_INFO_SERVICE_AREA">
+            <column name="OWNER_INFO_ID" type="NUMBER(19,0)"/>
+            <column name="SERVICE_AREA" type="VARCHAR2(50)"/>
+        </createTable>
+        <addColumn tableName="KPI_INFO">
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </addColumn>
+        <addColumn tableName="LETTER_OF_GUARENTEE">
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </addColumn>
+        <addColumn tableName="OWNER_INFO">
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20190530 16:09" author="Ertugrul Akbuga">
+        <dropColumn tableName="AGREEMENT" columnName="AGREEMENT_NUMBER"/>
+        <addColumn tableName="AGREEMENT">
+            <column name="PLACE" type="VARCHAR2(60)"/>
+            <column name="SIGNED_BY_EKOL" type="VARCHAR2(50)"/>
+            <column name="SIGNED_BY_TITLE_EKOL" type="VARCHAR2(50)"/>
+            <column name="DATE_SIGNED_EKOL" type="TIMESTAMP(6)"/>
+            <column name="SIGNED_BY_CUSTOMER" type="VARCHAR2(50)"/>
+            <column name="SIGNED_BY_TITLE_CUSTOMER" type="VARCHAR2(50)"/>
+            <column name="DATE_SIGNED_CUSTOMER" type="TIMESTAMP(6)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20190531 15:25" author="Ertugrul Akbuga">
+
+        <createTable tableName="AGREEMENT_NOTE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_AGREEMENT_NOTE" />
+            </column>
+            <column name="AGREEMENT_ID" type="NUMBER(19,0)"/>
+            <column name="NOTE_ID" type="VARCHAR2(50)"/>
+            <column name="NOTE_TYPE_CODE" type="VARCHAR2(50)"/>
+            <column name="NOTE_TYPE_NAME" type="VARCHAR2(100)"/>
+            <column name="CREATED_BY" type="VARCHAR2(100)"/>
+            <column name="CREATE_DATE" type="TIMESTAMP(6)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <addNotNullConstraint tableName="AGREEMENT_NOTE" columnName="NOTE_ID" />
+        <addNotNullConstraint tableName="AGREEMENT_NOTE" columnName="NOTE_TYPE_CODE" />
+
+        <addForeignKeyConstraint baseTableName="AGREEMENT_NOTE" baseColumnNames="AGREEMENT_ID"
+                                 constraintName="FK_NOTE_AGREEMENT" referencedTableName="AGREEMENT"
+                                 referencedColumnNames="ID"/>
+
+        <createSequence sequenceName="SEQ_AGREEMENTNOTE" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20190531 15:26" author="Ertugrul Akbuga">
+
+        <createTable tableName="AGREEMENT_DOCUMENT">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_AGREEMENT_DOCUMENT" />
+            </column>
+            <column name="AGREEMENT_ID" type="NUMBER(19,0)"/>
+            <column name="DOCUMENT_ID" type="VARCHAR2(50)"/>
+            <column name="DOCUMENT_NAME" type="VARCHAR2(100)"/>
+            <column name="INEFFACEABLE" type="NUMBER(1,0)"/>
+            <column name="CREATED_BY" type="VARCHAR2(100)"/>
+            <column name="CREATE_DATE" type="TIMESTAMP(6)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <addNotNullConstraint tableName="AGREEMENT_DOCUMENT" columnName="DOCUMENT_ID" />
+        <addNotNullConstraint tableName="AGREEMENT_DOCUMENT" columnName="DOCUMENT_NAME" />
+
+        <addForeignKeyConstraint baseTableName="AGREEMENT_DOCUMENT" baseColumnNames="AGREEMENT_ID"
+                                 constraintName="FK_DOCUMENT_AGREEMENT" referencedTableName="AGREEMENT"
+                                 referencedColumnNames="ID"/>
+
+        <createSequence sequenceName="SEQ_AGREEMENTDOCUMENT" incrementBy="50"/>
+
+    </changeSet>
+    
+    <changeSet id="20190617" author="Dogukan Sahinturk">
+        <createTable tableName="INSURANCE_INFO">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_INSURANCE_INFO" />
+            </column>
+            <column name="INSURANCE_TYPE" type="VARCHAR2(50)"/>
+            <column name="EXEMPTION_LIMIT" type="FLOAT"/>
+            <column name="INSURED_BY" type="VARCHAR2(19)"/>
+            <column name="CURRENCY" type="VARCHAR2(3)"/>
+            <column name="VALIDITY_DATE" type="TIMESTAMP(6)"/>
+            <column name="COVERAGE" type="VARCHAR2(50)"/>
+            <column name="AGREEMENT_ID" type="NUMBER(19,0)"/>
+        </createTable>
+        
+        <addNotNullConstraint tableName="INSURANCE_INFO" columnName="VALIDITY_DATE"/>
+        <addNotNullConstraint tableName="INSURANCE_INFO" columnName="INSURANCE_TYPE"/>
+        <addNotNullConstraint tableName="INSURANCE_INFO" columnName="INSURED_BY"/>
+
+        <addForeignKeyConstraint baseTableName="INSURANCE_INFO" baseColumnNames="AGREEMENT_ID"
+                                 constraintName="FK_INSURANCE_INFO" referencedTableName="AGREEMENT"
+                                 referencedColumnNames="ID"/>
+
+        <createSequence sequenceName="SEQ_INSURANCEINFO" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20190617 10:51" author="Dogukan Sahinturk">
+        <addColumn tableName="INSURANCE_INFO">
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </addColumn>
+    </changeSet>
+    
+    <changeSet id="20190619 13:23" author="Dogukan Sahinturk">
+
+        <createTable tableName="AGREEMENT_PRICE_ADP_MODEL">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_PRICE_ADP_MODEL"/>
+            </column>
+            <column name="NAME" type="VARCHAR2(255)"/>
+            <column name="EUR" type="NUMBER(3,0)"/>
+            <column name="EUR_REF" type="NUMBER(19,2)"/>
+            <column name="USD" type="NUMBER(3,0)"/>
+            <column name="USD_REF" type="NUMBER(19,2)"/>
+            <column name="INFLATION" type="NUMBER(3,0)"/>
+            <column name="MINIMUM_WAGE" type="NUMBER(3,0)"/>
+            <column name="MINIMUM_WAGE_REF" type="NUMBER(19,2)"/>
+            <column name="VALIDITY_START_DATE" type="TIMESTAMP(6)"/>
+            <column name="NOTES" type="VARCHAR2(255)"/>
+            <column name="AGREEMENT_ID" type="NUMBER(19,0)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <createSequence sequenceName="SEQ_PRICEADAPTATIONMODEL" incrementBy="50"/>
+
+        <addNotNullConstraint tableName="AGREEMENT_PRICE_ADP_MODEL" columnName="NAME"/>
+        <addNotNullConstraint tableName="AGREEMENT_PRICE_ADP_MODEL" columnName="VALIDITY_START_DATE"/>
+
+        <addForeignKeyConstraint baseTableName="AGREEMENT_PRICE_ADP_MODEL" baseColumnNames="AGREEMENT_ID"
+                                 constraintName="FK_PRICE_ADP_MODEL" referencedTableName="AGREEMENT"
+                                 referencedColumnNames="ID"/>
+
+        <createTable tableName="AGREEMENT_UNIT_PRICE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_UNIT_PRICE"/>
+            </column>
+            <column name="BILLING_ITEM" type="VARCHAR2(100)"/>
+            <column name="SERVICE_NAME" type="VARCHAR2(255)"/>
+            <column name="PRICE" type="NUMBER(6,2)"/>
+            <column name="CURRENCY" type="VARCHAR2(3)"/>
+            <column name="BASED_ON" type="VARCHAR2(19)"/>
+            <column name="VALIDITY_START_DATE" type="TIMESTAMP(6)"/>
+            <column name="UPDATE_PERIOD" type="NUMBER(3,0)"/>
+            <column name="RENEWAL_DATE_TYPE" type="VARCHAR2(19)"/>
+            <column name="VALIDITY_END_DATE" type="TIMESTAMP(6)"/>
+            <column name="PRICE_MODEL_ID" type="NUMBER(19,0)"/>
+            <column name="AGREEMENT_ID" type="NUMBER(19,0)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <createSequence sequenceName="SEQ_UNITPRICE" incrementBy="50"/>
+
+        <addNotNullConstraint tableName="AGREEMENT_UNIT_PRICE" columnName="BILLING_ITEM"/>
+        <addNotNullConstraint tableName="AGREEMENT_UNIT_PRICE" columnName="SERVICE_NAME"/>
+        <addNotNullConstraint tableName="AGREEMENT_UNIT_PRICE" columnName="PRICE"/>
+        <addNotNullConstraint tableName="AGREEMENT_UNIT_PRICE" columnName="CURRENCY"/>
+        <addNotNullConstraint tableName="AGREEMENT_UNIT_PRICE" columnName="BASED_ON"/>
+        <addNotNullConstraint tableName="AGREEMENT_UNIT_PRICE" columnName="VALIDITY_START_DATE"/>
+        <addNotNullConstraint tableName="AGREEMENT_UNIT_PRICE" columnName="UPDATE_PERIOD"/>
+
+        <addForeignKeyConstraint baseTableName="AGREEMENT_UNIT_PRICE" baseColumnNames="AGREEMENT_ID"
+                                 constraintName="FK_UNIT_PRICE" referencedTableName="AGREEMENT"
+                                 referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="AGREEMENT_UNIT_PRICE" baseColumnNames="PRICE_MODEL_ID"
+                                 constraintName="FK_UNIT_PRICE_MODEL" referencedTableName="AGREEMENT_PRICE_ADP_MODEL"
+                                 referencedColumnNames="ID"/>
+
+        <modifyDataType tableName="INSURANCE_INFO" columnName="EXEMPTION_LIMIT" newDataType="NUMBER(11,2)"/>
+        <renameTable oldTableName="INSURANCE_INFO" newTableName="AGREEMENT_INSURANCE_INFO"/>
+
+
+    </changeSet>
+    
+    <changeSet id="20190619 15:39" author="Dogukan Sahinturk">
+        <addColumn tableName="AGREEMENT_UNIT_PRICE">
+            <column name="NOTES" type="VARCHAR2(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20190621 11:12" author="Dogukan Sahinturk">
+        <dropColumn tableName="LETTER_OF_GUARENTEE" columnName="UPDATE_PERIOD"/>
+        <dropColumn tableName="LETTER_OF_GUARENTEE" columnName="RENEWAL_DATE_TYPE"/>
+
+        <renameColumn tableName="LETTER_OF_GUARENTEE" oldColumnName="NEXT_UPDATE_DATE" newColumnName="VALIDITY_END_DATE"/>
+        <renameColumn tableName="LETTER_OF_GUARENTEE" oldColumnName="VALIDITY_DATE" newColumnName="VALIDITY_START_DATE"/>
+
+        <addNotNullConstraint tableName="LETTER_OF_GUARENTEE" columnName="VALIDITY_START_DATE"/>
+        <addNotNullConstraint tableName="LETTER_OF_GUARENTEE" columnName="VALIDITY_END_DATE"/>
+    </changeSet>
+
+    <changeSet id="20190621 12:01" author="Dogukan Sahinturk">
+        <renameColumn tableName="AGREEMENT_INSURANCE_INFO" oldColumnName="VALIDITY_DATE" newColumnName="VALIDITY_START_DATE"/>
+        <addColumn tableName="AGREEMENT_INSURANCE_INFO">
+            <column name="VALIDITY_END_DATE" type="TIMESTAMP(6)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    
+    <changeSet id="20190621 16:52" author="Dogukan Sahinturk">
+        <addColumn tableName="AGREEMENT">
+            <column name="PAID" type="NUMBER(1,0)"/>
+        </addColumn>
+    </changeSet>
+    
+    <changeSet id="20190625 10:37" author="Dogukan Sahinturk">
+        <dropColumn tableName="AGREEMENT" columnName="PLACE"/>
+        <dropColumn tableName="AGREEMENT" columnName="SIGNED_BY_EKOL"/>
+        <dropColumn tableName="AGREEMENT" columnName="SIGNED_BY_TITLE_EKOL"/>
+        <dropColumn tableName="AGREEMENT" columnName="DATE_SIGNED_EKOL"/>
+        <dropColumn tableName="AGREEMENT" columnName="SIGNED_BY_CUSTOMER"/>
+        <dropColumn tableName="AGREEMENT" columnName="SIGNED_BY_TITLE_CUSTOMER"/>
+        <dropColumn tableName="AGREEMENT" columnName="DATE_SIGNED_CUSTOMER"/>
+        
+        <createTable tableName="AGREEMENT_SIGNATURE_INFO">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_SIGNATURE_INFO"/>
+            </column>
+            <column name="SIGNED_BY" type="VARCHAR2(19)"/>
+            <column name="NAME" type="VARCHAR2(50)"/>
+            <column name="TITLE" type="VARCHAR2(50)"/>
+            <column name="DATE" type="TIMESTAMP(6)"/>
+            <column name="PLACE" type="VARCHAR2(50)"/>
+            <column name="AGREEMENT_ID" type="NUMBER(19,0)"/>
+        </createTable>
+        
+        <addNotNullConstraint tableName="AGREEMENT_SIGNATURE_INFO" columnName="SIGNED_BY"/>
+        <addNotNullConstraint tableName="AGREEMENT_SIGNATURE_INFO" columnName="NAME"/>
+        <addNotNullConstraint tableName="AGREEMENT_SIGNATURE_INFO" columnName="DATE"/>
+
+        <addForeignKeyConstraint baseTableName="AGREEMENT_SIGNATURE_INFO" baseColumnNames="AGREEMENT_ID"
+                                 constraintName="FK_SIGNATURE_INFO" referencedTableName="AGREEMENT"
+                                 referencedColumnNames="ID"/>
+
+    </changeSet>
+
+    <changeSet id="20190625 11:15" author="Dogukan Sahinturk">
+        <createSequence sequenceName="SEQ_SIGNATUREINFO" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20190625 11:50" author="Dogukan Sahinturk">
+        <renameColumn tableName="AGREEMENT_SIGNATURE_INFO" oldColumnName="DATE" newColumnName="SIGNED_DATE"/>
+    </changeSet>
+
+    <changeSet id="20190625 14:10" author="Dogukan Sahinturk">
+        <addColumn tableName="AGREEMENT_SIGNATURE_INFO">
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </addColumn>
+    </changeSet>
+    
+    <changeSet id="20190628 11:43" author="Dogukan Sahinturk">
+        <addColumn tableName="AGREEMENT_SERVICE_AREA">
+            <column name="NAME" type="VARCHAR2(25)"/>
+        </addColumn>
+        <renameColumn tableName="AGREEMENT_SERVICE_AREA" oldColumnName="SERVICE_AREA" newColumnName="CODE" />
+    </changeSet>
+
+    <changeSet id="20190702 16:11" author="Dogukan Sahinturk">
+        <addColumn tableName="OWNER_INFO_SERVICE_AREA">
+            <column name="NAME" type="VARCHAR2(25)"/>
+        </addColumn>
+        <renameColumn tableName="OWNER_INFO_SERVICE_AREA" oldColumnName="SERVICE_AREA" newColumnName="CODE" />
+        
+        <addColumn tableName="OWNER_INFO">
+            <column name="RESPONSIBILITY_TYPE" type="VARCHAR2(25)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20190705 16:34" author="Dogukan Sahinturk">
+        <addColumn tableName="AGREEMENT_UNIT_PRICE">
+            <column name="EUR_REF" type="NUMBER(19,2)"/>
+            <column name="USD_REF" type="NUMBER(19,2)"/>
+            <column name="MINIMUM_WAGE_REF" type="NUMBER(19,2)"/>
+            <column name="INFLATION_REF" type="NUMBER(3,0)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20190709 16:40" author="Dogukan Sahinturk">
+        <dropColumn tableName="AGREEMENT_PRICE_ADP_MODEL" columnName="EUR_REF"/>
+        <dropColumn tableName="AGREEMENT_PRICE_ADP_MODEL" columnName="USD_REF"/>
+        <dropColumn tableName="AGREEMENT_PRICE_ADP_MODEL" columnName="MINIMUM_WAGE_REF"/>
+
+        <createTable tableName="AGREEMENT_HISTORY_MODEL">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_HISTORY_MODEL"/>
+            </column>
+            <column name="NAME" type="VARCHAR2(50)"/>
+            <column name="EUR" type="NUMBER(3,0)"/>
+            <column name="USD" type="NUMBER(3,0)"/>
+            <column name="INFLATION" type="NUMBER(3,0)"/>
+            <column name="MINIMUM_WAGE" type="NUMBER(3,0)"/>
+            <column name="VALIDITY_START_DATE" type="TIMESTAMP(6)"/>
+            <column name="VALIDITY_END_DATE" type="TIMESTAMP(6)"/>
+            <column name="NOTES" type="VARCHAR2(255)"/>
+            <column name="MODEL_ID" type="NUMBER(19,0)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20190709 17:33" author="Dogukan Sahinturk">
+        <createSequence sequenceName="SEQ_HISTORYMODEL" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20190709 17:35" author="Dogukan Sahinturk">
+        <addColumn tableName="AGREEMENT_HISTORY_MODEL">
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20190717 15:25" author="Dogukan Sahinturk">
+        <createTable tableName="AGREEMENT_HISTORY_PRICE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_HISTORY_PRICE"/>
+            </column>
+            <column name="BILLING_ITEM" type="VARCHAR2(100)"/>
+            <column name="SERVICE_NAME" type="VARCHAR2(255)"/>
+            <column name="PRICE" type="NUMBER(6,2)"/>
+            <column name="CURRENCY" type="VARCHAR2(3)"/>
+            <column name="BASED_ON" type="VARCHAR2(19)"/>
+            <column name="EUR_REF" type="NUMBER(19,2)"/>
+            <column name="USD_REF" type="NUMBER(19,2)"/>
+            <column name="MINIMUM_WAGE_REF" type="NUMBER(19,2)"/>
+            <column name="INFLATION_REF" type="NUMBER(3,0)"/>
+            <column name="VALIDITY_START_DATE" type="TIMESTAMP(6)"/>
+            <column name="UPDATE_PERIOD" type="NUMBER(3,0)"/>
+            <column name="RENEWAL_DATE_TYPE" type="VARCHAR2(19)"/>
+            <column name="VALIDITY_END_DATE" type="TIMESTAMP(6)"/>
+            <column name="PRICE_MODEL_ID" type="NUMBER(19,0)"/>
+            <column name="NOTES" type="VARCHAR2(255)"/>
+            <column name="UNIT_PRICE_ID" type="NUMBER(19,0)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <createSequence sequenceName="SEQ_HISTORYUNITPRICE" incrementBy="50"/>
+    </changeSet>
+    
+    <changeSet id="20190717 15:29" author="Dogukan Sahinturk">
+        <renameTable oldTableName="AGREEMENT_HISTORY_PRICE" newTableName="HISTORY_UNIT_PRICE"/>
+        <renameTable oldTableName="AGREEMENT_HISTORY_MODEL" newTableName="HISTORY_ADP_MODEL" />
+    </changeSet>
+    
+    <changeSet id="20190725 11:35" author="Dogukan Sahinturk">
+        <addColumn tableName="AGREEMENT">
+            <column name="STATUS" type="VARCHAR2(20)"/>
+        </addColumn>
+        <sql> UPDATE AGREEMENT SET STATUS = 'OPEN' </sql>
+        <addNotNullConstraint tableName="AGREEMENT" columnName="STATUS"/>
+    </changeSet>
+
+    <changeSet id="20190807 13:29" author="Dogukan Sahinturk">
+        <addColumn tableName="AGREEMENT">
+            <column name="AGREEMENT_NUMBER" type="NUMBER(19,0)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20190912 17:06" author="Dogukan Sahinturk" context="local,dev,integration">
+        <createTable tableName="REVISION_INFO">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UPDATED_TIME" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <addPrimaryKey tableName="REVISION_INFO" columnNames="ID" constraintName="PK_REVISION_INFO"/>
+        <createSequence sequenceName="SEQ_REVISIONINFO" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20190912 17:17" author="Dogukan Sahinturk">
+        <createTable tableName="AUD_AGREEMENT">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="NAME" type="VARCHAR2(255)"/>
+            <column name="TYPE" type="VARCHAR2(19)"/>
+            <column name="ACCOUNT_ID" type="NUMBER(19,0)"/>
+            <column name="ACCOUNT_NAME" type="VARCHAR2(150)"/>
+            <column name="START_DATE" type="TIMESTAMP(6)"/>
+            <column name="END_DATE" type="TIMESTAMP(6)"/>
+            <column name="RENEWAL_LENGTH" type="NUMBER(19,0)"/>
+            <column name="RENEWAL_DATE_TYPE" type="VARCHAR2(19)"/>
+            <column name="AUTO_RENEWAL_LENGTH" type="NUMBER(19,0)"/>
+            <column name="AUTO_RENEWAL_DATE_TYPE" type="VARCHAR2(19)"/>
+            <column name="AUTO_RENEWAL_DATE" type="TIMESTAMP(6)"/>
+            <column name="CONTRACT_AMOUNT" type="FLOAT"/>
+            <column name="CONTRACT_AMOUNT_CURRENCY" type="VARCHAR2(3)"/>
+            <column name="PAYMENT_DUE_DAYS" type="NUMBER(3,0)"/>
+            <column name="STAMP_TAX_PAYER" type="VARCHAR2(19)"/>
+            <column name="STAMP_TAX_AMOUNT" type="FLOAT"/>
+            <column name="STAMP_TAX_CURRENCY" type="VARCHAR2(3)"/>
+            <column name="STAMP_TAX_DUE_DATE" type="TIMESTAMP(6)"/>
+            <column name="COURT" type="VARCHAR2(255)"/>
+            <column name="LAW_COUNTRY_ISO" type="VARCHAR2(2)"/>
+            <column name="LAW_COUNTRY_NAME" type="VARCHAR2(50)"/>
+            <column name="NUMBER_OF_APOGRAPHS" type="NUMBER(2,0)"/>
+            <column name="APOGRAPH_TYPE" type="VARCHAR2(19)"/>
+            <column name="NUMBER_OF_PAPERS" type="NUMBER(2,0)"/>
+            <column name="TERMINATION_DATE" type="TIMESTAMP(6)"/>
+            <column name="TERMINATION_REASON" type="VARCHAR2(150)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+            <column name="PAID" type="NUMBER(1,0)"/>
+            <column name="STATUS" type="VARCHAR2(20)"/>
+            <column name="AGREEMENT_NUMBER" type="NUMBER(19,0)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_AGREEMENT" columnNames="ID, REV" constraintName="PK_AUD_AGREEMENT"/>
+        <addForeignKeyConstraint baseTableName="AUD_AGREEMENT" baseColumnNames="REV"
+                                 constraintName="FK_AUDAGREEMENT_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20190912 17:21" author="Dogukan Sahinturk">
+        <createTable tableName="AUD_AGREEMENT_DOCUMENT">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="AGREEMENT_ID" type="NUMBER(19,0)"/>
+            <column name="DOCUMENT_ID" type="VARCHAR2(50)"/>
+            <column name="DOCUMENT_NAME" type="VARCHAR2(100)"/>
+            <column name="INEFFACEABLE" type="NUMBER(1,0)"/>
+            <column name="CREATED_BY" type="VARCHAR2(100)"/>
+            <column name="CREATE_DATE" type="TIMESTAMP(6)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_AGREEMENT_DOCUMENT" columnNames="ID, REV"
+                       constraintName="PK_AUD_AGREEMENT_DOCUMENT"/>
+        <addForeignKeyConstraint baseTableName="AUD_AGREEMENT_DOCUMENT" baseColumnNames="REV"
+                                 constraintName="FK_AUDAGREEMENTDOCUMENT_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20190912 17:30" author="Dogukan Sahinturk">
+        <createTable tableName="AUD_AGREEMENT_INS_INFO">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="INSURANCE_TYPE" type="VARCHAR2(50)"/>
+            <column name="EXEMPTION_LIMIT" type="NUMBER(11,2)"/>
+            <column name="INSURED_BY" type="VARCHAR2(19)"/>
+            <column name="CURRENCY" type="VARCHAR2(3)"/>
+            <column name="VALIDITY_START_DATE" type="TIMESTAMP(6)"/>
+            <column name="COVERAGE" type="VARCHAR2(50)"/>
+            <column name="AGREEMENT_ID" type="NUMBER(19,0)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+            <column name="VALIDITY_END_DATE" type="TIMESTAMP(6)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_AGREEMENT_INS_INFO" columnNames="ID, REV"
+                       constraintName="PK_AUD_AGREEMENT_INS_INFO"/>
+        <addForeignKeyConstraint baseTableName="AUD_AGREEMENT_INS_INFO" baseColumnNames="REV"
+                                 constraintName="FK_AUDAGRMNTINSINFO_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20190912 18:10" author="Dogukan Sahinturk">
+        <createTable tableName="AUD_AGREEMENT_LOGISTIC">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="AGREEMENT_ID" type="NUMBER(19,0)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_AGREEMENT_LOGISTIC" columnNames="AGREEMENT_ID, REV"
+                       constraintName="PK_AUD_AGREEMENT_LOGISTIC"/>
+        <addForeignKeyConstraint baseTableName="AUD_AGREEMENT_LOGISTIC" baseColumnNames="REV"
+                                 constraintName="FK_AUDAGREEMENTLOGISTIC_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20190912 18:14" author="Dogukan Sahinturk">
+        <createTable tableName="AUD_AGREEMENT_NOTE">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="AGREEMENT_ID" type="NUMBER(19,0)"/>
+            <column name="NOTE_ID" type="VARCHAR2(50)"/>
+            <column name="NOTE_TYPE_CODE" type="VARCHAR2(50)"/>
+            <column name="NOTE_TYPE_NAME" type="VARCHAR2(100)"/>
+            <column name="CREATED_BY" type="VARCHAR2(100)"/>
+            <column name="CREATE_DATE" type="TIMESTAMP(6)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_AGREEMENT_NOTE" columnNames="ID, REV"
+                       constraintName="PK_AUD_AGREEMENT_NOTE"/>
+        <addForeignKeyConstraint baseTableName="AUD_AGREEMENT_NOTE" baseColumnNames="REV"
+                                 constraintName="FK_AUDAGREEMENTNOTE_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20190912 18:18" author="Dogukan Sahinturk">
+        <createTable tableName="AUD_AGRMNT_PRICE_MODEL">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="NAME" type="VARCHAR2(255)"/>
+            <column name="EUR" type="NUMBER(3,0)"/>
+            <column name="USD" type="NUMBER(3,0)"/>
+            <column name="INFLATION" type="NUMBER(3,0)"/>
+            <column name="MINIMUM_WAGE" type="NUMBER(3,0)"/>
+            <column name="VALIDITY_START_DATE" type="TIMESTAMP(6)"/>
+            <column name="NOTES" type="VARCHAR2(255)"/>
+            <column name="AGREEMENT_ID" type="NUMBER(19,0)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_AGRMNT_PRICE_MODEL" columnNames="ID, REV"
+                       constraintName="PK_AUD_AGRMNT_PRICE_MODEL"/>
+        <addForeignKeyConstraint baseTableName="AUD_AGRMNT_PRICE_MODEL" baseColumnNames="REV"
+                                 constraintName="FK_AUDAGRMNTPRICMODEL_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20190912 18:30" author="Dogukan Sahinturk">
+        <createTable tableName="AUD_AGRMNT_SIGN_INFO">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="SIGNED_BY" type="VARCHAR2(19)"/>
+            <column name="NAME" type="VARCHAR2(50)"/>
+            <column name="TITLE" type="VARCHAR2(50)"/>
+            <column name="SIGNED_DATE" type="TIMESTAMP(6)"/>
+            <column name="PLACE" type="VARCHAR2(50)"/>
+            <column name="AGREEMENT_ID" type="NUMBER(19,0)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_AGRMNT_SIGN_INFO" columnNames="ID, REV"
+                       constraintName="PK_AUD_AGRMNT_SIGN_INFO"/>
+        <addForeignKeyConstraint baseTableName="AUD_AGRMNT_SIGN_INFO" baseColumnNames="REV"
+                                 constraintName="FK_AUDAGRMNTSIGNINFO_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20190912 18:38" author="Dogukan Sahinturk">
+        <createTable tableName="AUD_AGRMNT_UNIT_PRICE">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="BILLING_ITEM" type="VARCHAR2(100)"/>
+            <column name="SERVICE_NAME" type="VARCHAR2(255)"/>
+            <column name="PRICE" type="NUMBER(6,2)"/>
+            <column name="CURRENCY" type="VARCHAR2(3)"/>
+            <column name="BASED_ON" type="VARCHAR2(19)"/>
+            <column name="VALIDITY_START_DATE" type="TIMESTAMP(6)"/>
+            <column name="UPDATE_PERIOD" type="NUMBER(3,0)"/>
+            <column name="RENEWAL_DATE_TYPE" type="VARCHAR2(19)"/>
+            <column name="VALIDITY_END_DATE" type="TIMESTAMP(6)"/>
+            <column name="PRICE_MODEL_ID" type="NUMBER(19,0)"/>
+            <column name="AGREEMENT_ID" type="NUMBER(19,0)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+            <column name="NOTES" type="VARCHAR2(255)"/>
+            <column name="EUR_REF" type="NUMBER(19,2)"/>
+            <column name="USD_REF" type="NUMBER(19,2)"/>
+            <column name="MINIMUM_WAGE_REF" type="NUMBER(19,2)"/>
+            <column name="INFLATION_REF" type="NUMBER(3,0)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_AGRMNT_UNIT_PRICE" columnNames="ID, REV"
+                       constraintName="PK_AUD_AGRMNT_UNIT_PRICE"/>
+        <addForeignKeyConstraint baseTableName="AUD_AGRMNT_UNIT_PRICE" baseColumnNames="REV"
+                                 constraintName="FK_AUDAGRMNTUNITPRICE_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20190912 18:48" author="Dogukan Sahinturk">
+        <renameTable oldTableName="KPI_INFO" newTableName="AGREEMENT_KPI_INFO"/>
+        <renameTable oldTableName="LETTER_OF_GUARENTEE" newTableName="AGREEMENT_LETTER_GRNT"/>
+        <renameTable oldTableName="OWNER_INFO" newTableName="AGREEMENT_OWNER_INFO"/>
+    </changeSet>
+
+    <changeSet id="20190912 18:49" author="Dogukan Sahinturk">
+        <createTable tableName="AUD_AGREEMENT_KPI_INFO">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="AGREEMENT_ID" type="NUMBER(19,0)"/>
+            <column name="NAME" type="VARCHAR2(255)"/>
+            <column name="TARGET" type="VARCHAR2(255)"/>
+            <column name="LAST_UPDATE_DATE" type="TIMESTAMP(6)"/>
+            <column name="UPDATE_PERIOD" type="NUMBER(2,0)"/>
+            <column name="RENEWAL_DATE_TYPE" type="VARCHAR2(19)"/>
+            <column name="NEXT_UPDATE_DATE" type="TIMESTAMP(6)"/>
+            <column name="ACTUAL" type="VARCHAR2(255)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_AGREEMENT_KPI_INFO" columnNames="ID, REV"
+                       constraintName="PK_AUD_AGRMNT_KPI_INFO"/>
+        <addForeignKeyConstraint baseTableName="AUD_AGREEMENT_KPI_INFO" baseColumnNames="REV"
+                                 constraintName="FK_AUDAGRMNTKPIINFO_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20190912 18:54" author="Dogukan Sahinturk">
+        <createTable tableName="AUD_AGRMNT_LETTER_GRNT">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="AGREEMENT_ID" type="NUMBER(19,0)"/>
+            <column name="SCOPE" type="VARCHAR2(255)"/>
+            <column name="CONTRACT_AMOUNT" type="FLOAT"/>
+            <column name="CURRENCY" type="VARCHAR2(3)"/>
+            <column name="VALIDITY_START_DATE" type="TIMESTAMP(6)"/>
+            <column name="VALIDITY_END_DATE" type="TIMESTAMP(6)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_AGRMNT_LETTER_GRNT" columnNames="ID, REV"
+                       constraintName="PK_AUD_AGRMNT_LETTER_GRNT"/>
+        <addForeignKeyConstraint baseTableName="AUD_AGRMNT_LETTER_GRNT" baseColumnNames="REV"
+                                 constraintName="FK_AUDAGRMNTLTTRGRNT_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20190912 19:00" author="Dogukan Sahinturk">
+        <createTable tableName="AUD_AGRMNT_OWNER_INFO">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="AGREEMENT_ID" type="NUMBER(19,0)"/>
+            <column name="CONTACT_ID" type="NUMBER(19,0)"/>
+            <column name="CONTACT_NAME" type="VARCHAR2(100)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+            <column name="RESPONSIBILITY_TYPE" type="VARCHAR2(25)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_AGRMNT_OWNER_INFO" columnNames="ID, REV"
+                       constraintName="PK_AUD_AGRMNT_OWNER_INFO"/>
+        <addForeignKeyConstraint baseTableName="AUD_AGRMNT_OWNER_INFO" baseColumnNames="REV"
+                                 constraintName="FK_AUDAGRMNTOWNERINFO_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20190913 12:05" author="Dogukan Sahinturk">
+        <dropColumn tableName="AUD_AGREEMENT_DOCUMENT" columnName="REVTYPE"/>
+        <dropColumn tableName="AUD_AGREEMENT_INS_INFO" columnName="REVTYPE"/>
+        <dropColumn tableName="AUD_AGREEMENT_LOGISTIC" columnName="REVTYPE"/>
+        <dropColumn tableName="AUD_AGREEMENT_NOTE" columnName="REVTYPE"/>
+        <dropColumn tableName="AUD_AGRMNT_PRICE_MODEL" columnName="REVTYPE"/>
+        <dropColumn tableName="AUD_AGRMNT_SIGN_INFO" columnName="REVTYPE"/>
+        <dropColumn tableName="AUD_AGRMNT_UNIT_PRICE" columnName="REVTYPE"/>
+        <dropColumn tableName="AUD_AGREEMENT_KPI_INFO" columnName="REVTYPE"/>
+        <dropColumn tableName="AUD_AGRMNT_LETTER_GRNT" columnName="REVTYPE"/>
+        <dropColumn tableName="AUD_AGRMNT_OWNER_INFO" columnName="REVTYPE"/>
+    </changeSet>
+
+    <changeSet id="20190913 12:17" author="Dogukan Sahinturk">
+        <addColumn tableName="AUD_AGREEMENT_DOCUMENT">
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="AUD_AGREEMENT_INS_INFO">
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="AUD_AGREEMENT_NOTE">
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="AUD_AGRMNT_PRICE_MODEL">
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="AUD_AGRMNT_SIGN_INFO">
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="AUD_AGRMNT_UNIT_PRICE">
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="AUD_AGREEMENT_KPI_INFO">
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="AUD_AGRMNT_LETTER_GRNT">
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="AUD_AGRMNT_OWNER_INFO">
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    
+    <changeSet id="20190913 12:27" author="Dogukan Sahinturk">
+        <createTable tableName="AUD_AGREEMENT_SERVICE_AREA">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SET_ORDINAL" type="NUMBER(3,0)"/>
+            <column name="AGREEMENT_ID" type="NUMBER(19,0)"/>
+            <column name="SERVICE_AREA" type="VARCHAR2(50)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_AGREEMENT_SERVICE_AREA" columnNames="AGREEMENT_ID, REV"
+                       constraintName="PK_AUD_AGRMNT_SRVC_AREA"/>
+        <addForeignKeyConstraint baseTableName="AUD_AGREEMENT_SERVICE_AREA" baseColumnNames="REV"
+                                 constraintName="FK_AUDAGRMNTSRVCAREA_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20190913 12:32" author="Dogukan Sahinturk">
+        <renameColumn tableName="AUD_AGREEMENT_SERVICE_AREA" oldColumnName="SET_ORDINAL" newColumnName="SETORDINAL"/>
+    </changeSet>
+
+    <changeSet id="20190913 12:35" author="Dogukan Sahinturk">
+        <addColumn tableName="AUD_AGREEMENT_SERVICE_AREA">
+            <column name="NAME" type="VARCHAR2(25)"/>
+        </addColumn>
+        <renameColumn tableName="AUD_AGREEMENT_SERVICE_AREA" oldColumnName="SERVICE_AREA" newColumnName="CODE" />
+    </changeSet>
+
+    <changeSet id="20190913 12:38" author="Dogukan Sahinturk">
+        <dropPrimaryKey tableName="AUD_AGREEMENT_SERVICE_AREA"/>
+        <addPrimaryKey tableName="AUD_AGREEMENT_SERVICE_AREA" columnNames="AGREEMENT_ID, REV, CODE"
+                       constraintName="PK_AUD_AGRMNT_SRVC_AREA"/>
+    </changeSet>
+
+    <changeSet id="20190918 11:57" author="Dogukan Sahinturk">
+        <renameTable oldTableName="OWNER_INFO_SERVICE_AREA" newTableName="AGRMNT_OWNER_I_SERVICE_A" />
+        <createTable tableName="AUD_AGRMNT_OWNER_I_SERVICE_A">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="OWNER_INFO_ID" type="NUMBER(19,0)"/>
+            <column name="CODE" type="VARCHAR2(50)"/>
+            <column name="NAME" type="VARCHAR2(25)"/>
+            <column name="SETORDINAL" type="NUMBER(3,0)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_AGRMNT_OWNER_I_SERVICE_A" columnNames="OWNER_INFO_ID, CODE, REV"
+                       constraintName="PK_AUD_AGRMNT_OWNER_SERVICE"/>
+        <addForeignKeyConstraint baseTableName="AUD_AGRMNT_OWNER_I_SERVICE_A" baseColumnNames="REV"
+                                 constraintName="FK_AUDAGRMNTOWNERSRVCAREA_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20190918 13:20" author="Dogukan Sahinturk">
+        <dropTable tableName="AUD_AGREEMENT_NOTE" />
+        <dropTable tableName="AUD_AGREEMENT_DOCUMENT" />
+    </changeSet>
+    
+    <changeSet id="20190920 11:01" author="Dogukan Sahinturk">
+        <addColumn tableName="AGREEMENT_PRICE_ADP_MODEL">
+            <column name="VALIDITY_END_DATE" type="TIMESTAMP(6)"/>
+        </addColumn>
+        <addColumn tableName="AUD_AGRMNT_PRICE_MODEL">
+            <column name="VALIDITY_END_DATE" type="TIMESTAMP(6)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20191017 16:51" author="Dogukan Sahinturk">
+        <modifyDataType tableName="AGREEMENT_UNIT_PRICE" columnName="PRICE" newDataType="NUMBER(19,6)"/>
+        <modifyDataType tableName="AGREEMENT_UNIT_PRICE" columnName="EUR_REF" newDataType="NUMBER(23,6)"/>
+        <modifyDataType tableName="AGREEMENT_UNIT_PRICE" columnName="USD_REF" newDataType="NUMBER(23,6)"/>
+    </changeSet>
+
+    <changeSet id="20191017 17:09" author="Dogukan Sahinturk">
+        <modifyDataType tableName="AUD_AGRMNT_UNIT_PRICE" columnName="PRICE" newDataType="NUMBER(19,6)"/>
+        <modifyDataType tableName="AUD_AGRMNT_UNIT_PRICE" columnName="EUR_REF" newDataType="NUMBER(23,6)"/>
+        <modifyDataType tableName="AUD_AGRMNT_UNIT_PRICE" columnName="USD_REF" newDataType="NUMBER(23,6)"/>
+    </changeSet>
+    
+    <changeSet id="20191114 16:02" author="Dogukan Sahinturk">
+        <modifyDataType tableName="AGREEMENT_UNIT_PRICE" columnName="BASED_ON" newDataType="VARCHAR2(25)"/>
+    </changeSet>
+
+    <changeSet id="20191114 16:04" author="Dogukan Sahinturk">
+        <modifyDataType tableName="AUD_AGRMNT_UNIT_PRICE" columnName="BASED_ON" newDataType="VARCHAR2(25)"/>
+    </changeSet>
+
+    <changeSet id="20200122 14:21" author="Dogukan Sahinturk">
+        <addColumn tableName="AGREEMENT">
+            <column name="CREATED_BY" type="VARCHAR2(100)"/>
+            <column name="CREATED_AT" type="TIMESTAMP(6)"/>
+        </addColumn>
+        <addColumn tableName="AUD_AGREEMENT">
+            <column name="CREATED_BY" type="VARCHAR2(100)"/>
+            <column name="CREATED_AT" type="TIMESTAMP(6)"/>
+        </addColumn>
+    </changeSet>
+    
+    <changeSet id="20200128 16:53" author="Dogukan Sahinturk">
+        <modifyDataType tableName="AGREEMENT" columnName="NUMBER_OF_PAPERS" newDataType="NUMBER(3,0)"/>
+        <modifyDataType tableName="AUD_AGREEMENT" columnName="NUMBER_OF_PAPERS" newDataType="NUMBER(3,0)"/>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,51 @@
+server:
+  port: 8902
+
+spring:
+  rabbitmq:
+    host: 10.1.70.92
+    port: 5672
+  redis:
+    host: 10.1.70.92
+    port: 6379
+
+neo4j:
+  url: http://neo4j:1234@10.1.70.92:7475
+  username: neo4j
+  password: 1234
+
+oneorder:
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    jdbcUrl: jdbc:oracle:thin:@//10.1.70.92:49161/xe
+    username: authorization
+    password: 1234
+
+security:
+  host: 10.1.70.92
+  oauth2:
+    client:
+      checkTokenUri: http://${security.host}:9999/auth/oauth/check_token
+      accessTokenUri: http://${security.host}:9999/auth/oauth/token
+      userAuthorizationUri: http://${security.host}:9999/auth/oauth/authorize
+      clientId: oneorder
+      clientSecret: oneorder
+      scope: oneorder
+    resource:
+      userInfoUri: http://${security.host}:9999/auth/user
+
+eureka:
+  client:
+    registerWithEureka: false
+    serviceUrl:
+      defaultZone: http://10.1.70.92:8761/eureka/
+
+
+logging:
+  level:
+    org:
+      zalando:
+        logbook: TRACE
+
+swagger:
+  enabled: true

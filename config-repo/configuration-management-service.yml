@@ -1,0 +1,154 @@
+server:
+  port: 0
+
+management:
+  security:
+    enabled: false
+
+swagger:
+  enabled: true
+
+spring:
+  cache:
+    cache-names:
+      - configuration-management-options
+    ttl:
+      configuration-management-options: 604800
+
+---
+spring:
+  profiles: dev
+  data:
+    mongodb:
+      host: 10.1.70.92
+      port: 27017
+      database: configuration-management
+      authentication-database: configuration-management
+      mechanism: SCRAM-SHA-1
+  rabbitmq:
+    host: 10.1.70.92
+    port: 5672
+  redis:
+    host: 10.1.70.92
+    port: 6379
+
+security:
+  host: 10.1.70.92
+  oauth2:
+    client:
+      checkTokenUri: http://${security.host}:9999/auth/oauth/check_token
+      accessTokenUri: http://${security.host}:9999/auth/oauth/token
+      userAuthorizationUri: http://${security.host}:9999/auth/oauth/authorize
+      clientId: oneorder
+      clientSecret: oneorder
+      scope: oneorder
+    resource:
+      userInfoUri: http://${security.host}:9999/auth/user
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://10.1.70.92:8761/eureka/
+
+---
+spring:
+  profiles: test
+  data:
+    mongodb:
+      host: 10.1.69.156
+      port: 27017
+      database: configuration-management
+      authentication-database: admin
+      mechanism: SCRAM-SHA-1
+      username: root
+      password: one+order
+  rabbitmq:
+    host: 10.1.69.156
+    port: 5672
+  redis:
+    host: 10.1.69.156
+    port: 6379
+    password: one+order
+
+security:
+  host: oneorder-test.ekol.com
+  oauth2:
+    client:
+      checkTokenUri: https://${security.host}:9999/auth/oauth/check_token
+      accessTokenUri: https://${security.host}:9999/auth/oauth/token
+      userAuthorizationUri: https://${security.host}:9999/auth/oauth/authorize
+      clientId: oneorder
+      clientSecret: oneorder
+      scope: oneorder
+    resource:
+      userInfoUri: https://${security.host}:9999/auth/user
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://10.1.69.156:8761/eureka/
+      
+---
+spring:
+  profiles: prod
+  data:
+    mongodb:
+      host: 10.1.70.244
+      port: 27017
+      database: configuration-management
+      authentication-database: admin
+      mechanism: SCRAM-SHA-1
+      username: root
+      password: one+order
+  rabbitmq:
+    host: 10.1.70.244
+    port: 5672
+  redis:
+    host: 10.1.70.244
+    port: 6379
+    password: one+order
+
+security:
+  host: oneorder.ekol.com
+  oauth2:
+    client:
+      checkTokenUri: https://${security.host}:9999/auth/oauth/check_token
+      accessTokenUri: https://${security.host}:9999/auth/oauth/token
+      userAuthorizationUri: https://${security.host}:9999/auth/oauth/authorize
+      clientId: oneorder
+      clientSecret: oneorder
+      scope: oneorder
+    resource:
+      userInfoUri: https://${security.host}:9999/auth/user
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://10.1.69.85:8761/eureka/
+
+---
+spring:
+  profiles: integration
+  rabbitmq:
+    host: 10.1.70.92
+    port: 5672
+  redis:
+    host: 10.1.70.92
+    port: 6379
+
+security:
+  host: localhost
+  oauth2:
+    client:
+      checkTokenUri: http://${security.host}:9999/auth/oauth/check_token
+      accessTokenUri: http://${security.host}:9999/auth/oauth/token
+      userAuthorizationUri: http://${security.host}:9999/auth/oauth/authorize
+      clientId: oneorder
+      clientSecret: oneorder
+      scope: oneorder
+    resource:
+      userInfoUri: http://${security.host}:9999/auth/user
+
+eureka:
+  client:
+    enabled: false

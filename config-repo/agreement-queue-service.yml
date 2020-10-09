@@ -1,0 +1,148 @@
+server:
+  port: 0
+
+management:
+  security:
+    enabled: false
+
+swagger:
+  enabled: true
+
+eureka:
+  client:
+    initialInstanceInfoReplicationIntervalSeconds: 5
+    registryFetchIntervalSeconds: 10
+
+oneorder:
+  consecutiveErrorThreshold: 3
+  backOff:
+    delay: 5000
+
+security:
+  oauth2:
+    client:
+      checkTokenUri: ${security.host}/auth/oauth/check_token
+      accessTokenUri: ${security.host}/auth/oauth/token
+      userAuthorizationUri: ${security.host}/auth/oauth/authorize
+      clientId: oneorder
+      clientSecret: oneorder
+      scope: oneorder
+    resource:
+      userInfoUri: ${security.host}/auth/user
+
+---
+spring:
+  profiles: dev
+  data:
+    mongodb:
+      host: 10.1.70.92
+      port: 27017
+      database: agreement-queue
+      authentication-database: agreement-queue
+      mechanism: SCRAM-SHA-1
+  redis:
+    host: 10.1.70.92
+    port: 6379
+  rabbitmq:
+    host: 10.1.70.92
+    port: 5672
+
+security:
+  host: http://10.1.70.92:9999
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://10.1.70.92:8761/eureka/
+
+rainbow:
+  agreement:
+    endpoint: http://edison.ekol.com:3010/orawsv/WMSWS/WSC_BF_UNIT_PRICE
+    username: SCH_WS
+    password: acDX65T2DUWG4KQx3vva
+
+---
+spring:
+  profiles: test
+  data:
+    mongodb:
+      host: 10.1.69.156
+      port: 27017
+      database: agreement-queue
+      authentication-database: admin
+      mechanism: SCRAM-SHA-1
+      username: root
+      password: one+order
+  redis:
+    host: 10.1.69.156
+    port: 6379
+    password: one+order
+  rabbitmq:
+    host: 10.1.69.156
+    port: 5672
+
+security:
+  host: https://oneorder-test.ekol.com:9999
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://10.1.69.156:8761/eureka/
+
+rainbow:
+  agreement:
+    endpoint: http://edison.ekol.com:3010/orawsv/WMSWS/WSC_BF_UNIT_PRICE
+    username: SCH_WS
+    password: acDX65T2DUWG4KQx3vva
+
+---
+spring:
+  profiles: prod
+  data:
+    mongodb:
+      host: 10.1.70.244
+      port: 27017
+      database: agreement-queue
+      authentication-database: admin
+      mechanism: SCRAM-SHA-1
+      username: root
+      password: one+order
+  redis:
+    host: 10.1.70.244
+    port: 6379
+    password: one+order
+  rabbitmq:
+    host: 10.1.70.244
+    port: 5672
+
+security:
+  host: https://oneorder.ekol.com:9999
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://10.1.69.85:8761/eureka/
+
+rainbow:
+  agreement:
+    endpoint: http://hertz.ekol.com:3010/orawsv/WMSWS/WSC_BF_UNIT_PRICE
+    username: SCH_WS
+    password: acDX65T2DUWG4KQx3vva
+
+---
+spring:
+  profiles: integration
+  rabbitmq:
+    host: 10.1.70.92
+    port: 5672
+
+redis:
+  host: 10.1.70.92
+  port: 6379
+
+security:
+  host: http://localhost:9999
+
+eureka:
+  client:
+    enabled: false

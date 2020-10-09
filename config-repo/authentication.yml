@@ -1,0 +1,103 @@
+server:
+  port: 9999
+  contextPath: /auth
+
+ldap:
+  url : ldaps://dc-kardelen.ekol.com:636
+  domain : ekol.com
+  username : OneOrder
+  password : O12346o
+
+spring:
+  jackson:
+    serialization:
+      write_dates_as_timestamps: false
+  jpa:
+    properties:
+      org.hibernate.envers.audit_table_prefix: AUD_
+      org.hibernate.envers.audit_table_suffix:
+      hibernate:
+        physical_naming_strategy: ekol.hibernate5.config.HibernateNamingStrategy
+        implicit_naming_strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
+        dialect: org.hibernate.dialect.Oracle10gDialect
+        id:
+          new_generator_mappings: true
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+  datasource:
+      max-wait: 10000
+      max-active: 5
+      test-on-borrow: false
+
+liquibase:
+  changeLog: classpath:/db/changelog.xml
+  contexts: local
+
+eureka:
+  client:
+    initialInstanceInfoReplicationIntervalSeconds: 5
+    registryFetchIntervalSeconds: 10
+
+---
+spring:
+  profiles: dev
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://10.1.70.92:8761/eureka/
+
+oneorder:
+  updateRefreshTokenLastLoginTime: true
+  resourcepath: //10.1.70.92/static
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    jdbcUrl : jdbc:oracle:thin:@//10.1.70.92:49161/xe
+    username : usermgr
+    password : 1234
+
+liquibase:
+  contexts: dev
+---
+spring:
+  profiles: test
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://10.1.69.156:8761/eureka/
+
+oneorder:
+  updateRefreshTokenLastLoginTime: true
+  resourcepath: //oneorder-test.ekol.com/static
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    jdbcUrl : jdbc:oracle:thin:@//10.1.69.156:49161/xe
+    username : oneorder
+    password : one+order
+
+liquibase:
+  contexts: test
+---
+spring:
+  profiles: prod
+
+eureka:
+  client:
+    registryFetchIntervalSeconds: 15
+    serviceUrl:
+      defaultZone: http://10.1.69.85:8761/eureka/
+
+oneorder:
+  updateRefreshTokenLastLoginTime: true
+  resourcepath: //oneorder.ekol.com/ui/static
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    jdbcUrl : jdbc:oracle:thin:@//10.1.70.6:1521/KD01.QUADRO
+    username : oneorder
+    password : dsRQT2aQY3EHqBb93sHQ
+
+liquibase:
+  contexts: prod
+

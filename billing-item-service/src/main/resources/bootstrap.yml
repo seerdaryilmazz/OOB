@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: billing-item-service
+  cloud:
+    config:
+      uri: http://localhost:8090
+
+---
+spring:
+  profiles: dev
+  cloud:
+    config:
+      uri: http://10.1.70.92:8090
+
+---
+spring:
+  profiles: test
+  cloud:
+    config:
+      uri: http://10.1.69.156:8090

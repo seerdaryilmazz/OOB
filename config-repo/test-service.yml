@@ -1,0 +1,111 @@
+server:
+  port: 0
+
+spring:
+  jackson:
+    serialization:
+      write_dates_as_timestamps: false
+  jpa:
+    properties:
+      org.hibernate.envers.audit_table_prefix: AUD_
+      org.hibernate.envers.audit_table_suffix:
+      hibernate:
+        physical_naming_strategy: ekol.hibernate5.config.HibernateNamingStrategy
+        implicit_naming_strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
+        dialect: org.hibernate.dialect.Oracle10gDialect
+        id:
+          new_generator_mappings: true
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+  datasource:
+      max-wait: 10000
+      max-active: 5
+      test-on-borrow: false
+  cloud:
+    config:
+      allowOverride: true
+
+
+management:
+  security:
+    enabled: false
+
+---
+spring:
+  profiles: dev
+  rabbitmq:
+    host: 10.1.70.92
+    port: 5672
+
+security:
+  host: 10.1.70.92
+  oauth2:
+    client:
+      accessTokenUri: http://${security.host}:9999/auth/oauth/token
+      userAuthorizationUri: http://${security.host}:9999/auth/oauth/authorize
+      clientId: oneorder
+      clientSecret: oneorder
+      scope: oneorder
+    resource:
+      userInfoUri: http://${security.host}:9999/auth/user
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://10.1.70.92:8761/eureka/
+
+---
+spring:
+  profiles: test
+  rabbitmq:
+    host: 10.1.69.156
+    port: 5672
+
+security:
+  host: oneorder-test.ekol.com
+  oauth2:
+    client:
+      accessTokenUri: http://${security.host}:9999/auth/oauth/token
+      userAuthorizationUri: http://${security.host}:9999/auth/oauth/authorize
+      clientId: oneorder
+      clientSecret: oneorder
+      scope: oneorder
+    resource:
+      userInfoUri: http://${security.host}:9999/auth/user
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://10.1.69.156:8761/eureka/
+
+---
+spring:
+  profiles: prod
+  rabbitmq:
+    host: 10.1.70.244
+    port: 5672
+
+security:
+  host: 10.1.69.85
+  oauth2:
+    client:
+      accessTokenUri: http://${security.host}:9999/auth/oauth/token
+      userAuthorizationUri: http://${security.host}:9999/auth/oauth/authorize
+      clientId: oneorder
+      clientSecret: oneorder
+      scope: oneorder
+    resource:
+      userInfoUri: http://${security.host}:9999/auth/user
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://10.1.69.85:8761/eureka/
+
+---
+spring:
+  profiles: integration
+
+liquibase:
+  changeLog: classpath:/db/changelog-integration-test.xml

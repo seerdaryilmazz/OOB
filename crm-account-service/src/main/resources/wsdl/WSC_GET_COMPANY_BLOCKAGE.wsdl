@@ -1,0 +1,70 @@
+<definitions name="WSC_GET_COMPANY_BLOCKAGE"
+    targetNamespace="http://xmlns.oracle.com/orawsv/QUADRO_INTERFACE/WSC_GET_COMPANY_BLOCKAGE"
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:tns="http://xmlns.oracle.com/orawsv/QUADRO_INTERFACE/WSC_GET_COMPANY_BLOCKAGE"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <types>
+    <xsd:schema targetNamespace="http://xmlns.oracle.com/orawsv/QUADRO_INTERFACE/WSC_GET_COMPANY_BLOCKAGE"
+     elementFormDefault="qualified">
+      <xsd:element name="WSC_GET_COMPANY_BLOCKAGEInput">
+        <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="I_COMPANY_ID-VARCHAR2-IN" type="xsd:string"/>
+              <xsd:element name="O_BLOCKAGE_CODE-VARCHAR2-OUT">
+                <xsd:complexType/>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:complexType>
+      </xsd:element>
+
+
+      <xsd:element name="WSC_GET_COMPANY_BLOCKAGEOutput">
+        <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="O_BLOCKAGE_CODE" type="xsd:string"/>
+            </xsd:sequence>
+          </xsd:complexType>
+      </xsd:element>
+   </xsd:schema>
+  </types>
+
+  <message name="WSC_GET_COMPANY_BLOCKAGEInputMessage">
+    <part name="parameters" element="tns:WSC_GET_COMPANY_BLOCKAGEInput"/>
+  </message>
+
+  <message name="WSC_GET_COMPANY_BLOCKAGEOutputMessage">
+    <part name="parameters" element="tns:WSC_GET_COMPANY_BLOCKAGEOutput"/>
+  </message>
+
+  <portType name="WSC_GET_COMPANY_BLOCKAGEPortType">
+  <operation name="WSC_GET_COMPANY_BLOCKAGE">
+      <input message="tns:WSC_GET_COMPANY_BLOCKAGEInputMessage"/>
+      <output message="tns:WSC_GET_COMPANY_BLOCKAGEOutputMessage"/>
+    </operation>
+  </portType>
+
+  <binding name="WSC_GET_COMPANY_BLOCKAGEBinding"
+           type="tns:WSC_GET_COMPANY_BLOCKAGEPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="WSC_GET_COMPANY_BLOCKAGE">
+      <soap:operation
+ soapAction="WSC_GET_COMPANY_BLOCKAGE"/>
+      <input>
+        <soap:body parts="parameters" use="literal"/>
+      </input>
+      <output>
+        <soap:body parts="parameters" use="literal"/>
+      </output>
+    </operation>
+  </binding>
+
+  <service name="WSC_GET_COMPANY_BLOCKAGEService">
+    <documentation>Oracle Web Service</documentation>
+    <port name="WSC_GET_COMPANY_BLOCKAGEPort" binding="tns:WSC_GET_COMPANY_BLOCKAGEBinding">
+       <soap:address 
+             location="http://hertz:3010/orawsv/QUADRO_INTERFACE/WSC_GET_COMPANY_BLOCKAGE"/>
+     </port>
+  </service>
+
+</definitions>

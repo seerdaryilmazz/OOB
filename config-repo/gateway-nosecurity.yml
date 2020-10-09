@@ -1,0 +1,87 @@
+server:
+  port: 8760
+
+info:
+  component: Zuul Server No Security
+
+zuul:
+  sensitiveHeaders: Cookie,Set-Cookie
+
+security:
+  ignored: /**
+
+endpoints:
+  restart:
+    enabled: false
+  shutdown:
+    enabled: false
+  health:
+    sensitive: false
+
+# Yeni spring-boot versiyonu ile artık konfigürasyon böyle yapılıyor.
+spring:
+  http:
+    multipart:
+      maxFileSize: 10Mb
+      maxRequestSize: 10Mb
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 15000
+ribbon:
+  ReadTimeout: 15000
+
+eureka:
+  client:
+    initialInstanceInfoReplicationIntervalSeconds: 5
+    registryFetchIntervalSeconds: 10
+
+---
+spring:
+  profiles: dev
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://10.1.70.92:8761/eureka/
+
+
+zuul:
+  routes:
+    home-ui:
+      path: /
+      url: http://10.1.70.92:8091
+
+---
+spring:
+  profiles: test
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://10.1.69.156:8761/eureka/
+
+zuul:
+  routes:
+    home-ui:
+      path: /
+      url: http://10.1.69.156:8091
+
+---
+spring:
+  profiles: prod
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://10.1.69.85:8761/eureka/
+
+zuul:
+  routes:
+    home-ui:
+      path: /
+      url: http://10.1.69.85:8091

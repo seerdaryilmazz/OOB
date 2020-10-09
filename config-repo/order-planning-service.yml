@@ -1,0 +1,164 @@
+server:
+  port: 0
+
+spring:
+  jpa:
+    properties:
+      hibernate:
+        physical_naming_strategy: ekol.hibernate5.config.HibernateNamingStrategy
+        implicit_naming_strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
+        dialect: org.hibernate.dialect.Oracle10gDialect
+        id:
+          new_generator_mappings: true
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+  datasource:
+      max-wait: 10000
+      max-active: 3
+      test-on-borrow: false
+
+management:
+  security:
+    enabled: false
+
+
+liquibase:
+  changeLog: classpath:/db/changelog.xml
+  contexts: local
+
+
+multipart:
+  maxFileSize: 100MB
+  maxRequestSize: 100MB
+
+swagger:
+  enabled: true
+
+eureka:
+  client:
+    initialInstanceInfoReplicationIntervalSeconds: 5
+    registryFetchIntervalSeconds: 10
+
+---
+spring:
+  profiles: dev
+  data:
+    elasticsearch:
+      cluster-nodes: 10.1.70.92:9301
+  rabbitmq:
+    host: 10.1.70.92
+    port: 5672
+
+redis:
+  host: 10.1.70.92
+  port: 6379
+
+oneorder:
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    jdbcUrl: jdbc:oracle:thin:@//10.1.70.92:49161/xe
+    username: orderplanning
+    password: 1234
+
+security:
+  host: 10.1.70.92
+  oauth2:
+    client:
+      checkTokenUri: http://${security.host}:9999/auth/oauth/check_token
+      accessTokenUri: http://${security.host}:9999/auth/oauth/token
+      userAuthorizationUri: http://${security.host}:9999/auth/oauth/authorize
+      clientId: oneorder
+      clientSecret: oneorder
+      scope: oneorder
+    resource:
+      userInfoUri: http://${security.host}:9999/auth/user
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://10.1.70.92:8761/eureka/
+
+liquibase:
+  contexts: dev
+---
+spring:
+  profiles: test
+  data:
+    elasticsearch:
+      cluster-nodes: 10.1.69.156:9300
+  rabbitmq:
+    host: 10.1.69.156
+    port: 5672
+
+redis:
+  host: 10.1.69.156
+  port: 6379
+  password: one+order
+
+oneorder:
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    jdbcUrl : jdbc:oracle:thin:@//10.1.69.156:49161/xe
+    username : oneorder
+    password : one+order
+
+security:
+  host: oneorder-test.ekol.com
+  oauth2:
+    client:
+      checkTokenUri: https://${security.host}:9999/auth/oauth/check_token
+      accessTokenUri: https://${security.host}:9999/auth/oauth/token
+      userAuthorizationUri: https://${security.host}:9999/auth/oauth/authorize
+      clientId: oneorder
+      clientSecret: oneorder
+      scope: oneorder
+    resource:
+      userInfoUri: https://${security.host}:9999/auth/user
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://10.1.69.156:8761/eureka/
+
+liquibase:
+  contexts: test
+---
+spring:
+  profiles: integration
+  data:
+    elasticsearch:
+      cluster-nodes: localhost:${test-elastic.port}
+  rabbitmq:
+    host: 10.1.70.92
+    port: 5672
+
+redis:
+  host: 10.1.70.92
+  port: 6379
+
+oneorder:
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    jdbcUrl: jdbc:oracle:thin:@//localhost:${test-database.port}/xe
+    username: system
+    password: oracle
+
+security:
+  host: localhost
+  oauth2:
+    client:
+      checkTokenUri: http://${security.host}:9999/auth/oauth/check_token
+      accessTokenUri: http://${security.host}:9999/auth/oauth/token
+      userAuthorizationUri: http://${security.host}:9999/auth/oauth/authorize
+      clientId: oneorder
+      clientSecret: oneorder
+      scope: oneorder
+    resource:
+      userInfoUri: http://${security.host}:9999/auth/user
+
+eureka:
+  client:
+    enabled: false
+
+liquibase:
+  contexts: integration

@@ -1,0 +1,162 @@
+server:
+  port: 8765
+
+info:
+  component: Zuul Server
+
+endpoints:
+  restart:
+    enabled: true
+  shutdown:
+    enabled: true
+  health:
+    sensitive: false
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 30000
+ribbon:
+  ReadTimeout: 30000
+
+eureka:
+  client:
+    initialInstanceInfoReplicationIntervalSeconds: 5
+    registryFetchIntervalSeconds: 10
+    
+management:
+  security:
+    enabled: false
+  metrics:
+    export:
+      influx:
+        enabled: false
+        uri: http://localhost:8086
+        db: oneorder
+        step: PT30S
+        
+---
+    
+spring:
+  profiles: dev
+  redis:
+    host: 10.1.70.92
+    port: 6379
+
+oneorder:
+  gateway:
+    authorize-ui: true
+    
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://10.1.70.92:8761/eureka/
+
+security:
+  host: 10.1.70.92
+  logoutUri: http://${security.host}:9999/auth/logout_page
+  oauth2:
+    client:
+      checkTokenUri: http://${security.host}:9999/auth/oauth/check_token
+      accessTokenUri: http://${security.host}:9999/auth/oauth/token
+      userAuthorizationUri: http://${security.host}:9999/auth/oauth/authorize
+      clientId: oneorder
+      clientSecret: oneorder
+      scope: oneorder
+    resource:
+      userInfoUri: http://${security.host}:9999/auth/user
+
+zuul:
+  routes:
+    ui:
+      path: /ui/**
+      url: http://10.1.70.92
+    static:
+      path: /ui/static/**
+      url: http://10.1.70.92/static
+
+
+---
+spring:
+  profiles: test
+  redis:
+      host: 10.1.69.156
+      port: 6379
+      password: one+order
+
+oneorder:
+  gateway:
+    authorize-ui: true
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://10.1.69.156:8761/eureka/
+
+security:
+  host: oneorder-test.ekol.com
+  logoutUri: https://${security.host}:9999/auth/logout_page
+  oauth2:
+    client:
+      checkTokenUri: https://${security.host}:9999/auth/oauth/check_token
+      accessTokenUri: https://${security.host}:9999/auth/oauth/token
+      userAuthorizationUri: https://${security.host}:9999/auth/oauth/authorize
+      clientId: oneorder
+      clientSecret: oneorder
+      scope: oneorder
+    resource:
+      userInfoUri: https://${security.host}:9999/auth/user
+
+zuul:
+  routes:
+    ui:
+      path: /ui/**
+      url: http://10.1.69.156
+    static:
+      path: /static/**
+      url: http://10.1.69.156/static
+
+---
+spring:
+  profiles: prod
+  redis:
+    host: 10.1.70.244
+    port: 6379
+    password: one+order
+
+eureka:
+  client:
+    registryFetchIntervalSeconds: 15
+    serviceUrl:
+      defaultZone: http://10.1.69.85:8761/eureka/
+
+security:
+  host: oneorder.ekol.com
+  logoutUri: https://${security.host}:9999/auth/logout_page
+  oauth2:
+    client:
+      checkTokenUri: https://${security.host}:9999/auth/oauth/check_token
+      accessTokenUri: https://${security.host}:9999/auth/oauth/token
+      userAuthorizationUri: https://${security.host}:9999/auth/oauth/authorize
+      clientId: oneorder
+      clientSecret: oneorder
+      scope: oneorder
+    resource:
+      userInfoUri: https://${security.host}:9999/auth/user
+
+management:
+  metrics:
+    export:
+      influx:
+        enabled: true
+        uri: http://10.1.70.244:8086
+
+zuul:
+  routes:
+    ui:
+      path: /ui/**
+      url: https://oneorder.ekol.com/app/
+

@@ -1,0 +1,158 @@
+<definitions name="WSC_GET_COMPANY_CR_INFO_P"
+    targetNamespace="http://xmlns.oracle.com/orawsv/QUADRO_INTERFACE/WSC_GET_COMPANY_CR_INFO_P"
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:tns="http://xmlns.oracle.com/orawsv/QUADRO_INTERFACE/WSC_GET_COMPANY_CR_INFO_P"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <types>
+    <xsd:schema targetNamespace="http://xmlns.oracle.com/orawsv/QUADRO_INTERFACE/WSC_GET_COMPANY_CR_INFO_P"
+     elementFormDefault="qualified">
+      <xsd:element name="WSC_GET_COMPANY_CR_INFO_PInput">
+        <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="I_OO_CMP_ID-NUMBER-IN" type="xsd:double"/>
+              <xsd:element name="O_RECORDS-WSC_COMPANY_CR_RESULT_W-COUT">
+                <xsd:complexType/>
+              </xsd:element>
+              <xsd:element name="O_RESULT-VARCHAR2-OUT">
+                <xsd:complexType/>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:complexType>
+      </xsd:element>
+
+
+      <xsd:element name="WSC_GET_COMPANY_CR_INFO_POutput">
+        <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="O_RECORDS" type="tns:WSC_COMPANY_CR_RESULT_WType"/>
+              <xsd:element name="O_RESULT" type="xsd:string"/>
+            </xsd:sequence>
+          </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="WSC_COMPANY_CR_RESULT_WType">
+        <xsd:sequence>
+          <xsd:element name="WSC_COMPANY_CR_RESULT_W">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="RECORDS">
+                  <xsd:complexType>
+                    <xsd:sequence>
+                      <xsd:element name="COMPANY_CR_INFO_RS" type="tns:COMPANY_CR_INFO_RS_IntType" maxOccurs="5000" minOccurs="0"/>
+                    </xsd:sequence>
+                  </xsd:complexType>
+                </xsd:element>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="COMPANY_CR_INFO_RS_IntType">
+        <xsd:sequence>
+          <xsd:element name="DEFAULT_ACCOUNTABLE">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="1"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="USER_CODE">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="20"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="USER_NAME">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="40"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="EMAIL">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="100"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="PHONE_01">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="20"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="WORK_AREA">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="20"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="SERVICE_GROUP_CODE">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="50"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="STATUS">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="40"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="QUADRO_COMPANY_CODE">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="20"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+   </xsd:schema>
+  </types>
+
+  <message name="WSC_GET_COMPANY_CR_INFO_PInputMessage">
+    <part name="parameters" element="tns:WSC_GET_COMPANY_CR_INFO_PInput"/>
+  </message>
+
+  <message name="WSC_GET_COMPANY_CR_INFO_POutputMessage">
+    <part name="parameters" element="tns:WSC_GET_COMPANY_CR_INFO_POutput"/>
+  </message>
+
+  <portType name="WSC_GET_COMPANY_CR_INFO_PPortType">
+  <operation name="WSC_GET_COMPANY_CR_INFO_P">
+      <input message="tns:WSC_GET_COMPANY_CR_INFO_PInputMessage"/>
+      <output message="tns:WSC_GET_COMPANY_CR_INFO_POutputMessage"/>
+    </operation>
+  </portType>
+
+  <binding name="WSC_GET_COMPANY_CR_INFO_PBinding"
+           type="tns:WSC_GET_COMPANY_CR_INFO_PPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="WSC_GET_COMPANY_CR_INFO_P">
+      <soap:operation
+ soapAction="WSC_GET_COMPANY_CR_INFO_P"/>
+      <input>
+        <soap:body parts="parameters" use="literal"/>
+      </input>
+      <output>
+        <soap:body parts="parameters" use="literal"/>
+      </output>
+    </operation>
+  </binding>
+
+  <service name="WSC_GET_COMPANY_CR_INFO_PService">
+    <documentation>Oracle Web Service</documentation>
+    <port name="WSC_GET_COMPANY_CR_INFO_PPort" binding="tns:WSC_GET_COMPANY_CR_INFO_PBinding">
+       <soap:address 
+             location="http://hertz:3010/orawsv/QUADRO_INTERFACE/WSC_GET_COMPANY_CR_INFO_P"/>
+     </port>
+  </service>
+
+</definitions>

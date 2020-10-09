@@ -1,0 +1,360 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <property name="DB_OWNER" value="AUTHORIZATION" context="dev,local"/>
+    <property name="DB_OWNER" value="ONEORDER" context="test,prod"/>
+    <property name="DB_OWNER" value="SYSTEM" context="integration"/>
+
+    <changeSet id="20170227 14:43:01" author="Ozer Senturk">
+
+        <createTable tableName="OPERATION">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_OPERATION"/>
+            </column>
+
+            <column name="NAME" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+    </changeSet>
+
+    <changeSet id="20170227 14:46:01" author="Ozer Senturk">
+
+        <createSequence sequenceName="SEQ_OPERATION" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20170227 14:49:01" author="Ozer Senturk">
+
+        <createTable tableName="OPERATION_URL">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_OPERATION_URL"/>
+            </column>
+
+            <column name="OPERATION_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="URL" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+    </changeSet>
+
+    <changeSet id="20170227 14:50:01" author="Ozer Senturk">
+
+        <createSequence sequenceName="SEQ_OPERATION_URL" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20170227 14:51:01" author="Ozer Senturk">
+
+        <createTable tableName="OPERATION_USER_GROUP">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_OPERATION_USER_GROUP"/>
+            </column>
+
+            <column name="OPERATION_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="USER_GROUP_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+    </changeSet>
+
+    <changeSet id="20170227 14:52:01" author="Ozer Senturk">
+
+        <createSequence sequenceName="SEQ_OPERATION_USER_GROUP" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20170227 14:53:01" author="Ozer Senturk">
+
+        <addForeignKeyConstraint
+                baseColumnNames="OPERATION_ID"
+                baseTableName="OPERATION_URL"
+                constraintName="FK_OPERATION_URL_OPERATION_ID"
+                referencedColumnNames="ID"
+                referencedTableName="OPERATION"/>
+
+    </changeSet>
+
+    <changeSet id="20170227 14:54:01" author="Ozer Senturk">
+
+        <addForeignKeyConstraint
+                baseColumnNames="OPERATION_ID"
+                baseTableName="OPERATION_USER_GROUP"
+                constraintName="FK_OPERATION_USER_GROUP_OP_ID"
+                referencedColumnNames="ID"
+                referencedTableName="OPERATION"/>
+
+    </changeSet>
+
+    <changeSet id="20170227 16:39:01" author="Ozer Senturk">
+
+        <createTable tableName="OPERATION_URL_METHOD">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_OPERATION_URL_METHOD"/>
+            </column>
+
+            <column name="OPERATION_URL_ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="METHOD" type="VARCHAR2(7)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+
+        </createTable>
+
+    </changeSet>
+
+    <changeSet id="20170227 16:40:01" author="Ozer Senturk">
+
+        <addForeignKeyConstraint
+                baseColumnNames="OPERATION_URL_ID"
+                baseTableName="OPERATION_URL_METHOD"
+                constraintName="FK_OPERATION_URL_METHOD"
+                referencedColumnNames="ID"
+                referencedTableName="OPERATION_URL"/>
+
+    </changeSet>
+
+    <changeSet id="20170227 17:56:01" author="Ozer Senturk">
+
+        <createSequence sequenceName="SEQ_OPERATION_URL_METHOD" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20170228 09:46:01" author="Ozer Senturk">
+
+        <addColumn tableName="OPERATION_URL">
+
+            <column name="SERVICE_NAME" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+
+        </addColumn>
+
+    </changeSet>
+
+    <changeSet id="20170308 10:00:01" author="Eray Oral">
+
+        <createTable tableName="DEPARTMENT">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_DEPARTMENT"/>
+            </column>
+
+            <column name="CODE" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="NAME" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20170308 10:00:02" author="Eray Oral">
+        <createSequence sequenceName="SEQ_DEPARTMENT" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20170319 10:23:01" author="Ozer Senturk">
+
+        <dropForeignKeyConstraint baseTableName="OPERATION_USER_GROUP" constraintName="FK_OPERATION_USER_GROUP_OP_ID"/>
+
+    </changeSet>
+
+    <changeSet id="20170319 10:24:01" author="Ozer Senturk">
+
+        <dropTable tableName="OPERATION_USER_GROUP"/>
+
+    </changeSet>
+
+    <changeSet id="20170319 10:25:01" author="Ozer Senturk">
+
+        <dropSequence sequenceName="SEQ_OPERATION_USER_GROUP"/>
+
+    </changeSet>
+
+    <changeSet id="20170427 10:35" author="kilimci">
+        <addColumn tableName="OPERATION">
+            <column name="DESCRIPTION" type="VARCHAR2(255)" />
+            <column name="CREATED_AT" type="TIMESTAMP(6)" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20170427 11:10" author="kilimci">
+        <sql>
+            update OPERATION set CREATED_AT = LAST_UPDATED;
+        </sql>
+    </changeSet>
+    <changeSet id="20170427 11:12" author="kilimci">
+        <sql>
+            update OPERATION set CREATED_AT = CURRENT_TIMESTAMP where CREATED_AT is null;
+        </sql>
+    </changeSet>
+    <changeSet id="20170427 11:11" author="kilimci">
+        <addNotNullConstraint tableName="OPERATION" columnName="CREATED_AT"/>
+    </changeSet>
+
+    <changeSet id="20170724 15:00" author="kilimci">
+        <dropNotNullConstraint tableName="OPERATION_URL" columnName="OPERATION_ID" />
+    </changeSet>
+
+    <changeSet id="20171103 11:00" author="kilimci">
+        <sqlFile path="add-column-deleted-at.sql" encoding="utf8" relativeToChangelogFile="true" splitStatements="false"/>
+    </changeSet>
+
+    <changeSet id="20180105 12:10:01" author="Eray Oral">
+
+        <createTable tableName="SUBSIDIARY">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_SUBSIDIARY"/>
+            </column>
+
+            <column name="NAME" type="VARCHAR2(255)"/>
+
+            <column name="DEFAULT_INVOICE_COMPANY_ID" type="NUMBER(19,0)"/>
+
+            <column name="DEFAULT_INVOICE_COMPANY_NAME" type="VARCHAR2(255)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="DELETED_AT" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20180105 12:10:02" author="Eray Oral">
+        <createSequence sequenceName="SEQ_SUBSIDIARY" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20180105 12:10:03" author="Eray Oral">
+
+        <createTable tableName="SUBSIDIARY_COMPANY">
+
+            <column name="SUBSIDIARY_ID" type="NUMBER(19,0)"/>
+
+            <column name="COMPANY_ID" type="NUMBER(19,0)"/>
+
+            <column name="COMPANY_NAME" type="VARCHAR2(255)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20180123 10:20" author="kilimci">
+        <addColumn tableName="DEPARTMENT">
+            <column name="HOMEPAGE" type="VARCHAR2(255)" />
+        </addColumn>
+    </changeSet>
+
+	<changeSet id="20180727 10:00:01" author="Ali Riza Bostanci">
+		<createTable tableName="CUSTOMER_GROUP">
+			<column name="ID" type="NUMBER(19,0)">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="PK_CUSTOMER_GROUP" />
+			</column>
+			<column name="NAME" type="VARCHAR2(255)" />
+			<column name="DELETED" type="NUMBER(1,0)" />
+			<column name="DELETED_AT" type="TIMESTAMP(6)" />
+			<column name="LAST_UPDATED" type="TIMESTAMP(6)" />
+			<column name="LAST_UPDATED_BY" type="VARCHAR2(100)" />
+		</createTable>
+		
+		<createSequence sequenceName="SEQ_CUSTOMER_GROUP" incrementBy="50" />
+		
+		<createTable tableName="CUSTOMER_GROUP_COMPANY">
+			<column name="ID" type="NUMBER(19,0)" />
+			<column name="NAME" type="VARCHAR2(255)" />
+			<column name="CUSTOMER_GROUP_ID" type="NUMBER(19,0)" />
+		</createTable>
+		
+		<createIndex tableName="CUSTOMER_GROUP_COMPANY" indexName="IDX_CGC_COMPANY_ID">
+			<column name="ID"/>
+		</createIndex>
+		
+		<createIndex tableName="CUSTOMER_GROUP_COMPANY" indexName="IDX_CGC_CUSTOMER_GROUP_ID">
+			<column name="CUSTOMER_GROUP_ID"/>
+		</createIndex>
+	</changeSet>
+	<changeSet id="20180807 17:40:01" author="Ali Riza Bostanci">
+		<createTable tableName="TEAMS">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TEAMS"/>
+            </column>
+            <column name="CODE" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+			<column name="DELETED_AT" type="TIMESTAMP(6)" />
+			<column name="LAST_UPDATED" type="TIMESTAMP(6)" />
+			<column name="LAST_UPDATED_BY" type="VARCHAR2(100)" />
+        </createTable>
+        
+        <createSequence sequenceName="SEQ_TEAMS" incrementBy="50" />
+	</changeSet>
+	
+	<changeSet id="20181101 12:40:01" author="Ali Riza Bostanci">
+		<addColumn tableName="TEAMS">
+            <column name="STATUS" type="VARCHAR2(20)" />
+        </addColumn>
+	</changeSet>
+	
+	<changeSet id="20181101 12:40:02" author="Ali Riza Bostanci">
+		<update tableName="TEAMS">
+			<column name="STATUS" value="ACTIVE" />
+		</update>
+	</changeSet>
+</databaseChangeLog>

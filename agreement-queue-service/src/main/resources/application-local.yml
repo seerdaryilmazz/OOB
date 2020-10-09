@@ -1,0 +1,50 @@
+server:
+  port: 8898
+
+spring:
+  data:
+    mongodb:
+      host: 10.1.70.92
+      port: 27017
+      database: agreement-queue
+      authentication-database: agreement-queue
+      mechanism: SCRAM-SHA-1
+  rabbitmq:
+    host: 10.1.70.92
+    port: 5672
+
+security:
+  host: 10.1.70.92
+  oauth2:
+    client:
+      checkTokenUri: http://${security.host}:9999/auth/oauth/check_token
+      accessTokenUri: http://${security.host}:9999/auth/oauth/token
+      userAuthorizationUri: http://${security.host}:9999/auth/oauth/authorize
+      clientId: oneorder
+      clientSecret: oneorder
+      scope: oneorder
+    resource:
+      userInfoUri: http://${security.host}:9999/auth/user
+oneorder:
+#  crm-history-service: http://crm-history-service
+  gateway: http://localhost:8765
+
+eureka:
+  client:
+    register-with-eureka: false
+    serviceUrl:
+      defaultZone: http://10.1.70.92:8761/eureka/
+
+rainbow:
+  agreement:
+    endpoint: http://hertz:3010/orawsv/WMSWS/WSC_BF_UNIT_PRICE
+    username: SCH_WS
+    password: acDX65T2DUWG4KQx3vva
+
+logging:
+  level:
+    org.springframework.web: DEBUG
+    org.springframework.ws.client.MessageTracing.sent: TRACE
+    org.springframework.ws.server.MessageTracing.sent: TRACE
+    org.springframework.ws.client.MessageTracing.received: TRACE
+    org.springframework.ws.server.MessageTracing.received: TRACE

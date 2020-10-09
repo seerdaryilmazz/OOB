@@ -1,0 +1,75 @@
+server:
+  port: 0
+
+spring:
+  jpa:
+    properties:
+      hibernate:
+        physical_naming_strategy: ekol.orders.config.HibernateNamingStrategy
+        implicit_naming_strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
+        dialect: org.hibernate.dialect.Oracle10gDialect
+        id:
+          new_generator_mappings: true
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+  datasource:
+      max-wait: 10000
+      max-active: 3
+      test-on-borrow: false
+
+management:
+  security:
+    enabled: false
+
+liquibase:
+  changeLog: classpath:/db/changelog.xml
+  contexts: test
+
+---
+spring:
+  profiles: dev
+
+security:
+  host: 10.1.70.92
+  oauth2:
+    client:
+      checkTokenUri: http://${security.host}:9999/auth/oauth/check_token
+      accessTokenUri: http://${security.host}:9999/auth/oauth/token
+      userAuthorizationUri: http://${security.host}:9999/auth/oauth/authorize
+      clientId: oneorder
+      clientSecret: oneorder
+      scope: oneorder
+    resource:
+      userInfoUri: http://${security.host}:9999/auth/user
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://10.1.70.92:8761/eureka/
+
+liquibase:
+  contexts: dev
+---
+spring:
+  profiles: test
+
+security:
+  host: oneorder-test.ekol.com
+  oauth2:
+    client:
+      checkTokenUri: https://${security.host}:9999/auth/oauth/check_token
+      accessTokenUri: https://${security.host}:9999/auth/oauth/token
+      userAuthorizationUri: https://${security.host}:9999/auth/oauth/authorize
+      clientId: oneorder
+      clientSecret: oneorder
+      scope: oneorder
+    resource:
+      userInfoUri: https://${security.host}:9999/auth/user
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://10.1.69.156:8761/eureka/
+
+liquibase:
+  contexts: test

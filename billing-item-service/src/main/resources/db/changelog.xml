@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="20180627 16:41:01" author="Eray Oral">
+
+        <createTable tableName="BILLING_ITEM">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_BILLING_ITEM"/>
+            </column>
+
+            <column name="PARENT_ID" type="NUMBER(19,0)"/>
+
+            <column name="CODE" type="CHAR(4)"/>
+
+            <column name="OFFICIAL_CODE" type="VARCHAR2(6)"/>
+
+            <column name="NAME" type="VARCHAR2(100)"/>
+
+            <column name="TYPE" type="VARCHAR2(30)"/>
+
+            <column name="ACTIVE" type="NUMBER(1,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="DELETED_AT" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20180627 16:41:02" author="Eray Oral">
+        <createSequence sequenceName="SEQ_BILLING_ITEM" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20180627 16:41:03" author="Eray Oral">
+
+        <createTable tableName="BILLING_ITEM_GROUP">
+
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_BILLING_ITEM_GROUP"/>
+            </column>
+
+            <column name="PARENT_ID" type="NUMBER(19,0)"/>
+
+            <column name="NAME" type="VARCHAR2(100)"/>
+
+            <column name="ACTIVE" type="NUMBER(1,0)"/>
+
+            <column name="DELETED" type="NUMBER(1,0)"/>
+
+            <column name="DELETED_AT" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20180627 16:41:04" author="Eray Oral">
+        <createSequence sequenceName="SEQ_BILLING_ITEM_GROUP" incrementBy="50"/>
+    </changeSet>
+
+</databaseChangeLog>

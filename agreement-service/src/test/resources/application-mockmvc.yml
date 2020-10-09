@@ -1,0 +1,25 @@
+host: localhost
+
+eureka:
+  client:
+    enabled: false
+
+security:
+  ignored: /**
+  oauth2:
+    client:
+      checkTokenUri: http://${host}:9999/auth/oauth/check_token
+      accessTokenUri: http://${host}:9999/auth/oauth/token
+      userAuthorizationUri: http://${host}:9999/auth/oauth/authorize
+      clientId: oneorder
+      clientSecret: oneorder
+      scope: oneorder
+    resource:
+      userInfoUri: http://${host}:9999/auth/user
+
+oneorder:
+  datasource:
+    jdbcUrl: jdbc:h2:file:~/test
+    username: sa
+    password:
+    driverClassName: org.h2.Driver

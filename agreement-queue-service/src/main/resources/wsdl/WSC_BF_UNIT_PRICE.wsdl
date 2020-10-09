@@ -1,0 +1,159 @@
+<definitions name="WSC_BF_UNIT_PRICE"
+    targetNamespace="http://xmlns.oracle.com/orawsv/WMSWS/WSC_BF_UNIT_PRICE"
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:tns="http://xmlns.oracle.com/orawsv/WMSWS/WSC_BF_UNIT_PRICE"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <types>
+    <xsd:schema targetNamespace="http://xmlns.oracle.com/orawsv/WMSWS/WSC_BF_UNIT_PRICE"
+     elementFormDefault="qualified">
+      <xsd:element name="WSC_BF_UNIT_PRICEInput">
+        <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="I_HEADER-WSC_BF_UNIT_PRICE_H_TYPE-CIN" type="tns:WSC_BF_UNIT_PRICE_H_TYPEType"/>
+              <xsd:element name="O_RESULT-VARCHAR2-OUT">
+                <xsd:complexType/>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:complexType>
+      </xsd:element>
+
+
+      <xsd:element name="WSC_BF_UNIT_PRICEOutput">
+        <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="O_RESULT" type="xsd:string"/>
+            </xsd:sequence>
+          </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="WSC_BF_UNIT_PRICE_H_TYPEType">
+        <xsd:sequence>
+          <xsd:element name="WSC_BF_UNIT_PRICE_H_TYPE">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="CONTRACT_ID" type="xsd:double"/>
+                <xsd:element name="CONTRACT_NUMBER" type="xsd:double"/>
+                <xsd:element name="STATUS">
+                  <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                      <xsd:maxLength value="20"/>
+                    </xsd:restriction>
+                  </xsd:simpleType>
+                </xsd:element>
+                <xsd:element name="ACCOUNT_NAME">
+                  <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                      <xsd:maxLength value="200"/>
+                    </xsd:restriction>
+                  </xsd:simpleType>
+                </xsd:element>
+                <xsd:element name="CONTRACT_NAME">
+                  <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                      <xsd:maxLength value="200"/>
+                    </xsd:restriction>
+                  </xsd:simpleType>
+                </xsd:element>
+                <xsd:element name="CONTRACT_URL">
+                  <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                      <xsd:maxLength value="200"/>
+                    </xsd:restriction>
+                  </xsd:simpleType>
+                </xsd:element>
+                <xsd:element name="LINE">
+                  <xsd:complexType>
+                    <xsd:sequence>
+                      <xsd:element name="WSC_BF_UNIT_PRICE_L_TYPE" type="tns:WSC_BF_UNIT_PRICE_L_TYPE_IntType" maxOccurs="200" minOccurs="0"/>
+                    </xsd:sequence>
+                  </xsd:complexType>
+                </xsd:element>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="WSC_BF_UNIT_PRICE_L_TYPE_IntType">
+        <xsd:sequence>
+          <xsd:element name="ID" type="xsd:double"/>
+          <xsd:element name="BILLING_ITEM_CODE" type="xsd:double"/>
+          <xsd:element name="SERVICE_NAME">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="100"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="PRICE" type="xsd:double"/>
+          <xsd:element name="CURRENCY">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="10"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="BASED_ON">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="20"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="START_DATE">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="8"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="END_DATE">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="8"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+   </xsd:schema>
+  </types>
+
+  <message name="WSC_BF_UNIT_PRICEInputMessage">
+    <part name="parameters" element="tns:WSC_BF_UNIT_PRICEInput"/>
+  </message>
+
+  <message name="WSC_BF_UNIT_PRICEOutputMessage">
+    <part name="parameters" element="tns:WSC_BF_UNIT_PRICEOutput"/>
+  </message>
+
+  <portType name="WSC_BF_UNIT_PRICEPortType">
+  <operation name="WSC_BF_UNIT_PRICE">
+      <input message="tns:WSC_BF_UNIT_PRICEInputMessage"/>
+      <output message="tns:WSC_BF_UNIT_PRICEOutputMessage"/>
+    </operation>
+  </portType>
+
+  <binding name="WSC_BF_UNIT_PRICEBinding"
+           type="tns:WSC_BF_UNIT_PRICEPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="WSC_BF_UNIT_PRICE">
+      <soap:operation
+ soapAction="WSC_BF_UNIT_PRICE"/>
+      <input>
+        <soap:body parts="parameters" use="literal"/>
+      </input>
+      <output>
+        <soap:body parts="parameters" use="literal"/>
+      </output>
+    </operation>
+  </binding>
+
+  <service name="WSC_BF_UNIT_PRICEService">
+    <documentation>Oracle Web Service</documentation>
+    <port name="WSC_BF_UNIT_PRICEPort" binding="tns:WSC_BF_UNIT_PRICEBinding">
+       <soap:address 
+             location="http://hertz:3010/orawsv/WMSWS/WSC_BF_UNIT_PRICE"/>
+     </port>
+  </service>
+
+</definitions>

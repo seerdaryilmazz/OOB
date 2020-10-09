@@ -1,0 +1,216 @@
+server:
+  port: 0
+
+spring:
+  cache:
+    cache-names:
+    - company-blockage
+    ttl:
+      company-blockage: 3600
+    type: redis 
+  jpa:
+    properties:
+      org.hibernate.envers.audit_table_prefix: AUD_
+      org.hibernate.envers.audit_table_suffix:
+      hibernate:
+        physical_naming_strategy: ekol.hibernate5.config.HibernateNamingStrategy
+        implicit_naming_strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
+        dialect: org.hibernate.dialect.Oracle10gDialect
+        id:
+          new_generator_mappings: true
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    
+management:
+  security:
+    enabled: false
+  metrics:
+    export:
+      influx:
+        enabled: false
+        uri: http://localhost:8086
+        db: oneorder
+        step: PT30S
+
+liquibase:
+  changeLog: classpath:/db/changelog.xml
+  contexts: local
+
+cache:
+  prefix: "${oneorder.cache.prefix}${spring.application.name}:"
+
+eureka:
+  client:
+    initialInstanceInfoReplicationIntervalSeconds: 5
+    registryFetchIntervalSeconds: 10
+    
+logging:
+  level:
+    ekol:
+      crm:
+        account:
+          service:
+            AccountCrudService: INFO
+            
+---
+spring:
+  profiles: dev
+  rabbitmq:
+    host: 10.1.70.92
+    port: 5672
+  redis:
+    host: 10.1.70.92
+    port: 6379
+
+oneorder:
+  userImages:
+    directory: /opt/artifacts/ui/user-images
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    jdbcUrl: jdbc:oracle:thin:@//10.1.70.92:49161/xe
+    username: crmaccount
+    password: 1234
+
+security:
+  host: 10.1.70.92
+  oauth2:
+    client:
+      checkTokenUri: http://${security.host}:9999/auth/oauth/check_token
+      accessTokenUri: http://${security.host}:9999/auth/oauth/token
+      userAuthorizationUri: http://${security.host}:9999/auth/oauth/authorize
+      clientId: oneorder
+      clientSecret: oneorder
+      scope: oneorder
+    resource:
+      userInfoUri: http://${security.host}:9999/auth/user
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://10.1.70.92:8761/eureka/
+
+liquibase:
+  contexts: dev
+
+swagger:
+  enabled: true
+  
+quadro:
+  username: sch_ws
+  password: acDX65T2DUWG4KQx3vva
+  company-blockage:
+    endpoint: http://hertz.ekol.com:3010/orawsv/QUADRO_INTERFACE/WSC_GET_COMPANY_BLOCKAGE
+  company-cr-info:
+    endpoint: http://hertz.ekol.com:3010/orawsv/QUADRO_INTERFACE/WSC_GET_COMPANY_CR_INFO_P
+    
+---
+spring:
+  profiles: test
+  rabbitmq:
+    host: 10.1.69.156
+    port: 5672
+  redis:
+    host: 10.1.69.156
+    port: 6379
+    password: one+order
+
+oneorder:
+  userImages:
+    directory: /opt/artifacts/ui/user-images
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    jdbcUrl : jdbc:oracle:thin:@//10.1.69.156:49161/xe
+    username : oneorder
+    password : one+order
+    maximumPoolSize: 3
+
+security:
+  host: oneorder-test.ekol.com
+  oauth2:
+    client:
+      checkTokenUri: https://${security.host}:9999/auth/oauth/check_token
+      accessTokenUri: https://${security.host}:9999/auth/oauth/token
+      userAuthorizationUri: https://${security.host}:9999/auth/oauth/authorize
+      clientId: oneorder
+      clientSecret: oneorder
+      scope: oneorder
+    resource:
+      userInfoUri: https://${security.host}:9999/auth/user
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://10.1.69.156:8761/eureka/
+
+liquibase:
+  contexts: test
+
+swagger:
+  enabled: true
+    
+quadro:
+  username: sch_ws
+  password: acDX65T2DUWG4KQx3vva
+  company-blockage:
+    endpoint: http://hertz.ekol.com:3010/orawsv/QUADRO_INTERFACE/WSC_GET_COMPANY_BLOCKAGE
+    enable: false
+  company-cr-info:
+    endpoint: http://hertz.ekol.com:3010/orawsv/QUADRO_INTERFACE/WSC_GET_COMPANY_CR_INFO_P
+    
+---
+spring:
+  profiles: prod
+  rabbitmq:
+    host: 10.1.70.244
+    port: 5672
+  redis:
+    host: 10.1.70.244
+    port: 6379
+    password: one+order
+
+oneorder:
+  userImages:
+    directory: /opt/artifacts/ui/user-images
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    jdbcUrl : jdbc:oracle:thin:@//10.1.70.6:1521/KD01.QUADRO
+    username : oneorder
+    password : dsRQT2aQY3EHqBb93sHQ
+    maximumPoolSize: 10
+
+security:
+  host: oneorder.ekol.com
+  oauth2:
+    client:
+      checkTokenUri: https://${security.host}:9999/auth/oauth/check_token
+      accessTokenUri: https://${security.host}:9999/auth/oauth/token
+      userAuthorizationUri: https://${security.host}:9999/auth/oauth/authorize
+      clientId: oneorder
+      clientSecret: oneorder
+      scope: oneorder
+    resource:
+      userInfoUri: https://${security.host}:9999/auth/user
+
+eureka:
+  client:
+    registryFetchIntervalSeconds: 15
+    serviceUrl:
+      defaultZone: http://10.1.69.85:8761/eureka/
+
+management:
+  metrics:
+    export:
+      influx:
+        enabled: true
+        uri: http://10.1.70.244:8086
+
+liquibase:
+  contexts: prod
+  
+quadro:
+  username: sch_ws
+  password: acDX65T2DUWG4KQx3vva
+  company-blockage:
+    endpoint: http://hertz.ekol.com:3010/orawsv/QUADRO_INTERFACE/WSC_GET_COMPANY_BLOCKAGE
+  company-cr-info:
+    endpoint: http://hertz.ekol.com:3010/orawsv/QUADRO_INTERFACE/WSC_GET_COMPANY_CR_INFO_P

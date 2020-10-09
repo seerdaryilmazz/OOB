@@ -1,0 +1,179 @@
+server:
+  port: 0
+
+spring:
+  jpa:
+    properties:
+      org.hibernate.envers.audit_table_prefix: AUD_
+      org.hibernate.envers.audit_table_suffix:
+      hibernate:
+        physical_naming_strategy: ekol.hibernate5.config.HibernateNamingStrategy
+        implicit_naming_strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
+        dialect: org.hibernate.dialect.Oracle10gDialect
+        id:
+          new_generator_mappings: true
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+  metrics:
+    influx:
+      enabled: false
+      uri: http://localhost:8086
+      db: oneorder
+      step: PT30S
+    servo:
+      enabled: false
+    web:
+      server:
+        autoTimeRequests: false
+
+management:
+  security:
+    enabled: false
+
+liquibase:
+  changeLog: classpath:/db/changelog.xml
+  contexts: local
+
+cache:
+  prefix: "${oneorder.cache.prefix}${spring.application.name}:"
+
+eureka:
+  client:
+    initialInstanceInfoReplicationIntervalSeconds: 5
+    registryFetchIntervalSeconds: 10
+
+---
+spring:
+  profiles: dev
+  rabbitmq:
+    host: 10.1.70.92
+    port: 5672
+  redis:
+    host: 10.1.70.92
+    port: 6379
+
+oneorder:
+  userImages:
+    directory: /opt/artifacts/ui/user-images
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    jdbcUrl: jdbc:oracle:thin:@//10.1.70.92:49161/xe
+    username: crmopportunity
+    password: 1234
+
+security:
+  host: 10.1.70.92
+  oauth2:
+    client:
+      checkTokenUri: http://${security.host}:9999/auth/oauth/check_token
+      accessTokenUri: http://${security.host}:9999/auth/oauth/token
+      userAuthorizationUri: http://${security.host}:9999/auth/oauth/authorize
+      clientId: oneorder
+      clientSecret: oneorder
+      scope: oneorder
+    resource:
+      userInfoUri: http://${security.host}:9999/auth/user
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://10.1.70.92:8761/eureka/
+
+liquibase:
+  contexts: dev
+---
+spring:
+  profiles: test
+  redis:
+    host: 10.1.69.156
+    port: 6379
+    password: one+order
+  rabbitmq:
+    host: 10.1.69.156
+    port: 5672
+
+oneorder:
+  userImages:
+    directory: /opt/artifacts/ui/user-images
+  datasource:
+    jdbcUrl : jdbc:oracle:thin:@//10.1.69.156:49161/xe
+    username : oneorder
+    password : one+order
+    maximumPoolSize: 3
+
+security:
+  host: oneorder-test.ekol.com
+  oauth2:
+    client:
+      checkTokenUri: https://${security.host}:9999/auth/oauth/check_token
+      accessTokenUri: https://${security.host}:9999/auth/oauth/token
+      userAuthorizationUri: https://${security.host}:9999/auth/oauth/authorize
+      clientId: oneorder
+      clientSecret: oneorder
+      scope: oneorder
+    resource:
+      userInfoUri: https://${security.host}:9999/auth/user
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://10.1.69.156:8761/eureka/
+
+liquibase:
+  contexts: test
+---
+spring:
+  profiles: prod
+  rabbitmq:
+    host: 10.1.70.244
+    port: 5672
+  redis:
+    host: 10.1.70.244
+    port: 6379
+    password: one+order
+
+oneorder:
+  userImages:
+    directory: /opt/artifacts/ui/user-images
+  datasource:
+    jdbcUrl : jdbc:oracle:thin:@//10.1.70.6:1521/KD01.QUADRO
+    username : oneorder
+    password : dsRQT2aQY3EHqBb93sHQ
+    maximumPoolSize: 20
+
+security:
+  host: oneorder.ekol.com
+  oauth2:
+    client:
+      checkTokenUri: https://${security.host}:9999/auth/oauth/check_token
+      accessTokenUri: https://${security.host}:9999/auth/oauth/token
+      userAuthorizationUri: https://${security.host}:9999/auth/oauth/authorize
+      clientId: oneorder
+      clientSecret: oneorder
+      scope: oneorder
+    resource:
+      userInfoUri: https://${security.host}:9999/auth/user
+
+eureka:
+  client:
+    registryFetchIntervalSeconds: 15
+    serviceUrl:
+      defaultZone: http://10.1.69.85:8761/eureka/
+
+management:
+  metrics:
+    export:
+      influx:
+        enabled: true
+        uri: http://10.1.70.244:8086
+
+liquibase:
+  contexts: prod
+---
+spring:
+  profiles: integration
+
+liquibase:
+  changeLog: classpath:/db/changelog-integration-test.xml
+  contexts: integration
+---

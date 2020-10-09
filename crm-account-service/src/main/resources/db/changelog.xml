@@ -1,0 +1,679 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <property name="DB_OWNER" value="CRMACCOUNT" context="dev,local"/>
+    <property name="DB_OWNER" value="ONEORDER" context="test,prod"/>
+    <property name="DB_OWNER" value="SYSTEM" context="integration"/>
+
+    <changeSet id="20180221 09:00" author="caputlu">
+
+    <createTable tableName="CRM_ACCOUNT">
+        <column name="ID" type="NUMBER(19,0)">
+            <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CRM_ACCOUNT" />
+        </column>
+        <column name="NAME" type="VARCHAR2(150)"/>
+        <column name="COMPANY_ID" type="NUMBER(19,0)"/>
+        <column name="COMPANY_NAME" type="VARCHAR2(150)"/>
+        <column name="COUNTRY_ISO" type="VARCHAR2(2)"/>
+        <column name="COUNTRY_NAME" type="VARCHAR2(50)"/>
+        <column name="ACCOUNT_OWNER" type="VARCHAR2(100)"/>
+        <column name="ACCOUNT_TYPE" type="VARCHAR2(20)"/>
+        <column name="SEGMENT" type="VARCHAR2(20)"/>
+        <column name="PARENT_SECTOR_CODE" type="VARCHAR2(20)"/>
+        <column name="PARENT_SECTOR_NAME" type="VARCHAR2(100)"/>
+        <column name="SUB_SECTOR_CODE" type="VARCHAR2(20)"/>
+        <column name="SUB_SECTOR_NAME" type="VARCHAR2(100)"/>
+        <column name="TOTAL_LOGISTICS_POTENTIAL" type="VARCHAR2(50)"/>
+        <column name="STRATEGIC_INFORMATION" type="VARCHAR2(300)"/>
+        <column name="FORTUNE_500" type="NUMBER(1,0)"/>
+        <column name="GALAXY" type="NUMBER(1,0)"/>
+        <column name="CREATED_AT" type="TIMESTAMP(6)" />
+        <column name="CREATED_BY" type="VARCHAR2(100)" />
+        <column name="DELETED" type="NUMBER(1,0)"/>
+        <column name="DELETED_AT" type="TIMESTAMP(6)" />
+        <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+        <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+    </createTable>
+
+    <addNotNullConstraint tableName="CRM_ACCOUNT" columnName="NAME" />
+    <addNotNullConstraint tableName="CRM_ACCOUNT" columnName="COMPANY_ID" />
+    <addNotNullConstraint tableName="CRM_ACCOUNT" columnName="COMPANY_NAME" />
+    <addNotNullConstraint tableName="CRM_ACCOUNT" columnName="COUNTRY_ISO" />
+    <addNotNullConstraint tableName="CRM_ACCOUNT" columnName="ACCOUNT_OWNER" />
+    <addNotNullConstraint tableName="CRM_ACCOUNT" columnName="ACCOUNT_TYPE" />
+
+    <createSequence sequenceName="SEQ_CRMACCOUNT" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20180415 12:30" author="caputlu">
+
+        <createTable tableName="CRM_ACCOUNT_CONTACT">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CRM_ACCOUNT_CONTACT" />
+            </column>
+            <column name="ACCOUNT_ID" type="NUMBER(19,0)"/>
+            <column name="COMPANY_CONTACT_ID" type="NUMBER(19,0)"/>
+            <column name="FIRST_NAME" type="VARCHAR2(100)"/>
+            <column name="LAST_NAME" type="VARCHAR2(100)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <addNotNullConstraint tableName="CRM_ACCOUNT_CONTACT" columnName="COMPANY_CONTACT_ID" />
+        <addNotNullConstraint tableName="CRM_ACCOUNT_CONTACT" columnName="FIRST_NAME" />
+        <addNotNullConstraint tableName="CRM_ACCOUNT_CONTACT" columnName="LAST_NAME" />
+
+        <addForeignKeyConstraint baseTableName="CRM_ACCOUNT_CONTACT" baseColumnNames="ACCOUNT_ID"
+                                 constraintName="FK_CRM_CONTACT_ACCOUNT" referencedTableName="CRM_ACCOUNT"
+                                 referencedColumnNames="ID"/>
+
+        <createSequence sequenceName="SEQ_CRMACCOUNTCONTACT" incrementBy="50"/>
+
+    </changeSet>
+
+    <changeSet id="20180907 13:30" author="caputlu">
+        <createTable tableName="CRM_PT_SHIPMENT_LT">
+            <column name="POTENTIAL_ID" type="Number(19, 0)"/>
+            <column name="SHIPMENT_LOADING_TYPE" type="VARCHAR2(50)"/>
+        </createTable>
+    </changeSet>
+
+
+
+    <changeSet id="20180921 11:00" author="caputlu">
+        <createTable tableName="CRM_PT_CHARGE_VOLUME">
+            <column name="POTENTIAL_ID" type="NUMBER(19,0)"/>
+            <column name="CHARGEABLE_VOLUME" type="VARCHAR2(50)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20180921 11:15" author="caputlu">
+        <createTable tableName="CRM_PT_CONTAINER_TYPE">
+            <column name="POTENTIAL_ID" type="NUMBER(19,0)"/>
+            <column name="CONTAINER_TYPE" type="VARCHAR2(50)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20180921 11:30" author="caputlu">
+        <createTable tableName="CRM_PT_CHARGE_WEIGHT">
+            <column name="POTENTIAL_ID" type="NUMBER(19,0)"/>
+            <column name="CHARGEABLE_WEIGHT" type="VARCHAR2(50)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20181003 09:00" author="caputlu">
+        <createTable tableName="CRM_COUNTRY">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CRM_COUNTRY" />
+            </column>
+            <column name="ISO" type="VARCHAR2(2)"/>
+            <column name="NAME" type="VARCHAR2(100)"/>
+            <column name="STATUS" type="VARCHAR2(20)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <addNotNullConstraint tableName="CRM_COUNTRY" columnName="ISO" />
+        <addNotNullConstraint tableName="CRM_COUNTRY" columnName="NAME" />
+        <addNotNullConstraint tableName="CRM_COUNTRY" columnName="STATUS" />
+    </changeSet>
+
+    <changeSet id="20181003 09:30" author="caputlu">
+        <createTable tableName="CRM_COUNTRY_POINT">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CRM_COUNTRY_POINT" />
+            </column>
+            <column name="COUNTRY_ID" type="NUMBER(19,0)"/>
+            <column name="TYPE" type="VARCHAR2(20)"/>
+            <column name="CODE" type="VARCHAR2(50)"/>
+            <column name="NAME" type="VARCHAR2(150)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <addNotNullConstraint tableName="CRM_COUNTRY_POINT" columnName="TYPE" />
+        <addNotNullConstraint tableName="CRM_COUNTRY_POINT" columnName="CODE" />
+        <addNotNullConstraint tableName="CRM_COUNTRY_POINT" columnName="NAME" />
+
+        <addForeignKeyConstraint baseTableName="CRM_COUNTRY_POINT" baseColumnNames="COUNTRY_ID"
+                                 constraintName="FK_CRM_COUNTRY_POINT" referencedTableName="CRM_COUNTRY"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+
+    <changeSet id="20181003 11:00" author="caputlu">
+
+        <createTable tableName="CRM_POTENTIAL">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CRM_POTENTIAL" />
+            </column>
+            <column name="ACCOUNT_ID" type="NUMBER(19,0)"/>
+            <column name="FROM_COUNTRY_ID" type="NUMBER(19,0)"/>
+            <column name="FROM_COUNTRY_POINT_ID" type="NUMBER(19,0)"/>
+            <column name="TO_COUNTRY_ID" type="NUMBER(19,0)"/>
+            <column name="TO_COUNTRY_POINT_ID" type="NUMBER(19,0)"/>
+            <column name="LOAD_WEIGHT_TYPE" type="VARCHAR2(50)"/>
+            <column name="INCOTERM" type="VARCHAR2(20)"/>
+            <column name="INCOTERM_EXPLANATION" type="VARCHAR2(50)"/>
+            <column name="CUSTOMS_TYPE" type="VARCHAR2(50)"/>
+            <column name="COMPETITOR_ID" type="NUMBER(19,0)"/>
+            <column name="COMPETITOR_NAME" type="VARCHAR2(150)"/>
+            <column name="FREQUENCY_TYPE" type="VARCHAR2(50)"/>
+            <column name="FREQUENCY" type="NUMBER(5,0)"/>
+            <column name="SERVICE_AREA" type="VARCHAR2(20)"/>
+            <column name="VALIDITY_START_DATE" type="TIMESTAMP(6)"/>
+            <column name="VALIDITY_END_DATE" type="TIMESTAMP(6)"/>
+            <column name="CREATED_AT" type="TIMESTAMP(6)" />
+            <column name="CREATED_BY" type="VARCHAR2(100)" />
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="CRM_POTENTIAL" baseColumnNames="ACCOUNT_ID"
+                                 constraintName="FK_CRM_POTENTIAL_ACCOUNT" referencedTableName="CRM_ACCOUNT"
+                                 referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="CRM_POTENTIAL" baseColumnNames="FROM_COUNTRY_ID"
+                                 constraintName="FK_CRM_POTENTIAL_FROM_COUNTRY" referencedTableName="CRM_COUNTRY"
+                                 referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="CRM_POTENTIAL" baseColumnNames="FROM_COUNTRY_POINT_ID"
+                                 constraintName="FK_CRM_POTENTIAL_FROM_CP" referencedTableName="CRM_COUNTRY_POINT"
+                                 referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="CRM_POTENTIAL" baseColumnNames="TO_COUNTRY_ID"
+                                 constraintName="FK_CRM_POTENTIAL_TO_COUNTRY" referencedTableName="CRM_COUNTRY"
+                                 referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="CRM_POTENTIAL" baseColumnNames="TO_COUNTRY_POINT_ID"
+                                 constraintName="FK_CRM_POTENTIAL_TO_CP" referencedTableName="CRM_COUNTRY_POINT"
+                                 referencedColumnNames="ID"/>
+
+        <addNotNullConstraint tableName="CRM_POTENTIAL" columnName="VALIDITY_START_DATE" />
+        <addNotNullConstraint tableName="CRM_POTENTIAL" columnName="VALIDITY_END_DATE" />
+
+        <createSequence sequenceName="SEQ_CRMPOTENTIAL" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20181214 16:00" author="caputlu">
+        <createTable tableName="CRM_PT_CUSTOMS_OFFICE">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CRM_PT_CUSTOMS_OFFICE" />
+            </column>
+            <column name="CUSTOMS_OFFICE_ID" type="NUMBER(19,0)"/>
+            <column name="CUSTOMS_OFFICE_NAME" type="VARCHAR2(150)"/>
+            <column name="POTENTIAL_ID" type="NUMBER(19,0)"/>
+        </createTable>
+
+        <addNotNullConstraint tableName="CRM_PT_CUSTOMS_OFFICE" columnName="CUSTOMS_OFFICE_ID" />
+
+        <addForeignKeyConstraint baseTableName="CRM_PT_CUSTOMS_OFFICE" baseColumnNames="POTENTIAL_ID"
+                                 constraintName="FK_PT_CUSTOMS_OFFICE" referencedTableName="CRM_POTENTIAL"
+                                 referencedColumnNames="ID"/>
+
+        <createSequence sequenceName="SEQ_CRMPOTENTIALCUSTOMSOFFICE" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20181008 12:00" author="caputlu">
+        <sqlFile path="insert_countries.sql" encoding="utf8" relativeToChangelogFile="true"/>
+    </changeSet>
+    <changeSet id="20181008 12:10" author="caputlu">
+        <sqlFile path="insert_postal_country_points.sql" encoding="utf8" relativeToChangelogFile="true"/>
+    </changeSet>
+    <changeSet id="20181008 12:20" author="caputlu">
+        <sqlFile path="insert_port_country_points.sql" encoding="utf8" relativeToChangelogFile="true"/>
+    </changeSet>
+    <changeSet id="20181008 12:30" author="caputlu">
+        <sqlFile path="insert_airport_country_points.sql" encoding="utf8" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="20181226 10:00" author="caputlu" context="local,dev,integration">
+        <createTable tableName="REVISION_INFO">
+            <column name="ID" type="NUMBER(19,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UPDATED_TIME" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <addPrimaryKey tableName="REVISION_INFO" columnNames="ID" constraintName="PK_REVISION_INFO"/>
+        <createSequence sequenceName="SEQ_REVISIONINFO" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="20181226 10:05" author="caputlu">
+        <createTable tableName="AUD_CRM_ACCOUNT">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="NAME" type="VARCHAR2(255)" />
+            <column name="COMPANY_ID" type="NUMBER(19,0)"/>
+            <column name="COMPANY_NAME" type="VARCHAR2(150)"/>
+            <column name="COUNTRY_ISO" type="VARCHAR2(2)"/>
+            <column name="COUNTRY_NAME" type="VARCHAR2(50)"/>
+            <column name="ACCOUNT_OWNER" type="VARCHAR2(100)"/>
+            <column name="ACCOUNT_TYPE" type="VARCHAR2(20)"/>
+            <column name="SEGMENT" type="VARCHAR2(20)"/>
+            <column name="PARENT_SECTOR_CODE" type="VARCHAR2(20)"/>
+            <column name="PARENT_SECTOR_NAME" type="VARCHAR2(100)"/>
+            <column name="SUB_SECTOR_CODE" type="VARCHAR2(20)"/>
+            <column name="SUB_SECTOR_NAME" type="VARCHAR2(100)"/>
+            <column name="TOTAL_LOGISTICS_POTENTIAL" type="VARCHAR2(50)"/>
+            <column name="STRATEGIC_INFORMATION" type="VARCHAR2(300)"/>
+            <column name="FORTUNE_500" type="NUMBER(1,0)"/>
+            <column name="GALAXY" type="NUMBER(1,0)"/>
+            <column name="CREATED_AT" type="TIMESTAMP(6)" />
+            <column name="CREATED_BY" type="VARCHAR2(100)" />
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_CRM_ACCOUNT" columnNames="ID, REV" constraintName="PK_AUD_CRM_ACCOUNT"/>
+        <addForeignKeyConstraint baseTableName="AUD_CRM_ACCOUNT" baseColumnNames="REV" constraintName="FK_AUDCRMACCOUNT_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+
+    <changeSet id="20181226 10:10" author="caputlu">
+        <createTable tableName="AUD_CRM_ACCOUNT_CONTACT">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="ACCOUNT_ID" type="NUMBER(19,0)"/>
+            <column name="COMPANY_CONTACT_ID" type="NUMBER(19,0)"/>
+            <column name="FIRST_NAME" type="VARCHAR2(100)"/>
+            <column name="LAST_NAME" type="VARCHAR2(100)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_CRM_ACCOUNT_CONTACT" columnNames="ID, REV" constraintName="PK_AUD_CRM_ACCOUNT_CONTACT"/>
+        <addForeignKeyConstraint baseTableName="AUD_CRM_ACCOUNT_CONTACT" baseColumnNames="REV" constraintName="FK_AUDCRMACCOUNTCONTACT_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20181226 10:15" author="caputlu">
+        <createTable tableName="AUD_CRM_POTENTIAL">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="ACCOUNT_ID" type="NUMBER(19,0)"/>
+            <column name="FROM_COUNTRY_ID" type="NUMBER(19,0)"/>
+            <column name="FROM_COUNTRY_POINT_ID" type="NUMBER(19,0)"/>
+            <column name="TO_COUNTRY_ID" type="NUMBER(19,0)"/>
+            <column name="TO_COUNTRY_POINT_ID" type="NUMBER(19,0)"/>
+            <column name="LOAD_WEIGHT_TYPE" type="VARCHAR2(50)"/>
+            <column name="INCOTERM" type="VARCHAR2(20)"/>
+            <column name="INCOTERM_EXPLANATION" type="VARCHAR2(50)"/>
+            <column name="CUSTOMS_TYPE" type="VARCHAR2(50)"/>
+            <column name="COMPETITOR_ID" type="NUMBER(19,0)"/>
+            <column name="COMPETITOR_NAME" type="VARCHAR2(150)"/>
+            <column name="FREQUENCY_TYPE" type="VARCHAR2(50)"/>
+            <column name="FREQUENCY" type="NUMBER(5,0)"/>
+            <column name="SERVICE_AREA" type="VARCHAR2(20)"/>
+            <column name="VALIDITY_START_DATE" type="TIMESTAMP(6)"/>
+            <column name="VALIDITY_END_DATE" type="TIMESTAMP(6)"/>
+            <column name="CREATED_AT" type="TIMESTAMP(6)" />
+            <column name="CREATED_BY" type="VARCHAR2(100)" />
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_CRM_POTENTIAL" columnNames="ID, REV" constraintName="PK_AUD_CRM_POTENTIAL"/>
+        <addForeignKeyConstraint baseTableName="AUD_CRM_POTENTIAL" baseColumnNames="REV" constraintName="FK_AUDCRMPOTENTIAL_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20181226 10:20" author="caputlu">
+        <createTable tableName="AUD_CRM_COUNTRY">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="ISO" type="VARCHAR2(2)"/>
+            <column name="NAME" type="VARCHAR2(100)"/>
+            <column name="STATUS" type="VARCHAR2(20)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_CRM_COUNTRY" columnNames="ID, REV" constraintName="PK_AUD_CRM_COUNTRY"/>
+        <addForeignKeyConstraint baseTableName="AUD_CRM_COUNTRY" baseColumnNames="REV" constraintName="FK_AUDCRMCOUNTRY_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20181226 10:25" author="caputlu">
+        <createTable tableName="AUD_CRM_COUNTRY_POINT">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="COUNTRY_ID" type="NUMBER(19,0)"/>
+            <column name="TYPE" type="VARCHAR2(20)"/>
+            <column name="CODE" type="VARCHAR2(50)"/>
+            <column name="NAME" type="VARCHAR2(150)"/>
+            <column name="DELETED" type="NUMBER(1,0)"/>
+            <column name="DELETED_AT" type="TIMESTAMP(6)" />
+            <column name="LAST_UPDATED" type="TIMESTAMP(6)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR2(100)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_CRM_COUNTRY_POINT" columnNames="ID, REV" constraintName="PK_AUD_CRM_COUNTRY_POINT"/>
+        <addForeignKeyConstraint baseTableName="AUD_CRM_COUNTRY_POINT" baseColumnNames="REV" constraintName="FK_AUDCRMCOUNTRYPOINT_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+
+    <changeSet id="20181226 10:30" author="caputlu">
+        <createTable tableName="AUD_CRM_PT_SHIPMENT_LT">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="POTENTIAL_ID" type="Number(19, 0)"/>
+            <column name="SHIPMENT_LOADING_TYPE" type="VARCHAR2(50)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_CRM_PT_SHIPMENT_LT" columnNames="POTENTIAL_ID, SHIPMENT_LOADING_TYPE, REV" constraintName="PK_AUD_CRM_PT_SHIPMENT_LT"/>
+        <addForeignKeyConstraint baseTableName="AUD_CRM_PT_SHIPMENT_LT" baseColumnNames="REV" constraintName="FK_AUDCRMPTSHIPMENTLT_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20181226 10:35" author="caputlu">
+        <createTable tableName="AUD_CRM_PT_CHARGE_VOLUME">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="POTENTIAL_ID" type="NUMBER(19,0)"/>
+            <column name="CHARGEABLE_VOLUME" type="VARCHAR2(50)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_CRM_PT_CHARGE_VOLUME" columnNames="POTENTIAL_ID, CHARGEABLE_VOLUME, REV" constraintName="PK_AUD_CRM_PT_CHARGE_VOLUME"/>
+        <addForeignKeyConstraint baseTableName="AUD_CRM_PT_CHARGE_VOLUME" baseColumnNames="REV" constraintName="FK_AUDCRMPTCHARGEVOLUME_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20181226 10:40" author="caputlu">
+        <createTable tableName="AUD_CRM_PT_CONTAINER_TYPE">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="POTENTIAL_ID" type="NUMBER(19,0)"/>
+            <column name="CONTAINER_TYPE" type="VARCHAR2(50)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_CRM_PT_CONTAINER_TYPE" columnNames="POTENTIAL_ID, CONTAINER_TYPE, REV" constraintName="PK_AUD_CRM_PT_CONTAINER_TYPE"/>
+        <addForeignKeyConstraint baseTableName="AUD_CRM_PT_CONTAINER_TYPE" baseColumnNames="REV" constraintName="FK_AUDCRMPTCONTAINERTYPE_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20181226 10:45" author="caputlu">
+        <createTable tableName="AUD_CRM_PT_CHARGE_WEIGHT">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="POTENTIAL_ID" type="NUMBER(19,0)"/>
+            <column name="CHARGEABLE_WEIGHT" type="VARCHAR2(50)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_CRM_PT_CHARGE_WEIGHT" columnNames="POTENTIAL_ID, CHARGEABLE_WEIGHT, REV" constraintName="PK_AUD_CRM_PT_CHARGE_WEIGHT"/>
+        <addForeignKeyConstraint baseTableName="AUD_CRM_PT_CHARGE_WEIGHT" baseColumnNames="REV" constraintName="FK_AUDCRMPTCHARGEWEIGHT_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20181226 10:50" author="caputlu">
+        <createTable tableName="AUD_CRM_PT_CUSTOMS_OFFICE">
+            <column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="NUMBER(19,0)"/>
+            <column name="CUSTOMS_OFFICE_ID" type="NUMBER(19,0)"/>
+            <column name="CUSTOMS_OFFICE_NAME" type="VARCHAR2(150)"/>
+            <column name="POTENTIAL_ID" type="NUMBER(19,0)"/>
+        </createTable>
+        <addPrimaryKey tableName="AUD_CRM_PT_CUSTOMS_OFFICE" columnNames="ID, REV" constraintName="PK_AUD_CRM_PT_CUSTOMS_OFFICE"/>
+        <addForeignKeyConstraint baseTableName="AUD_CRM_PT_CUSTOMS_OFFICE" baseColumnNames="REV" constraintName="FK_AUDCRMPTCUSTOMSOFFICE_REV" referencedTableName="REVISION_INFO"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="20190121 23:14:01" author="Eray Oral">
+        <addColumn tableName="CRM_COUNTRY">
+            <column name="RANK" type="NUMBER(3,0)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20190121 23:14:02" author="Eray Oral">
+        <sql>UPDATE CRM_COUNTRY SET RANK = 999</sql>
+    </changeSet>
+
+    <changeSet id="20190121 23:14:03" author="Eray Oral">
+        <sql>UPDATE CRM_COUNTRY SET RANK = 1 WHERE ISO = 'TR'</sql>
+    </changeSet>
+
+    <changeSet id="20190121 23:14:04" author="Eray Oral">
+        <sql>UPDATE CRM_COUNTRY SET RANK = 2 WHERE ISO = 'DE'</sql>
+    </changeSet>
+
+    <changeSet id="20190121 23:14:05" author="Eray Oral">
+        <sql>UPDATE CRM_COUNTRY SET RANK = 3 WHERE ISO = 'IT'</sql>
+    </changeSet>
+
+    <changeSet id="20190121 23:14:06" author="Eray Oral">
+        <sql>UPDATE CRM_COUNTRY SET RANK = 4 WHERE ISO = 'FR'</sql>
+    </changeSet>
+
+    <changeSet id="20190121 23:14:07" author="Eray Oral">
+        <sql>UPDATE CRM_COUNTRY SET RANK = 5 WHERE ISO = 'GB'</sql>
+    </changeSet>
+
+    <changeSet id="20190121 23:14:08" author="Eray Oral">
+        <sql>UPDATE CRM_COUNTRY SET RANK = 6 WHERE ISO = 'ES'</sql>
+    </changeSet>
+
+    <changeSet id="20190121 23:14:09" author="Eray Oral">
+        <sql>UPDATE CRM_COUNTRY SET RANK = 7 WHERE ISO = 'NL'</sql>
+    </changeSet>
+
+    <changeSet id="20190121 23:14:10" author="Eray Oral">
+        <sql>UPDATE CRM_COUNTRY SET RANK = 8 WHERE ISO = 'PL'</sql>
+    </changeSet>
+
+    <changeSet id="20190121 23:14:11" author="Eray Oral">
+        <sql>UPDATE CRM_COUNTRY SET RANK = 9 WHERE ISO = 'BE'</sql>
+    </changeSet>
+
+    <changeSet id="20190121 23:14:12" author="Eray Oral">
+        <sql>UPDATE CRM_COUNTRY SET RANK = 10 WHERE ISO = 'CZ'</sql>
+    </changeSet>
+
+    <changeSet id="20190328 14:43:01" author="Dogukan Sahinturk">
+        <sql>UPDATE CRM_ACCOUNT SET SEGMENT='PARTNER' WHERE SEGMENT = 'AGENCY' </sql>
+    </changeSet>
+    
+    <changeSet id="20190412 12:00:01" author="Dogukan Sahinturk">
+        <addColumn tableName="CRM_ACCOUNT">
+            <column name="GLOBAL" type="NUMBER(1,0)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="GLOBAL_ACCOUNT_OWNER" type="VARCHAR2(100 BYTE)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="GLOBAL_ACCOUNT_ID" type="NUMBER(19,0)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20190418 12:00:01" author="Dogukan Sahinturk">
+        <addColumn tableName="AUD_CRM_ACCOUNT">
+            <column name="GLOBAL" type="NUMBER(1,0)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="GLOBAL_ACCOUNT_OWNER" type="VARCHAR2(100 BYTE)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="GLOBAL_ACCOUNT_ID" type="NUMBER(19,0)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    
+    <changeSet id="20190625 13:39:01" author="AliRiza.Bostanci">
+        <createTable tableName="CRM_PT_FR_COUNTRY_POINT">
+            <column name="POTENTIAL_ID" type="NUMBER(19,0)"></column>
+            <column name="COUNTRY_POINT_ID" type="NUMBER(19,0)"></column>
+        </createTable>
+        
+        <addForeignKeyConstraint constraintName="FK_PT_FR_CP_PT_ID" 
+        						 baseTableName="CRM_PT_FR_COUNTRY_POINT" baseColumnNames="POTENTIAL_ID"
+                                 referencedTableName="CRM_POTENTIAL" referencedColumnNames="ID"/>
+                                 
+        <addForeignKeyConstraint constraintName="FK_PT_FR_CP_CP_ID" 
+                                 baseTableName="CRM_PT_FR_COUNTRY_POINT" baseColumnNames="COUNTRY_POINT_ID" 
+                                 referencedTableName="CRM_COUNTRY_POINT" referencedColumnNames="ID"/>
+    </changeSet>
+    
+    <changeSet id="20190625 13:39:02" author="AliRiza.Bostanci">
+        <createTable tableName="CRM_PT_TO_COUNTRY_POINT">
+            <column name="POTENTIAL_ID" type="NUMBER(19,0)"></column>
+            <column name="COUNTRY_POINT_ID" type="NUMBER(19,0)"></column>
+        </createTable>
+        
+        <addForeignKeyConstraint constraintName="FK_PT_TO_CP_PT_ID" 
+        						 baseTableName="CRM_PT_TO_COUNTRY_POINT" baseColumnNames="POTENTIAL_ID"
+                                 referencedTableName="CRM_POTENTIAL" referencedColumnNames="ID"/>
+                                 
+        <addForeignKeyConstraint constraintName="FK_PT_TO_CP_CP_ID" 
+                                 baseTableName="CRM_PT_TO_COUNTRY_POINT" baseColumnNames="COUNTRY_POINT_ID" 
+                                 referencedTableName="CRM_COUNTRY_POINT" referencedColumnNames="ID"/>
+    </changeSet>
+    
+    <changeSet id="20190625 13:39:03" author="AliRiza.Bostanci">
+        <createTable tableName="AUD_CRM_PT_FR_COUNTRY_POINT">
+        	<column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="POTENTIAL_ID" type="NUMBER(19,0)"></column>
+            <column name="COUNTRY_POINT_ID" type="NUMBER(19,0)"></column>
+        </createTable>
+        
+        <addPrimaryKey tableName="AUD_CRM_PT_FR_COUNTRY_POINT" columnNames="REV, POTENTIAL_ID, COUNTRY_POINT_ID" constraintName="PK_AUD_CRM_PT_FR_CP"/>
+        <addForeignKeyConstraint constraintName="FK_AUDCRMPTFRCOUNTRYPOINT_REV" 
+        						 baseTableName="AUD_CRM_PT_FR_COUNTRY_POINT" baseColumnNames="REV" 
+        						 referencedTableName="REVISION_INFO" referencedColumnNames="ID"/>
+	</changeSet>
+	
+    <changeSet id="20190625 13:39:04" author="AliRiza.Bostanci">
+        <createTable tableName="AUD_CRM_PT_TO_COUNTRY_POINT">
+        	<column name="REV" type="NUMBER(10,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="NUMBER(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="POTENTIAL_ID" type="NUMBER(19,0)"></column>
+            <column name="COUNTRY_POINT_ID" type="NUMBER(19,0)"></column>
+        </createTable>
+        
+        <addPrimaryKey tableName="AUD_CRM_PT_TO_COUNTRY_POINT" columnNames="REV, POTENTIAL_ID, COUNTRY_POINT_ID" constraintName="PK_AUD_CRM_PT_TO_CP"/>
+        <addForeignKeyConstraint constraintName="FK_AUDCRMPTTOCOUNTRYPOINT_REV" 
+        						 baseTableName="AUD_CRM_PT_TO_COUNTRY_POINT" baseColumnNames="REV" 
+        						 referencedTableName="REVISION_INFO" referencedColumnNames="ID"/>
+	</changeSet>
+    <changeSet id="20190625 13:39:05" author="AliRiza.Bostanci">
+    	<sql><![CDATA[
+    		INSERT INTO CRM_PT_FR_COUNTRY_POINT(potential_id, country_point_id) select id, from_country_point_id from crm_potential where from_country_point_id is not null;
+			INSERT INTO CRM_PT_TO_COUNTRY_POINT(potential_id, country_point_id) select id, to_country_point_id from crm_potential where to_country_point_id is not null;
+    	]]>
+    	</sql>
+    </changeSet>
+
+    <changeSet id="20190702 10:21" author="Dogukan Sahinturk">
+        <sql> UPDATE CRM_POTENTIAL SET SERVICE_AREA = 'CCL' WHERE SERVICE_AREA= 'CUSTOMS'</sql>
+    </changeSet>
+    
+    <changeSet id="20190719 09:21" author="AliRiza.Bostanci">
+    	<createIndex tableName="CRM_POTENTIAL" indexName="IDX_CRM_PT_ACCOUNT_ID">
+			<column name="ACCOUNT_ID"/>
+		</createIndex>
+    	<createIndex tableName="CRM_POTENTIAL" indexName="IDX_CRM_PT_FROM_COUNTRY_ID">
+			<column name="FROM_COUNTRY_ID"/>
+		</createIndex>
+    	<createIndex tableName="CRM_POTENTIAL" indexName="IDX_CRM_PT_TO_COUNTRY_ID">
+			<column name="TO_COUNTRY_ID"/>
+		</createIndex>
+    	<createIndex tableName="CRM_POTENTIAL" indexName="IDX_CRM_PT_SERVICE_AREA">
+			<column name="SERVICE_AREA"/>
+		</createIndex>
+    </changeSet>
+    
+    <changeSet id="20190719 09:22" author="AliRiza.Bostanci">
+    	<createIndex tableName="CRM_POTENTIAL" indexName="IDX_CRM_PT_FND_DUPL">
+			<column name="ACCOUNT_ID"/>
+			<column name="SERVICE_AREA"/>
+			<column name="FROM_COUNTRY_ID"/>
+			<column name="TO_COUNTRY_ID"/>
+		</createIndex>
+    </changeSet>
+    
+    <changeSet id="20190719 09:23" author="AliRiza.Bostanci">
+    	<dropIndex tableName="CRM_POTENTIAL" indexName="IDX_CRM_PT_ACCOUNT_ID"/>
+    	<dropIndex tableName="CRM_POTENTIAL" indexName="IDX_CRM_PT_FROM_COUNTRY_ID"/>
+    	<dropIndex tableName="CRM_POTENTIAL" indexName="IDX_CRM_PT_TO_COUNTRY_ID"/>
+    	<dropIndex tableName="CRM_POTENTIAL" indexName="IDX_CRM_PT_SERVICE_AREA"/>
+    </changeSet>
+    
+    <changeSet id="20190719 09:24" author="AliRiza.Bostanci">
+    	<createIndex tableName="CRM_PT_TO_COUNTRY_POINT" indexName="IDX_CRM_PT_TO_CP_ID">
+			<column name="COUNTRY_POINT_ID"/>
+		</createIndex>
+    	<createIndex tableName="CRM_PT_FR_COUNTRY_POINT" indexName="IDX_CRM_PT_FR_CP_ID">
+			<column name="COUNTRY_POINT_ID"/>
+		</createIndex>
+    </changeSet>
+</databaseChangeLog>
